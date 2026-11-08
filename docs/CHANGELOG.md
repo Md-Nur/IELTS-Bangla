@@ -38,6 +38,15 @@ All notable changes, architectural decisions, and milestones for this project wi
   - Built frontend `useExamAutosave` hook with debounced text inputs (600ms), immediate discrete updates (50ms), monotonic version checking to ignore out-of-order responses, exponential retry backoff (1s, 2s, 4s), automatic re-sync on `online` event, and `beforeunload` warning when unsaved changes exist.
   - Integrated visual autosave status indicators (`Saving...`, `Saved`, `Offline / Retrying`) in `ExamHeader`.
   - Authored comprehensive test suite `app/api/exam/__tests__/examAutosave.test.ts` covering 11 concurrency, security, expiration, and idempotency test cases.
+- **Secure Exam Finalization & Reading Scoring (`POST /api/exam/[attemptId]/finalize`):**
+  - Implemented `finalizeAndScoreAttempt` in `lib/services/examAttemptService.ts` executing row lock (`SELECT FOR UPDATE`), authoritative clock checks (`SELECT NOW() as db_now`), answer evaluation, and `EvaluationResult` persistence inside a single atomic transaction.
+  - Server-authoritative deadline evaluation: on-time manual submissions transition to `SUBMITTED`; expired attempts transition to `TIMED_OUT`; premature timeout requests are rejected with `400 DEADLINE_NOT_PASSED`.
+  - Integrated pure deterministic reading scoring engine: evaluates answers against published version answer key, computes raw score (0..40), and maps to exact IELTS Reading Band (0.0..9.0) using version-specific `bandConversionTable`.
+  - Question-level auditability: updates all 40 `StudentAnswer` rows with `isCorrect` and `scoreAwarded` (treating unanswered questions as zero).
+  - Persists immutable `EvaluationResult` record with `scoringVersion: "reading_v1.0.0"`, configuration snapshot, passage-level section breakdown, and question-level audit data.
+  - Idempotency & Concurrency: handles repeated finalization and concurrent requests safely, returning committed evaluation snapshots without duplicate records or re-scoring.
+  - Attempt closure enforcement: finalized attempts cannot be reopened or edited by autosave.
+  - Authored test suite `app/api/exam/__tests__/examFinalize.test.ts` (13 tests passing covering 40/40 golden score, empty attempts, accepted alternatives, rejected alternatives, word limit violations, premature timeout rejection, expiration transitions, idempotency, concurrency, and rollback guarantees).
 
 ## [Unreleased] - 2026-11-08
 

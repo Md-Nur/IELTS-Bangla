@@ -1,5 +1,13 @@
-import { AttemptStatus, QuestionType } from "@prisma/client";
+import { AttemptStatus, QuestionType, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import {
+  evaluateReadingAttempt,
+  QuestionScoringInput,
+  StudentAnswerInput,
+  QuestionScoreResult,
+  SectionScoreSummary,
+} from "@/lib/scoring/reading";
+import { BandConversionRange } from "@/lib/scoring/band";
 
 // ====================================================================
 // Custom Service Errors
@@ -58,6 +66,15 @@ export class ExamQuestionMismatchError extends Error {
   ) {
     super(message);
     this.name = "ExamQuestionMismatchError";
+    this.code = code;
+  }
+}
+
+export class ExamDeadlineNotPassedError extends Error {
+  code: string;
+  constructor(message: string = "Attempt deadline has not passed yet", code: string = "DEADLINE_NOT_PASSED") {
+    super(message);
+    this.name = "ExamDeadlineNotPassedError";
     this.code = code;
   }
 }
@@ -659,6 +676,338 @@ export async function saveStudentAnswer(options: SaveAnswerOptions): Promise<Sav
       answerText: saved.answerText,
       isFlaggedForReview: saved.isFlaggedForReview,
       lastSavedAt: saved.lastSavedAt.toISOString(),
+    };
+  });
+}
+
+export interface FinalizeAttemptOptions {
+  userId: string;
+  attemptId: string;
+  reason?: "MANUAL" | "TIMEOUT";
+}
+
+export interface FinalizeAttemptResponseDTO {
+  attemptId: string;
+  testId: string;
+  testSlug: string;
+  testTitle: string;
+  testVersionId: string;
+  versionNumber: number;
+  status: AttemptStatus;
+  startedAt: string;
+  expiresAt: string;
+  submittedAt: string;
+  timeSpentSeconds: number;
+  totalQuestions: number;
+  totalAttempted: number;
+  totalCorrect: number;
+  totalIncorrect: number;
+  rawScore: number;
+  estimatedBand: number;
+  scoringVersion: string;
+  sectionBreakdown: Record<string, SectionScoreSummary>;
+  questionBreakdown: QuestionScoreResult[];
+  redirectUrl: string;
+}
+
+/**
+ * Securely finalizes a test attempt, evaluates answers against the published answer key,
+ * calculates raw score and band, and persists the evaluation result atomically within one transaction.
+ *
+ * Transaction Guarantees:
+ * 1. Acquires pessimistic row lock (SELECT FOR UPDATE) on TestAttempt.
+ * 2. Uses database-authoritative current time.
+ * 3. Enforces attempt ownership (IDOR prevention).
+ * 4. Idempotently returns committed result if already submitted or timed out.
+ * 5. Rejects premature timeout requests (reason === 'TIMEOUT' but !isExpired).
+ * 6. Sets status to SUBMITTED (manual on-time) or TIMED_OUT (deadline passed).
+ * 7. Evaluates all questions using pure deterministic scoring engine.
+ * 8. Upserts correctness and score on StudentAnswer records.
+ * 9. Persists immutable EvaluationResult with question and section breakdowns.
+ * 10. Atomically commits all mutations; rolls back completely on any failure.
+ */
+export async function finalizeAndScoreAttempt(
+  options: FinalizeAttemptOptions
+): Promise<FinalizeAttemptResponseDTO> {
+  const { userId, attemptId, reason = "MANUAL" } = options;
+
+  return await prisma.$transaction(async (tx) => {
+    // 1. Lock the TestAttempt row using SELECT FOR UPDATE and read database-authoritative current time
+    const attempts = await tx.$queryRaw<Array<{
+      id: string;
+      userId: string;
+      testId: string;
+      testVersionId: string;
+      status: AttemptStatus;
+      startedAt: Date;
+      expiresAt: Date;
+      submittedAt: Date | null;
+      timeSpentSeconds: number;
+      rawScore: number | null;
+      estimatedBand: number | null;
+      db_now: Date;
+    }>>`
+      SELECT 
+        id, "userId", "testId", "testVersionId", status, "startedAt", "expiresAt", "submittedAt", "timeSpentSeconds", "rawScore", "estimatedBand",
+        NOW() as db_now
+      FROM "TestAttempt"
+      WHERE id = ${attemptId}
+      FOR UPDATE
+    `;
+
+    if (!attempts.length) {
+      throw new ExamNotFoundError("Test attempt not found", "ATTEMPT_NOT_FOUND");
+    }
+
+    const attempt = attempts[0];
+    const dbNow = new Date(attempt.db_now);
+
+    // 2. Verify attempt ownership (IDOR prevention)
+    if (attempt.userId !== userId) {
+      throw new ExamForbiddenError(
+        "You do not have permission to finalize this examination attempt",
+        "FORBIDDEN_ATTEMPT_ACCESS"
+      );
+    }
+
+    // Fetch test metadata for response DTO
+    const testMeta = await tx.test.findUnique({
+      where: { id: attempt.testId },
+      select: { slug: true, title: true },
+    });
+    const versionMeta = await tx.publishedTestVersion.findUnique({
+      where: { id: attempt.testVersionId },
+      select: { versionNumber: true, bandConversionTable: true, durationMinutes: true, totalQuestions: true },
+    });
+
+    if (!testMeta || !versionMeta) {
+      throw new ExamNotFoundError("Test or test version metadata not found", "TEST_NOT_FOUND");
+    }
+
+    // 3. Idempotency Check: If attempt is already SUBMITTED or TIMED_OUT, return existing committed EvaluationResult
+    if (attempt.status === AttemptStatus.SUBMITTED || attempt.status === AttemptStatus.TIMED_OUT) {
+      const existingEvaluation = await tx.evaluationResult.findUnique({
+        where: { attemptId: attempt.id },
+      });
+
+      if (existingEvaluation) {
+        return {
+          attemptId: attempt.id,
+          testId: attempt.testId,
+          testSlug: testMeta.slug,
+          testTitle: testMeta.title,
+          testVersionId: attempt.testVersionId,
+          versionNumber: versionMeta.versionNumber,
+          status: attempt.status,
+          startedAt: attempt.startedAt.toISOString(),
+          expiresAt: attempt.expiresAt.toISOString(),
+          submittedAt: (attempt.submittedAt ?? existingEvaluation.evaluatedAt).toISOString(),
+          timeSpentSeconds: attempt.timeSpentSeconds,
+          totalQuestions: existingEvaluation.totalQuestions,
+          totalAttempted: existingEvaluation.totalAttempted,
+          totalCorrect: existingEvaluation.totalCorrect,
+          totalIncorrect: existingEvaluation.totalIncorrect,
+          rawScore: existingEvaluation.rawScore,
+          estimatedBand: existingEvaluation.estimatedBand,
+          scoringVersion: existingEvaluation.scoringVersion,
+          sectionBreakdown: existingEvaluation.sectionBreakdown as unknown as Record<string, SectionScoreSummary>,
+          questionBreakdown: existingEvaluation.questionBreakdown as unknown as QuestionScoreResult[],
+          redirectUrl: `/results/${attempt.id}`,
+        };
+      }
+      throw new ExamConflictError("Attempt has been finalized but evaluation result is missing", "EVALUATION_MISSING");
+    }
+
+    if (attempt.status !== AttemptStatus.IN_PROGRESS) {
+      throw new ExamConflictError(
+        `Attempt is in status ${attempt.status} and cannot be finalized`,
+        "ATTEMPT_NOT_IN_PROGRESS"
+      );
+    }
+
+    // 4. Evaluate deadline & determine final status
+    const isExpired = dbNow.getTime() >= new Date(attempt.expiresAt).getTime();
+
+    if (reason === "TIMEOUT" && !isExpired) {
+      throw new ExamDeadlineNotPassedError(
+        "Attempt deadline has not passed yet",
+        "DEADLINE_NOT_PASSED"
+      );
+    }
+
+    const finalStatus: AttemptStatus = isExpired ? AttemptStatus.TIMED_OUT : AttemptStatus.SUBMITTED;
+
+    // Calculate authoritative time spent
+    const startedTime = new Date(attempt.startedAt).getTime();
+    const expiresTime = new Date(attempt.expiresAt).getTime();
+    const nowTime = dbNow.getTime();
+    const maxDurationMs = expiresTime - startedTime;
+    const actualTimeSpentMs = isExpired ? maxDurationMs : Math.min(nowTime - startedTime, maxDurationMs);
+    const timeSpentSeconds = Math.max(0, Math.floor(actualTimeSpentMs / 1000));
+
+    // 5. Load all saved answers for this attempt
+    const savedAnswers = await tx.studentAnswer.findMany({
+      where: { attemptId: attempt.id },
+    });
+    const existingQuestionIds = new Set(savedAnswers.map((a) => a.questionId));
+
+    // 6. Load published sections, groups, questions, and accepted answers
+    const publishedSections = await tx.publishedSection.findMany({
+      where: { testVersionId: attempt.testVersionId },
+      orderBy: { orderIndex: "asc" },
+      include: {
+        groups: {
+          orderBy: { orderIndex: "asc" },
+          include: {
+            questions: {
+              orderBy: { questionNumber: "asc" },
+              include: {
+                acceptedAnswers: {
+                  orderBy: { orderIndex: "asc" },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const questionsInput: QuestionScoringInput[] = [];
+    for (const sec of publishedSections) {
+      for (const grp of sec.groups) {
+        for (const q of grp.questions) {
+          questionsInput.push({
+            questionId: q.id,
+            questionNumber: q.questionNumber,
+            questionType: grp.questionType,
+            wordLimit: grp.wordLimit,
+            sectionIndex: sec.orderIndex,
+            explanation: q.explanation,
+            acceptedAnswers: q.acceptedAnswers.map((a) => ({
+              acceptedText: a.acceptedText,
+              isCaseSensitive: a.isCaseSensitive,
+            })),
+          });
+        }
+      }
+    }
+
+    const studentAnswersInput: StudentAnswerInput[] = savedAnswers.map((sa) => ({
+      questionId: sa.questionId,
+      answerText: sa.answerText,
+    }));
+
+    // 7. Evaluate answers using pure deterministic scoring engine
+    const summary = evaluateReadingAttempt(
+      questionsInput,
+      studentAnswersInput,
+      versionMeta.bandConversionTable as unknown as BandConversionRange[]
+    );
+
+    // 8. Persist question-level evaluation on StudentAnswer
+    const missingAnswers = summary.questionBreakdown
+      .filter((q) => !existingQuestionIds.has(q.questionId))
+      .map((q) => ({
+        attemptId: attempt.id,
+        testVersionId: attempt.testVersionId,
+        questionId: q.questionId,
+        answerText: null,
+        isFlaggedForReview: false,
+        isCorrect: q.isCorrect,
+        scoreAwarded: q.scoreAwarded,
+        lastSavedAt: dbNow,
+      }));
+
+    if (missingAnswers.length > 0) {
+      await tx.studentAnswer.createMany({
+        data: missingAnswers,
+      });
+    }
+
+    // Update existing student answers with correctness and score
+    await Promise.all(
+      summary.questionBreakdown
+        .filter((q) => existingQuestionIds.has(q.questionId))
+        .map((q) =>
+          tx.studentAnswer.update({
+            where: {
+              attemptId_questionId: {
+                attemptId: attempt.id,
+                questionId: q.questionId,
+              },
+            },
+            data: {
+              isCorrect: q.isCorrect,
+              scoreAwarded: q.scoreAwarded,
+            },
+          })
+        )
+    );
+
+    // 9. Update TestAttempt status, score, and timestamps
+    await tx.testAttempt.update({
+      where: { id: attempt.id },
+      data: {
+        status: finalStatus,
+        submittedAt: dbNow,
+        timeSpentSeconds,
+        rawScore: summary.rawScore,
+        estimatedBand: summary.estimatedBand,
+      },
+    });
+
+    // 10. Create EvaluationResult snapshot
+    const scoringConfig = {
+      version: "reading_v1.0.0",
+      scoringEngine: "deterministic_exact_match",
+      bandConversionTable: versionMeta.bandConversionTable,
+      durationMinutes: versionMeta.durationMinutes,
+      rules: {
+        wordLimitStrict: true,
+        caseSensitiveDefault: false,
+        hyphenatedAsSingleWord: true,
+      },
+    };
+
+    const evaluation = await tx.evaluationResult.create({
+      data: {
+        attemptId: attempt.id,
+        totalQuestions: summary.totalQuestions,
+        totalAttempted: summary.totalAttempted,
+        totalCorrect: summary.totalCorrect,
+        totalIncorrect: summary.totalIncorrect,
+        rawScore: summary.rawScore,
+        estimatedBand: summary.estimatedBand,
+        scoringVersion: "reading_v1.0.0",
+        scoringConfig: scoringConfig as unknown as Prisma.InputJsonValue,
+        sectionBreakdown: summary.sectionBreakdown as unknown as Prisma.InputJsonValue,
+        questionBreakdown: summary.questionBreakdown as unknown as Prisma.InputJsonValue,
+        evaluatedAt: dbNow,
+      },
+    });
+
+    return {
+      attemptId: attempt.id,
+      testId: attempt.testId,
+      testSlug: testMeta.slug,
+      testTitle: testMeta.title,
+      testVersionId: attempt.testVersionId,
+      versionNumber: versionMeta.versionNumber,
+      status: finalStatus,
+      startedAt: attempt.startedAt.toISOString(),
+      expiresAt: attempt.expiresAt.toISOString(),
+      submittedAt: dbNow.toISOString(),
+      timeSpentSeconds,
+      totalQuestions: evaluation.totalQuestions,
+      totalAttempted: evaluation.totalAttempted,
+      totalCorrect: evaluation.totalCorrect,
+      totalIncorrect: evaluation.totalIncorrect,
+      rawScore: evaluation.rawScore,
+      estimatedBand: evaluation.estimatedBand,
+      scoringVersion: evaluation.scoringVersion,
+      sectionBreakdown: summary.sectionBreakdown,
+      questionBreakdown: summary.questionBreakdown,
+      redirectUrl: `/results/${attempt.id}`,
     };
   });
 }

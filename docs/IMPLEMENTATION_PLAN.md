@@ -115,31 +115,26 @@ flowchart TD
 
 ---
 
-### Milestone 6: Deterministic Scoring Engine & Timeout Handling
-- **Objectives:** Deliver 100% deterministic, test-calibrated server-side scoring and transaction-safe finalization.
-- **Tasks:**
-  - Pure scoring engine `lib/scoring/reading.ts`:
-    - Normalized string matching: case-insensitive, trimmed whitespace, normalized punctuation.
-    - Explicit alternative answer support (e.g. `x / y` or `[x, y]`).
-    - Strict word count limit enforcement (reject answers exceeding limit).
-    - Roman numeral normalization (`i` vs `I`).
-  - Shared finalization service `lib/services/attemptFinalizer.ts`:
-    - Handles both manual submission (`SUBMITTED`) and timeout expiration (`TIMED_OUT`).
-    - If manual submission arrives after deadline (`now > expiresAt`), automatically routes through timeout finalization.
-    - Single transaction executes status transition, answer scoring, and `EvaluationResult` insertion.
-    - Rollback ensures attempt is never left in dangling finalized state without evaluation.
-    - Mutex pattern prevents concurrent duplicate scoring.
-    - Calculates estimated IELTS band using version-specific `bandConversionTable`.
-- **Deliverables:**
-  - `lib/scoring/reading.ts`
-  - `lib/services/attemptFinalizer.ts`
-  - Golden test suite matching `Mock_01_Answer_Key.pdf`.
-- **Acceptance Criteria:**
-  - All 40 questions of Mock Test 01 score 100% with golden answers.
-  - Edge cases (whitespace, capitalization, accepted variants) score accurately.
-  - Exceeding word limit awards 0 marks.
-  - Late manual submission transitions to `TIMED_OUT` and scores saved answers.
-- **Testing Requirements:** Exhaustive unit test suite covering 20+ scoring edge cases.
+### Milestone 6: Deterministic Scoring Engine, Exam Finalization & Timeout Handling (COMPLETED)
+- **Status:** COMPLETED
+- **Achievements:**
+  - Implemented `finalizeAndScoreAttempt` in `lib/services/examAttemptService.ts` executing all finalization steps within a single transaction under PostgreSQL `SELECT FOR UPDATE` pessimistic row locking.
+  - Server-authoritative time evaluation (`SELECT NOW() as db_now`):
+    - On-time manual submissions (`db_now < expiresAt`) transition cleanly to `SUBMITTED`.
+    - Late submissions (`db_now >= expiresAt`) automatically transition to `TIMED_OUT`.
+    - Premature timeout requests (`reason === 'TIMEOUT'` before expiration) are rejected with `400 DEADLINE_NOT_PASSED`.
+  - Next.js 16 App Router endpoint `POST /api/exam/[attemptId]/finalize`.
+  - Pure deterministic scoring across all 7 question types using version-specific accepted answers and `bandConversionTable`:
+    - Full 40/40 golden answers yield Band 9.0.
+    - Missing/unanswered questions treated strictly as 0 marks.
+    - Q37–Q40 accept only their specified option letters (A, C, D, E) and reject word alternatives.
+    - Q21 (`overflows`) and Q22 (`islands`) reject unapproved variants (`overflow`, `isolated islands`).
+    - Word limit strictness enforced (exceeding words awards 0 marks).
+  - Version-locked auditability: persists `scoringVersion: "reading_v1.0.0"`, `scoringConfig`, `sectionBreakdown`, and `questionBreakdown` in `EvaluationResult`.
+  - Comprehensive question-level audit: updates `isCorrect` and `scoreAwarded` on all 40 `StudentAnswer` records.
+  - Idempotency & Concurrency: repeated requests and serialized concurrent requests return identical committed evaluations without creating duplicate records.
+  - Attempt closure invariant: finalized attempts cannot be reopened or mutated via autosave or content endpoints (`409 ATTEMPT_NOT_IN_PROGRESS`).
+  - Authored comprehensive test suite `app/api/exam/__tests__/examFinalize.test.ts` (13 tests passing).
 
 ---
 

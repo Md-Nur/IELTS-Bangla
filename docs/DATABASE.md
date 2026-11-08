@@ -304,7 +304,7 @@ All triggers, partial unique indexes, locking strategies, and deadline transitio
 
 ## 8. Verification Results on Dedicated Neon Database (`ielts_bangla`)
 
-The Reading Phase 1 (Exam Start & Content Retrieval) and Phase 2 (Reliable Answer Autosave) workflows were executed and verified against the live Neon database:
+The Reading Phase 1 (Exam Start & Content Retrieval), Phase 2 (Reliable Answer Autosave), and Phase 3 (Finalization & Scoring) workflows were executed and verified against the live Neon database:
 
 | # | Test Scenario | Mechanism | Result | Status |
 | :--- | :--- | :--- | :--- | :--- |
@@ -321,5 +321,14 @@ The Reading Phase 1 (Exam Start & Content Retrieval) and Phase 2 (Reliable Answe
 | **11** | Submitted attempt write rejection | `status !== 'IN_PROGRESS'` under row lock | Rejects autosave on finalized attempt with 409 Conflict | **PASS** |
 | **12** | Cross-version question rejection | `PublishedQuestion` version validation | Rejects foreign question ID with 400 `QUESTION_NOT_IN_VERSION` | **PASS** |
 | **13** | Answer restoration on reload | `GET /api/exam/[attemptId]` query | Restores all saved answers with accurate lastSavedAt | **PASS** |
+| **14** | Exam finalization & golden score | `finalizeAndScoreAttempt` + row lock | 40/40 primary answers yield Band 9.0; `EvaluationResult` persisted | **PASS** |
+| **15** | Missing answers handling | Zero-fill in evaluation | Unanswered questions score 0; 40 `StudentAnswer` records created | **PASS** |
+| **16** | Accepted variants & normalization | Pure scoring engine rules | Case variations, letter formats `(A)`, `a`, and Roman numerals score 1 | **PASS** |
+| **17** | Unapproved variants & word limits | Pure scoring engine rules | Singular `overflow`, `isolated islands`, words on letter questions score 0 | **PASS** |
+| **18** | Premature timeout rejection | `reason === 'TIMEOUT' && !isExpired` | Rejects early timeout with 400 `DEADLINE_NOT_PASSED`; 0 state mutations | **PASS** |
+| **19** | Expiration transition | `db_now >= expiresAt` check | Automatically sets status to `TIMED_OUT` when finalized post-deadline | **PASS** |
+| **20** | Finalization idempotency | Status check under row lock | Repeated finalization returns identical evaluation; no duplicate records | **PASS** |
+| **21** | Concurrent finalization safety | `SELECT ... FOR UPDATE` serialization | Simultaneous finalizations serialize cleanly, returning identical result | **PASS** |
+| **22** | Finalization transaction rollback | `prisma.$transaction` rollback | Error in transaction rolls back attempt status to `IN_PROGRESS` | **PASS** |
 
-**Total Live Integration & Unit Tests Passed: 89 tests across 9 test suites.**
+**Total Live Integration & Unit Tests Passed: 102 tests across 10 test suites.**

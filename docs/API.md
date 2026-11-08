@@ -233,38 +233,81 @@ All API routes and server actions in IELTS Bangla adhere to standard RESTful and
   - `404 Not Found` (`ATTEMPT_NOT_FOUND`).
   - `409 Conflict` (`ATTEMPT_NOT_IN_PROGRESS`).
 
-### `POST /api/exam/[attemptId]/submit`
-- **Purpose:** Final manual submission of an examination.
-- **Pessimistic Row Lock & Deadline Evaluation:**
-  - Inside a transaction, acquires `SELECT FOR UPDATE` on `TestAttempt` and queries `NOW() as db_now`.
-  - **If `db_now <= expiresAt`:** Transitions attempt to `SUBMITTED`, calculates scores, records `EvaluationResult`, and returns the result.
-  - **If `db_now > expiresAt`:** The manual submission arrived after expiry! It automatically routes through **timeout finalization**, transitioning the attempt to `TIMED_OUT`, calculates scores, and records `EvaluationResult`.
-- **Single Transaction Guarantee:** Transition, scoring, and `EvaluationResult` creation execute atomically. If scoring fails, status rollback occurs.
-- **Idempotency:** Repeated calls return the existing committed `EvaluationResult`.
-- **Response (200):**
+### `POST /api/exam/[attemptId]/finalize`
+- **Purpose:** Securely finalize an active examination attempt, evaluate answers against the immutable published answer key, calculate raw score (0..40) and estimated IELTS band (0.0..9.0), and persist the evaluation snapshot atomically.
+- **Authentication:** Required (`Bearer <token>` header or `ib_session` HTTP-only cookie).
+- **Request Body (Optional):**
+  ```json
+  {
+    "reason": "MANUAL" // or "TIMEOUT"
+  }
+  ```
+- **Single Database Transaction & Concurrency Guarantees:**
+  - Acquires row-level pessimistic lock: `SELECT ... FROM "TestAttempt" WHERE id = $1 FOR UPDATE`.
+  - Queries server-authoritative time: `SELECT NOW() as db_now`.
+  - Enforces attempt ownership (`attempt.userId === session.user.id`). IDOR attempts return `403 Forbidden` (`FORBIDDEN_ATTEMPT_ACCESS`).
+  - **Idempotency Guarantee:** If the attempt is already `SUBMITTED` or `TIMED_OUT`, returns the committed `EvaluationResult` without re-scoring or creating duplicate records.
+  - **Deadline Enforcement:**
+    - If `reason === "TIMEOUT"` and `db_now < expiresAt`, request is rejected with `400 Bad Request` (`DEADLINE_NOT_PASSED`); zero state mutation occurs.
+    - If `db_now >= expiresAt`, attempt transitions strictly to `TIMED_OUT` (even if submitted with `MANUAL`).
+    - If `db_now < expiresAt`, attempt transitions to `SUBMITTED`.
+  - **Scoring & Integrity:**
+    - Loads published sections, groups, questions, and accepted answers for the attempt's `testVersionId`.
+    - Evaluates student answers using pure deterministic scoring engine (`reading_v1.0.0`).
+    - Treats unanswered questions as zero.
+    - Updates `isCorrect` and `scoreAwarded` on all 40 `StudentAnswer` records.
+    - Creates immutable `EvaluationResult` record with `sectionBreakdown`, `questionBreakdown`, and `scoringConfig`.
+  - **Atomic Commit / Rollback:** Status update, student answer evaluation, and `EvaluationResult` creation execute in a single atomic transaction. Any error causes a complete rollback.
+- **Response (200 OK):**
   ```json
   {
     "success": true,
-    "attemptId": "cuid_attempt_123",
-    "status": "SUBMITTED",
-    "rawScore": 38,
-    "estimatedBand": 8.5,
-    "totalQuestions": 40,
-    "totalAttempted": 40,
-    "totalCorrect": 38,
-    "timeSpentSeconds": 3120,
-    "redirectUrl": "/results/cuid_attempt_123"
+    "data": {
+      "attemptId": "cuid_attempt_123",
+      "testId": "cuid_test_1",
+      "testSlug": "academic-reading-mock-01",
+      "testTitle": "Academic Reading · Mock Test 01",
+      "testVersionId": "cmw86bndp005wlqu6v8yuiwsx",
+      "versionNumber": 1,
+      "status": "SUBMITTED",
+      "startedAt": "2026-11-09T01:00:00.000Z",
+      "expiresAt": "2026-11-09T02:00:00.000Z",
+      "submittedAt": "2026-11-09T01:52:00.000Z",
+      "timeSpentSeconds": 3120,
+      "totalQuestions": 40,
+      "totalAttempted": 40,
+      "totalCorrect": 38,
+      "totalIncorrect": 2,
+      "rawScore": 38,
+      "estimatedBand": 8.5,
+      "scoringVersion": "reading_v1.0.0",
+      "sectionBreakdown": {
+        "passage1": { "sectionIndex": 1, "totalQuestions": 13, "attempted": 13, "correct": 13, "rawScore": 13, "accuracyPercentage": 100 },
+        "passage2": { "sectionIndex": 2, "totalQuestions": 13, "attempted": 13, "correct": 12, "rawScore": 12, "accuracyPercentage": 92 },
+        "passage3": { "sectionIndex": 3, "totalQuestions": 14, "attempted": 14, "correct": 13, "rawScore": 13, "accuracyPercentage": 93 }
+      },
+      "questionBreakdown": [
+        {
+          "questionId": "cmw86bne4005ylqu6j1a7h4q8",
+          "questionNumber": 1,
+          "studentAnswer": "FALSE",
+          "acceptedAnswers": ["FALSE", "F"],
+          "isCorrect": true,
+          "scoreAwarded": 1,
+          "wordLimitExceeded": false,
+          "explanation": "Para 1: ‘Drais was a civil servant…’."
+        }
+      ],
+      "redirectUrl": "/results/cuid_attempt_123"
+    }
   }
   ```
-
-### `POST /api/exam/[attemptId]/timeout`
-- **Purpose:** Authoritative expiration endpoint triggered when the countdown reaches zero or during an automated timeout sweep.
-- **Pessimistic Row Lock & Deadline Validation:**
-  - Inside a transaction, acquires `SELECT FOR UPDATE` on `TestAttempt` and queries `NOW() as db_now`.
-  - Evaluates `db_now >= expiresAt`.
-  - **If `db_now < expiresAt`:** Rejects request with `400 Bad Request` (`"Attempt deadline has not passed"`). No state mutation occurs.
-  - **If `db_now >= expiresAt`:** Transitions attempt from `IN_PROGRESS` to `TIMED_OUT`, scores saved answers, and records `EvaluationResult`.
-- **Response (200):** Same structure as `/submit`, with `"status": "TIMED_OUT"`.
+- **Errors:**
+  - `401 Unauthorized` (unauthenticated).
+  - `400 Bad Request` (`VALIDATION_ERROR` or `DEADLINE_NOT_PASSED`).
+  - `403 Forbidden` (`FORBIDDEN_ATTEMPT_ACCESS`).
+  - `404 Not Found` (`ATTEMPT_NOT_FOUND`).
+  - `409 Conflict` (`ATTEMPT_NOT_IN_PROGRESS`).
 
 ### `GET /api/exam/[attemptId]/results`
 - **Purpose:** Fetch detailed scored results, per-question correctness, and detailed explanations for review.
