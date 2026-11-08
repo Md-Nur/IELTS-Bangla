@@ -2,6 +2,27 @@
 
 All notable changes, architectural decisions, and milestones for this project will be documented in this file.
 
+## [Unreleased] - 2026-11-09
+
+### Added
+- **Authentication & Stateless Session Layer:**
+  - Implemented session issuance and verification using `jose` HS256 JWTs (`lib/auth/session.ts`) supporting both Bearer tokens and HTTP-only `ib_session` cookies.
+  - Implemented password hashing using `bcryptjs`.
+  - Implemented role-based and active-status guards in `lib/auth/guards.ts` (`getCurrentUser`, `requireAuth`, `requireRole`).
+  - Implemented `/api/auth/register` (strictly enforcing `Role.STUDENT`), `/api/auth/login`, and `/api/auth/logout`.
+  - Authored test suite `app/api/auth/__tests__/authRoutes.test.ts` (6 tests passing).
+- **Prisma Client Singleton:**
+  - Configured global singleton in `lib/prisma.ts` for connection pooling across serverless invocations.
+- **Reading Exam Attempt Service (`lib/services/examAttemptService.ts`):**
+  - `startExamAttempt`: Fetches database-authoritative time (`SELECT NOW()`), resolves active published test version, enforces single active attempt per student, resumes existing active attempts (`isResumed: true`), and catches concurrent insert collisions via the PostgreSQL partial unique index `idx_unique_active_attempt_per_test`.
+  - `getExamContent`: Validates student ownership (IDOR prevention), verifies attempt is active (`IN_PROGRESS`) and unexpired, returns continuous 1..40 questions across 3 sections, and strictly excludes accepted answers, explanations, and scoring configurations from student payloads.
+  - Defined explicit typed DTOs: `StartAttemptResponseDTO`, `ExamContentResponseDTO`, `SectionDTO`, `QuestionGroupDTO`, `QuestionDTO`, `SavedAnswerDTO`.
+  - Authored integration test suite `lib/services/__tests__/examAttemptService.test.ts` (9 tests passing).
+- **Exam Next.js 16 App Router API Endpoints:**
+  - `POST /api/exam/start`: Starts or resumes an active exam attempt. Returns 201 for newly initialized attempts and 200 for resumed active attempts.
+  - `GET /api/exam/[attemptId]`: Retrieves published exam content and saved answers with asynchronous `params` handling for Next.js 16.
+  - Authored HTTP route test suite `app/api/exam/__tests__/examRoutes.test.ts` (8 tests passing).
+
 ## [Unreleased] - 2026-11-08
 
 ### Added

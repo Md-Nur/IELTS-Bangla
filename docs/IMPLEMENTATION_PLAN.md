@@ -56,58 +56,48 @@ flowchart TD
 
 ---
 
-### Milestone 3: Minimal Authentication & Server-Side Roles
-- **Objectives:** Implement secure, lightweight, stateless session authentication for Students and Admins.
-- **Tasks:**
-  - Implement password hashing with `bcryptjs`.
-  - Implement session management using signed HTTP-only cookies via `jose`.
-  - Create registration endpoint (`/api/auth/register`) strictly enforcing `Role.STUDENT` (strips any requested role).
-  - Create login endpoint (`/api/auth/login`) with credential and deactivation checks.
-  - Create server authorization helpers: `getCurrentUser()`, `requireAuth()`, `requireRole('ADMIN')`.
-- **Deliverables:**
-  - `/login` and `/register` pages.
-  - `lib/auth/session.ts` and `lib/auth/guards.ts`.
-- **Acceptance Criteria:**
-  - Passwords stored securely as bcrypt hashes.
-  - Protected routes reject unauthenticated requests.
-  - Deactivated users cannot log in.
-- **Testing Requirements:** Unit tests for session issuance/verification; integration tests for route protection.
+### Milestone 3: Minimal Authentication & Server-Side Roles (COMPLETED)
+- **Status:** COMPLETED
+- **Achievements:**
+  - Password hashing implemented with `bcryptjs`.
+  - Stateless tamper-proof session tokens signed and verified via `jose` (`lib/auth/session.ts`).
+  - Strict student role enforcement on registration: `/api/auth/register` assigns `Role.STUDENT`.
+  - Login endpoint `/api/auth/login` checks credentials and `User.isActive`.
+  - Logout endpoint `/api/auth/logout` clears HTTP-only session cookies.
+  - Server-side authentication guards implemented (`lib/auth/guards.ts`): `getCurrentUser()`, `requireAuth()`, `requireRole()`.
+  - Comprehensive unit test suite in `app/api/auth/__tests__/authRoutes.test.ts` (6 tests passing).
 
 ---
 
-### Milestone 4: Publishing Service with Integrity Validation
-- **Objectives:** Implement backend service to validate draft test content and publish immutable version snapshots.
-- **Tasks:**
-  - Implement publishing service `lib/services/testPublishing.ts`:
-    - Validates exact total question count.
-    - Validates continuous question numbering (1 to `totalQuestions` without gaps or duplicates).
-    - Validates structural completeness (every section has groups, every group has questions, every question has accepted answers).
-    - Validates question options and word limits.
-    - Validates band conversion table completeness (covers 0 to `totalQuestions` continuously, bands 0.0 to 9.0).
-    - Deep-copies draft sections, groups, questions, and accepted answers into `Published*` models in a single atomic database transaction.
-    - Increments `versionNumber`.
-- **Deliverables:**
-  - `lib/services/testPublishing.ts`
-  - Unit tests verifying snapshot deep copy, validation failure rollbacks, and constraint enforcement.
-- **Acceptance Criteria:**
-  - Invalid draft cannot produce a partial published version.
-  - Question number uniqueness and continuity are strictly enforced.
+### Milestone 4: Publishing Service with Integrity Validation (COMPLETED)
+- **Status:** COMPLETED
+- **Achievements:**
+  - Implemented `lib/services/testPublishing.ts` with deep copy, question continuity, and accepted answer completeness validation.
+  - Unit test suite passing in `lib/services/__tests__/testPublishing.test.ts` (5 tests passing).
+  - Published Mock Test 01 Version 1 on Neon (`cmw86bndp005wlqu6v8yuiwsx`).
 
 ---
 
 ### Milestone 5: Reading Examination Engine (Student Experience)
-- **Objectives:** Build the core computer-delivered IELTS (CD-IELTS) testing environment.
-- **Tasks:**
+- **Status:** PHASE 1 BACKEND COMPLETED | PHASE 2 FRONTEND PENDING
+- **Phase 1 Backend Achievements (COMPLETED):**
+  - Implemented `lib/services/examAttemptService.ts`:
+    - `startExamAttempt`: database-authoritative timing (`SELECT NOW()`), single active attempt enforcement via PostgreSQL partial unique index, seamless resumption of existing active attempt, and safe resolution of concurrent start races.
+    - `getExamContent`: IDOR-protected content delivery, expired attempt protection, continuous 1..40 question ordering, explicit response DTOs, and 100% answer-key/explanation containment.
+  - Implemented Next.js App Router API endpoints:
+    - `POST /api/exam/start`
+    - `GET /api/exam/[attemptId]`
+  - Authored comprehensive integration test suites:
+    - `lib/services/__tests__/examAttemptService.test.ts` (9 tests passing).
+    - `app/api/exam/__tests__/examRoutes.test.ts` (8 tests passing).
+- **Phase 2 Frontend Tasks (NEXT):**
   - Examination split-screen layout:
     - Left pane: Passage text with clear paragraph labeling (A, B, C...).
     - Right pane: Interactive question rendering.
     - Configurable layout: Accommodates any number of passages and questions defined by the test version.
   - Authoritative countdown timer synchronized with server-issued `expiresAt`.
-  - Duplicate active attempt prevention (at most one active `IN_PROGRESS` attempt per test).
-  - Interactive question renderers:
-    - Multiple choice (single select radio).
-    - True / False / Not Given & Yes / No / Not Given (pill radio buttons).
-    - Sentence / Note / Summary completion (inline text inputs).
+  - Interactive question renderers (`TRUE_FALSE_NOT_GIVEN`, `MULTIPLE_CHOICE`, `SENTENCE_COMPLETION`, `MATCHING_HEADINGS`).
+  - Question palette navigation (1 to 40) with visual states.
     - Matching Headings (dropdown selectors).
   - Question palette navigation (1 to 40) with visual states: Unattempted, Answered, Flagged for Review.
   - Debounced autosave to `/api/exam/[attemptId]/save` using `SELECT ... FOR UPDATE` row locking:

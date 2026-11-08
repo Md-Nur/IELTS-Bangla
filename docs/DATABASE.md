@@ -299,3 +299,22 @@ All triggers, partial unique indexes, locking strategies, and deadline transitio
 | **8b** | Late manual submission arriving after `expiresAt` | `SELECT FOR UPDATE` + `NOW() >= expiresAt` | Transitioned strictly to `TIMED_OUT`; scored successfully | **PASS** |
 
 **Summary: 10 automated test suites executed, 10 passed, 0 failed.**
+
+---
+
+## 8. Verification Results on Dedicated Neon Database (`ielts_bangla`)
+
+The Reading Phase 1 exam start and content retrieval workflows were executed and verified against the live Neon database:
+
+| # | Test Scenario | Mechanism | Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **1** | Database-authoritative timing | `SELECT NOW() as db_now` | `startedAt` & `expiresAt` match exact duration (60m) | **PASS** |
+| **2** | Single active attempt per student | `idx_unique_active_attempt_per_test` | Repeated `start` resumes existing attempt with 200 OK | **PASS** |
+| **3** | Concurrent simultaneous starts | Partial unique index + P2002 trap | Simultaneous requests resolve to identical attempt ID | **PASS** |
+| **4** | Unpublished test prevention | Draft check without published version | Rejects start with `UnpublishedTestError` (404) | **PASS** |
+| **5** | IDOR protection & ownership | `attempt.userId === session.userId` | Cross-student attempt access blocked with 403 Forbidden | **PASS** |
+| **6** | Expired attempt protection | `db_now >= attempt.expiresAt` | Expired attempt content blocked with 403 `ATTEMPT_EXPIRED` | **PASS** |
+| **7** | Zero answer key leakage | Strict projection & explicit DTO | 0% leakage of `acceptedAnswers`, `explanation`, or `scoringConfig` | **PASS** |
+| **8** | Continuous question numbering | Published order sorting | Continuous questions 1..40 across 3 sections | **PASS** |
+
+**Total Live Neon Integration Tests Passed: 72 tests across 7 test suites.**

@@ -76,52 +76,121 @@ All API routes and server actions in IELTS Bangla adhere to standard RESTful and
   ```
 
 ### `POST /api/exam/start`
-- **Purpose:** Initialize a new test attempt for the authenticated student against an active published test version.
+- **Purpose:** Initialize a new test attempt for the authenticated student against an active published test version, or resume an existing active attempt.
+- **Authentication:** Required (`Bearer <token>` header or `ib_session` HTTP-only cookie).
 - **Database-Level Single Active Attempt Policy:**
   - Enforced by PostgreSQL partial unique index:
     `CREATE UNIQUE INDEX "idx_unique_active_attempt_per_test" ON "TestAttempt" ("userId", "testId") WHERE status = 'IN_PROGRESS';`
   - A student can have at most ONE `IN_PROGRESS` attempt per logical test.
-  - If a concurrent attempt is initiated, the database constraint rejects the second insert with unique violation (`23505`), returning `409 Conflict` with `{ "error": "Active attempt already in progress", "attemptId": "...", "canResume": true }`.
-- **Request Body:** `{ "testSlug": "academic-reading-mock-01" }`
-- **Response (201):**
+  - If the student already has an active attempt, the endpoint returns the existing attempt (`isResumed: true`) with HTTP status `200 OK`.
+  - Concurrent start requests are handled safely: any simultaneous insert hitting PostgreSQL constraint `P2002` catches the collision and retrieves the winning active attempt.
+  - Start and expiration timestamps are strictly server-authoritative (`SELECT NOW() as db_now`).
+- **Request Body:**
   ```json
   {
-    "attemptId": "cuid_attempt_123",
-    "testId": "cuid_test_1",
-    "testVersionId": "cuid_ver_01",
-    "testTitle": "IELTS Academic Reading Mock Test 01",
-    "startedAt": "2026-11-08T08:30:00.000Z",
-    "expiresAt": "2026-11-08T09:30:00.000Z",
-    "durationMinutes": 60,
-    "totalQuestions": 40,
-    "sections": [
-      {
-        "id": "sec_1",
-        "orderIndex": 1,
-        "title": "The Bicycle: From Wooden Hobby-Horse to Everyday Machine",
-        "passageText": "...",
-        "questionGroups": [
-          {
-            "id": "grp_1",
-            "orderIndex": 1,
-            "instruction": "Do the following statements agree with the information in Reading Passage 1? Write TRUE, FALSE, or NOT GIVEN.",
-            "questionType": "TRUE_FALSE_NOT_GIVEN",
-            "wordLimit": null,
-            "questions": [
-              {
-                "id": "q_1",
-                "questionNumber": 1,
-                "prompt": "The inventor of the early two-wheeled machine was an engineer.",
-                "options": null
-              }
-            ]
-          }
-        ]
-      }
-    ]
+    "testSlug": "academic-reading-mock-01"
   }
   ```
-  *(Answer keys, rationales, and accepted answers are strictly omitted from this payload.)*
+  *(Accepts either `testSlug` or `testId`)*
+- **Response (201 Created for new attempt, 200 OK for resumed attempt):**
+  ```json
+  {
+    "success": true,
+    "data": {
+      "attemptId": "cuid_attempt_123",
+      "testId": "cuid_test_1",
+      "testSlug": "academic-reading-mock-01",
+      "testTitle": "Academic Reading · Mock Test 01",
+      "testVersionId": "cmw86bndp005wlqu6v8yuiwsx",
+      "versionNumber": 1,
+      "status": "IN_PROGRESS",
+      "startedAt": "2026-11-09T00:45:00.000Z",
+      "expiresAt": "2026-11-09T01:45:00.000Z",
+      "durationMinutes": 60,
+      "totalQuestions": 40,
+      "serverTime": "2026-11-09T00:45:00.000Z",
+      "remainingSeconds": 3600,
+      "isResumed": false
+    }
+  }
+  ```
+- **Errors:**
+  - `401 Unauthorized` (unauthenticated).
+  - `400 Bad Request` (invalid body).
+  - `403 Forbidden` (account deactivated).
+  - `404 Not Found` (test not found or no published version available).
+
+### `GET /api/exam/[attemptId]`
+- **Purpose:** Retrieve full published exam content (passages, groups, questions) and saved answers for an active attempt.
+- **Authentication:** Required (`Bearer <token>` header or `ib_session` HTTP-only cookie).
+- **Authorization & Security Guards:**
+  - **Ownership:** Scoped strictly to `attempt.userId === session.user.id`. Access by any other user returns `403 Forbidden` (`FORBIDDEN_ATTEMPT_ACCESS`).
+  - **Status:** Requires `attempt.status === 'IN_PROGRESS'`. Other statuses return `409 Conflict` (`ATTEMPT_NOT_IN_PROGRESS`).
+  - **Authoritative Deadline:** Evaluated against database clock (`SELECT NOW() as db_now`). If `db_now >= attempt.expiresAt`, access is rejected with `403 Forbidden` (`ATTEMPT_EXPIRED`).
+  - **Strict Answer Key Containment:** `acceptedAnswers`, `explanation`, and `bandConversionTable` are completely omitted from the response.
+- **Response (200 OK):**
+  ```json
+  {
+    "success": true,
+    "data": {
+      "attempt": {
+        "id": "cuid_attempt_123",
+        "testId": "cuid_test_1",
+        "testSlug": "academic-reading-mock-01",
+        "testTitle": "Academic Reading · Mock Test 01",
+        "testVersionId": "cmw86bndp005wlqu6v8yuiwsx",
+        "versionNumber": 1,
+        "status": "IN_PROGRESS",
+        "startedAt": "2026-11-09T00:45:00.000Z",
+        "expiresAt": "2026-11-09T01:45:00.000Z",
+        "durationMinutes": 60,
+        "totalQuestions": 40,
+        "serverTime": "2026-11-09T00:45:00.000Z",
+        "remainingSeconds": 3600
+      },
+      "sections": [
+        {
+          "id": "sec_1",
+          "orderIndex": 1,
+          "title": "The Bicycle: From Wooden Hobby-Horse to Everyday Machine",
+          "passageText": "...",
+          "questionGroups": [
+            {
+              "id": "grp_1",
+              "orderIndex": 1,
+              "instruction": "Do the following statements agree with the information in Reading Passage 1? Write TRUE, FALSE, or NOT GIVEN.",
+              "questionType": "TRUE_FALSE_NOT_GIVEN",
+              "wordLimit": null,
+              "contextOptions": null,
+              "questions": [
+                {
+                  "id": "q_1",
+                  "questionNumber": 1,
+                  "prompt": "Karl von Drais was an engineer by profession.",
+                  "options": null
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "savedAnswers": [
+        {
+          "questionId": "q_1",
+          "answerText": "FALSE",
+          "isFlaggedForReview": false,
+          "lastSavedAt": "2026-11-09T00:46:12.000Z"
+        }
+      ]
+    }
+  }
+  ```
+- **Errors:**
+  - `401 Unauthorized` (unauthenticated).
+  - `400 Bad Request` (invalid attempt ID).
+  - `403 Forbidden` (`FORBIDDEN_ATTEMPT_ACCESS` or `ATTEMPT_EXPIRED`).
+  - `404 Not Found` (attempt not found).
+  - `409 Conflict` (`ATTEMPT_NOT_IN_PROGRESS`).
 
 ### `POST /api/exam/[attemptId]/save`
 - **Purpose:** Debounced autosave endpoint for student answers with row-level locking.
