@@ -489,16 +489,18 @@ If the codebase and documentation disagree, investigate the actual implementatio
   - Row-level locking (`SELECT FOR UPDATE`) defined for autosave and finalization, resolving deadline races.
   - Strict deadline enforcement: late manual submissions route to `TIMED_OUT`; premature timeouts rejected.
   - PostgreSQL row-level and statement-level triggers protecting published tables against UPDATE, DELETE, and TRUNCATE.
-  - 10/10 automated verification tests executed and passed on disposable PostgreSQL 17 test cluster (zero impact on Neon).
-  - Prisma schema validated and Prisma Client (v6.19.3) generated without errors.
-- Master implementation plan updated and prioritized for Reading MVP (`docs/IMPLEMENTATION_PLAN.md`).
-- API specification updated (`docs/API.md`).
+- **Initial Neon Database Migration Applied & Verified:**
+  - Dedicated, isolated database `ielts_bangla` created on the Neon cluster to safeguard existing databases (`cognivex`, `neondb`, `vat_tax_hub`).
+  - Migration `20261108000000_init_reading_schema` applied via `prisma migrate deploy` (exit code: 0).
+  - Verified 14 application tables, 6 enums, 15 foreign keys, partial unique index, and 10 immutability triggers.
+  - Zero schema drift reported by `prisma migrate diff`.
+  - Zero seed rows inserted (clean state confirmed).
 
 ## In Progress / Immediate Next Milestones
 
-- Final Technical Founder Approval for Database Migration.
+- Post-Migration Review by Technical Founder.
 - M1: Project Foundation & Tooling (Vitest test runner setup, base design tokens).
-- M2: Database Migration & Seeding with Triggers (Prisma migration against Neon, seed Mock Test 01).
+- Seed Mock Test 01 into Neon (awaiting approval).
 - M3: Minimal Authentication (Credentials login/register, session cookie, role guard).
 - M4: Publishing Service with Integrity Validation.
 - M5 & M6: Reading Examination Engine & Deterministic Scoring Engine.
