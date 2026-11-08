@@ -1,0 +1,5 @@
+# Build and deploy exclusions
+scratch
+docs
+resource
+*.tsbuildinfo
