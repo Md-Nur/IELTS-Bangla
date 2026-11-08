@@ -494,16 +494,19 @@ If the codebase and documentation disagree, investigate the actual implementatio
   - Migration `20261108000000_init_reading_schema` applied via `prisma migrate deploy` (exit code: 0).
   - Verified 14 application tables, 6 enums, 15 foreign keys, partial unique index, and 10 immutability triggers.
   - Zero schema drift reported by `prisma migrate diff`.
-  - Zero seed rows inserted (clean state confirmed).
+- **Mock Test 01 Seeded & Published on Neon (`ielts_bangla`):**
+  - Executed idempotent seed script creating root `Test` (`cmw86bhej0000lqu6kjmymj46`) and draft hierarchy (3 passages, 8 groups, 40 questions, 54 accepted answers).
+  - Published immutable `PublishedTestVersion` Version 1 (`cmw86bndp005wlqu6v8yuiwsx`) with complete MOCK_01_BAND_TABLE.
+  - Verified with independent post-seed audit (`scratch/neon_post_seed_verify.ts`): question continuity 1..40, exact answer key matching, word limit rules, and database trigger immutability verified against Neon.
 
 ## In Progress / Immediate Next Milestones
 
-- Post-Migration Review by Technical Founder.
-- M1: Project Foundation & Tooling (Vitest test runner setup, base design tokens).
-- Seed Mock Test 01 into Neon (awaiting approval).
-- M3: Minimal Authentication (Credentials login/register, session cookie, role guard).
-- M4: Publishing Service with Integrity Validation.
-- M5 & M6: Reading Examination Engine & Deterministic Scoring Engine.
+- Post-Migration & Seed Review by Technical Founder.
+- Reading Student Workflow Implementation:
+  - Authentication & Session System (Credentials/Stateless Cookie).
+  - Reading Exam APIs (`/api/exam/start`, `/api/exam/[attemptId]`, `/api/exam/[attemptId]/save`, `/api/exam/[attemptId]/submit`, `/api/exam/[attemptId]/timeout`).
+  - Reading CD-IELTS Examination Interface (Split-pane layout, countdown timer, question palette, autosave hook).
+  - Results & Answer Review Interface (`/results/[attemptId]`).
 
 ---
 

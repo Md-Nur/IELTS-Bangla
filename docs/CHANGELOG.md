@@ -19,8 +19,10 @@ All notable changes, architectural decisions, and milestones for this project wi
 - **Draft-to-Published Publishing Service:**
   - Implemented `lib/services/testPublishing.ts` with validation of draft question continuity, accepted answer non-emptiness, and atomic deep-copy across the published composite foreign key hierarchy inside a database transaction.
   - Authored unit test suite in `lib/services/__tests__/testPublishing.test.ts` (5 tests).
-- **Orchestrated Seed Script:**
-  - Authored `prisma/seed.ts` to idempotently seed draft tables and publish Version 1. Guarded against execution until founder approval.
+- **Mock Test 01 Seeded & Published to Dedicated Neon Database (`ielts_bangla`):**
+  - Executed idempotent seed inserting root `Test` (`Academic Reading · Mock Test 01`, slug: `academic-reading-mock-01`), 3 draft sections, 8 draft question groups, 40 draft questions, and 54 draft accepted answers.
+  - Published immutable `PublishedTestVersion` Version 1 (`cmw86bndp005wlqu6v8yuiwsx`) via `publishDraftTestVersion`.
+  - Executed post-seed verification against live Neon cluster: verified 100% question numbering continuity (1..40), accepted answer precision (e.g. Q9 `air-filled` and `air filled`, Q21 `overflows`, Q22 `islands`, Q37-40 options only `A`, `C`, `D`, `E`), and live immutability trigger blocks against `UPDATE` and `DELETE`.
 - **Mock Test 01 Content Verification Report:**
   - Published `docs/MOCK_01_VERIFICATION.md` detailing all 40 questions, accepted answers, alternative variants, word limits, and paragraph rationales for founder review.
 - **Initial Neon Database Migration Successfully Applied (`20261108000000_init_reading_schema`):**

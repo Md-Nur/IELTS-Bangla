@@ -4,7 +4,7 @@
 **Date:** 2026-11-09  
 **Module:** Academic Reading  
 **Test Identifier:** `academic-reading-mock-01`  
-**Database Status:** Verified on disposable PostgreSQL 17 cluster (`localhost:5433`). **Zero rows committed to Neon PostgreSQL.**
+**Database Status:** Seeded into dedicated Neon PostgreSQL database `ielts_bangla` (Published Version ID: `cmw86bndp005wlqu6v8yuiwsx`) and verified with independent post-seed audit.
 
 ---
 
