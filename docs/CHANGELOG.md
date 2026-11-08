@@ -5,10 +5,21 @@ All notable changes, architectural decisions, and milestones for this project wi
 ## [Unreleased] - 2026-11-08
 
 ### Added
-- Complete project context analysis in `docs/PROJECT_CONTEXT.md` (synchronized from root).
-- Comprehensive resource analysis in `docs/RESOURCE_ANALYSIS.md` detailing all assets in `resource/`, question structures, licensing considerations, and discovery of `Mock_01_Test.pdf`.
-- Database architecture and normalized Prisma schema specification in `docs/DATABASE.md` supporting immutable test versions, atomic autosave, server-side scoring, and band conversion tables.
-- Master development roadmap and 12-milestone engineering plan in `docs/IMPLEMENTATION_PLAN.md`.
-- Living API contract specification in `docs/API.md`.
-- Initial environment verification confirming reachability of AWS Neon PostgreSQL instance on port 5432.
-- Verified Next.js 16.4.5, React 19, and Tailwind CSS v4 baseline build and linting.
+- **Revised Database Architecture & Immutability Specification (`docs/DATABASE.md`):**
+  - Fully separated editable draft test models (`Test`, `DraftSection`, `DraftQuestionGroup`, `DraftQuestion`, `DraftAcceptedAnswer`) from immutable published test models (`PublishedTestVersion`, `PublishedSection`, `PublishedQuestionGroup`, `PublishedQuestion`, `PublishedAcceptedAnswer`).
+  - Implemented multi-level composite foreign key relationships (`[testVersionId, id]`) across the published hierarchy, ensuring relational prevention of cross-version question corruption.
+  - Linked `StudentAnswer` via composite foreign keys to both `TestAttempt[id, testVersionId]` and `PublishedQuestion[testVersionId, id]`, making cross-version question referencing mathematically and relationally impossible.
+  - Enforced continuous, unique question numbering across test versions via `@@unique([testVersionId, questionNumber])`.
+  - Defined PostgreSQL trigger strategy and relational `onDelete: Restrict` for immutable snapshot protection.
+  - Designed single transaction-safe finalization service supporting both manual `SUBMITTED` and automated `TIMED_OUT` states with concurrency mutex, authoritative server timing, and idempotent result return.
+  - Resolved exact Academic Reading band conversion table directly from `resource/Mock_01_Answer_Key.pdf`.
+- **Revised API Contracts (`docs/API.md`):**
+  - Detailed `/submit` and `/timeout` contracts with shared idempotency and state transitions.
+  - Documented complete `EvaluationResult` audit schema (`scoringVersion`, `scoringConfig`, `sectionBreakdown`, `questionBreakdown`).
+- **Revised Implementation Plan (`docs/IMPLEMENTATION_PLAN.md`):**
+  - Re-ordered milestones to prioritize a working Reading MVP first (Foundation -> DB & Prisma -> Minimal Auth -> Minimal Publishing Service -> Reading Exam Engine -> Scoring Engine -> Results Review) before broad admin dashboards.
+- **Prisma Schema Specification (`prisma/schema.prisma`):**
+  - Cleaned up redundant indexes on unique fields.
+  - Made `User.passwordHash` nullable for clean OAuth extensibility.
+  - Replaced boolean `Test.isPublished` with `TestStatus` enum and version-based publication state.
+  - Made `StudentAnswer.scoreAwarded` and `isCorrect` nullable without default.

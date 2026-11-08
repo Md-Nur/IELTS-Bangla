@@ -1,92 +1,154 @@
-# Database Architecture & Design — IELTS Bangla (Revised)
+# Database Architecture & Design — IELTS Bangla
 
 **Document type:** Living Database Specification  
 **Project:** IELTS Bangla  
 **Author:** Software Architect & Database Engineer  
-**Status:** Revised Architecture Proposal (Phase 1: Reading MVP)  
+**Status:** Revised Final Proposal (Pre-Migration Architecture Review)  
 **Last updated:** 2026-11-08  
 
 ---
 
-## 1. Overview & Architectural Principles
+## 1. Database Environment & Connection
 
-The database schema is engineered specifically for an online, computer-delivered IELTS (CD-IELTS) testing system where **correctness, examination integrity, referential consistency, and historical auditability** are paramount.
+- **Provider:** Neon Serverless PostgreSQL
+- **Host Region:** `ap-southeast-1` (AWS Singapore, low latency for Bangladesh/Asia-Pacific)
+- **Connection Mode:** Pooled connection via PgBouncer (`-pooler` endpoint) for resilient serverless connection handling.
+- **ORM:** Prisma ORM with standard PostgreSQL migrations.
 
-### Core Architectural Principles:
-
-1. **Strict Separation of Drafts and Published Snapshots:**
-   - **Drafts (`Test`, `DraftSection`, `DraftQuestionGroup`, `DraftQuestion`, `DraftAcceptedAnswer`):** Fully mutable by administrators. Used to author, revise, reorder, preview, and refine test passages, questions, and explanations.
-   - **Published Snapshots (`PublishedTestVersion`, `PublishedSection`, `PublishedQuestionGroup`, `PublishedQuestion`, `PublishedAcceptedAnswer`):** Frozen, immutable snapshots created at publication time.
-   - Once a version is published, it is never mutated in place. If an administrator edits the draft and publishes again, a new version snapshot (`versionNumber = 2`) is generated.
-2. **Cross-Table Referential Integrity (Version Pinning):**
-   - A `StudentAnswer` cannot reference a question belonging to another test version. This is enforced at the database engine level via composite foreign keys sharing `testVersionId`.
-3. **Continuous Question Number Uniqueness:**
-   - IELTS Reading tests are numbered continuously from 1 to 40 across all three passages. A unique constraint on `(testVersionId, questionNumber)` guarantees that no test version contains duplicate question numbers or numbering gaps.
-4. **Authoritative Server Timestamps:**
-   - Client clocks are untrusted. Test duration, expiration, remaining time, and submission validity are computed and enforced solely using database-recorded server timestamps (`startedAt`, `expiresAt`, `submittedAt`).
-5. **Deterministic, Non-Fuzzy Scoring:**
-   - Only explicitly configured accepted answers are credited. No fuzzy, phonetic (Soundex), stemming, or semantic matching is permitted. Whitespace normalization, case insensitivity, and word count enforcement are strictly applied.
-6. **Idempotent, Transaction-Safe Submission:**
-   - Atomic conditional transitions prevent duplicate scoring and race conditions under network retries or repeated submission clicks.
+### Security Configuration
+- The database connection string is stored securely in `.env` as `DATABASE_URL` (with fallback support for `DATA_BASE`).
+- Secrets and credentials must never be committed to git or exposed in client bundles.
+- Direct database credentials are not logged or returned in error responses.
 
 ---
 
-## 2. Relational Architecture Diagram
+## 2. Core Architectural Principles & Revisions
+
+### 2.1. Complete Separation of Draft vs. Published Snapshots
+To preserve absolute examination integrity and historical auditability:
+- **Draft Entities (`Test`, `DraftSection`, `DraftQuestionGroup`, `DraftQuestion`, `DraftAcceptedAnswer`):** Fully editable by administrators. Any passage revision, question re-numbering, or prompt correction happens in the draft domain without risking active student sessions.
+- **Published Entities (`PublishedTestVersion`, `PublishedSection`, `PublishedQuestionGroup`, `PublishedQuestion`, `PublishedAcceptedAnswer`):** Created when an admin executes a "Publish" action. A full, frozen, deep copy of the draft is created with an incremented `versionNumber`. Once created, this data is immutable.
+
+### 2.2. Version Integrity via Composite Foreign Keys
+In hierarchical document schemas, a simple foreign key (e.g. `questionGroupId`) cannot prove at the database level that the parent group belongs to the exact same test version as the question.
+
+We solve this using **composite foreign keys** that cascade `testVersionId` through every level of the hierarchy:
+1. `PublishedSection` has composite unique key `@@unique([testVersionId, id])`.
+2. `PublishedQuestionGroup` references `PublishedSection` via `(testVersionId, sectionId)`.
+3. `PublishedQuestionGroup` has composite unique key `@@unique([testVersionId, id])`.
+4. `PublishedQuestion` references `PublishedQuestionGroup` via `(testVersionId, questionGroupId)`.
+5. `PublishedAcceptedAnswer` references `PublishedQuestion` via `(testVersionId, questionId)`.
+6. `TestAttempt` has composite unique key `@@unique([id, testVersionId])`.
+7. `StudentAnswer` references `TestAttempt` via `(attemptId, testVersionId)` **AND** references `PublishedQuestion` via `(testVersionId, questionId)`.
+
+> [!IMPORTANT]
+> Because `StudentAnswer` binds both the `TestAttempt` and `PublishedQuestion` to the **same** `testVersionId` column, it is **relationally impossible** for a student answer to point to a question belonging to another test version.
+
+### 2.3. Uniqueness of Question Numbering
+Within any `PublishedTestVersion`, question numbers (1 to 40) must be continuous, ordered, and unique across the entire test booklet (not just within an individual passage).
+- Enforced by: `@@unique([testVersionId, questionNumber])` in `PublishedQuestion`.
+- Any attempt to publish a test version with missing or duplicated question numbers will fail database validation.
+
+### 2.4. Protection of Published Content
+- **Relational `onDelete: Restrict`:** Every relation pointing to or within the published hierarchy uses `onDelete: Restrict`. This prevents accidental deletion of tests, versions, sections, questions, or answers if any dependencies (or student attempts) exist.
+- **Database Trigger Enforcement:** In the initial migration, PostgreSQL triggers will be attached to published tables:
+  ```sql
+  CREATE OR REPLACE FUNCTION prevent_published_data_modification()
+  RETURNS TRIGGER AS $$
+  BEGIN
+    IF TG_OP = 'DELETE' THEN
+      RAISE EXCEPTION 'Immutable snapshot violation: Deleting published test content is prohibited.';
+    ELSIF TG_OP = 'UPDATE' THEN
+      -- Only allow isArchived to be toggled on PublishedTestVersion
+      IF TG_TABLE_NAME = 'PublishedTestVersion' AND
+         (OLD.title = NEW.title AND OLD.testId = NEW.testId AND OLD.versionNumber = NEW.versionNumber AND
+          OLD.durationMinutes = NEW.durationMinutes AND OLD.totalQuestions = NEW.totalQuestions AND
+          OLD.bandConversionTable = NEW.bandConversionTable) THEN
+        RETURN NEW;
+      END IF;
+      RAISE EXCEPTION 'Immutable snapshot violation: Modifying published test content is prohibited.';
+    END IF;
+    RETURN NEW;
+  END;
+  $$ LANGUAGE plpgsql;
+  ```
+- **Archiving Policy:** Archiving (`isArchived = true`) removes a version from the active student test catalog without deleting a single byte of passage, question, or attempt history.
+
+---
+
+## 3. Entity-Relationship Model (Reading MVP)
 
 ```mermaid
 erDiagram
-    User ||--o{ TestAttempt : "takes"
-    
+    User ||--o{ TestAttempt : "undertakes"
     Test ||--o{ DraftSection : "drafts"
+    Test ||--o{ PublishedTestVersion : "publishes"
+    
     DraftSection ||--o{ DraftQuestionGroup : "contains"
     DraftQuestionGroup ||--o{ DraftQuestion : "contains"
-    DraftQuestion ||--o{ DraftAcceptedAnswer : "accepts"
+    DraftQuestion ||--o{ DraftAcceptedAnswer : "has"
 
-    Test ||--o{ PublishedTestVersion : "publishes (1..N)"
     PublishedTestVersion ||--o{ PublishedSection : "freezes"
-    PublishedSection ||--o{ PublishedQuestionGroup : "freezes"
-    PublishedQuestionGroup ||--o{ PublishedQuestion : "freezes"
-    PublishedQuestion ||--o{ PublishedAcceptedAnswer : "freezes"
+    PublishedTestVersion ||--o{ TestAttempt : "attempted via"
+    PublishedSection ||--o{ PublishedQuestionGroup : "freezes (version-locked)"
+    PublishedQuestionGroup ||--o{ PublishedQuestion : "freezes (version-locked)"
+    PublishedQuestion ||--o{ PublishedAcceptedAnswer : "freezes (version-locked)"
 
-    PublishedTestVersion ||--o{ TestAttempt : "attemped via"
-    TestAttempt ||--o{ StudentAnswer : "submits"
-    PublishedQuestion ||--o{ StudentAnswer : "evaluates"
-    TestAttempt ||--o| EvaluationResult : "scores"
+    TestAttempt ||--o{ StudentAnswer : "contains (version-locked)"
+    PublishedQuestion ||--o{ StudentAnswer : "answers (version-locked)"
+    TestAttempt ||--o| EvaluationResult : "produces (atomic)"
 
     User {
         string id PK
         string email UK
         string name
-        string passwordHash
+        string passwordHash "nullable for future OAuth"
         enum role "STUDENT, ADMIN"
-        datetime emailVerified
-        string phone
-        float targetBand
-        datetime examDate
-        boolean isActive
+        datetime createdAt
+        datetime updatedAt
     }
 
     Test {
         string id PK
         string title
         string slug UK
-        enum module "READING"
+        enum module "READING, LISTENING, WRITING, SPEAKING"
         enum category "ACADEMIC, GENERAL_TRAINING"
+        enum status "DRAFT, ARCHIVED"
         int durationMinutes
         int totalQuestions
-        boolean isPublished
+        int currentPublishedVersionNumber "nullable"
     }
 
     PublishedTestVersion {
         string id PK
         string testId FK
-        int versionNumber
+        int versionNumber UK_per_test
         string title
         int durationMinutes
         int totalQuestions
         json bandConversionTable
         boolean isArchived
         datetime publishedAt
+    }
+
+    PublishedSection {
+        string id PK
+        string testVersionId FK
+        int orderIndex
+        string title
+        string passageText
+    }
+
+    PublishedQuestionGroup {
+        string id PK
+        string testVersionId FK
+        string sectionId FK
+        int orderIndex
+        string instruction
+        enum questionType
+        int wordLimit
+        json contextOptions
     }
 
     PublishedQuestion {
@@ -99,14 +161,23 @@ erDiagram
         string explanation
     }
 
+    PublishedAcceptedAnswer {
+        string id PK
+        string testVersionId FK
+        string questionId FK
+        string acceptedText
+        boolean isCaseSensitive
+        int orderIndex
+    }
+
     TestAttempt {
         string id PK
         string userId FK
         string testVersionId FK
         enum status "IN_PROGRESS, SUBMITTED, TIMED_OUT, ABANDONED"
         datetime startedAt
-        datetime expiresAt
-        datetime submittedAt
+        datetime expiresAt "server authoritative"
+        datetime submittedAt "server authoritative"
         int timeSpentSeconds
         int rawScore
         float estimatedBand
@@ -119,8 +190,8 @@ erDiagram
         string questionId FK
         string answerText
         boolean isFlaggedForReview
-        boolean isCorrect
-        int scoreAwarded
+        boolean isCorrect "nullable while in-progress"
+        int scoreAwarded "nullable while in-progress"
         datetime lastSavedAt
     }
 
@@ -133,182 +204,92 @@ erDiagram
         int totalIncorrect
         int rawScore
         float estimatedBand
+        string scoringVersion
+        json scoringConfig
         json sectionBreakdown
+        json questionBreakdown
         datetime evaluatedAt
     }
 ```
 
 ---
 
-## 3. Critical Relational Constraints & Guarantees
+## 4. Complete Prisma Schema Specification
 
-### 3.1. Enforcing Version Integrity on Student Answers
+The complete schema is maintained at [`prisma/schema.prisma`](file:///Users/md.nurealamsiddiquee/Projects/ielts-bangla/prisma/schema.prisma).
 
-**Problem:** In a naive schema, `StudentAnswer` references `attemptId` and `questionId`. A compromised client or code defect could submit an `attemptId` belonging to Test Version 1 with a `questionId` belonging to Test Version 2, corrupting scoring and analytics.
-
-**Solution:** Composite Foreign Key Constraints.
-1. `TestAttempt` defines a unique constraint on `(id, testVersionId)`.
-2. `PublishedQuestion` defines a unique constraint on `(id, testVersionId)`.
-3. `StudentAnswer` stores `attemptId`, `testVersionId`, and `questionId`.
-4. `StudentAnswer` declares two composite foreign keys:
-   ```sql
-   FOREIGN KEY (attemptId, testVersionId)
-     REFERENCES "TestAttempt"(id, "testVersionId")
-     ON DELETE CASCADE;
-
-   FOREIGN KEY (questionId, testVersionId)
-     REFERENCES "PublishedQuestion"(id, "testVersionId")
-     ON DELETE RESTRICT;
-   ```
-**Mathematical Guarantee:** Because both foreign keys share the identical `testVersionId` attribute on `StudentAnswer`, it is physically impossible for a student answer to reference a question belonging to any test version other than the one bound to the attempt.
-
-### 3.2. Question Numbering Uniqueness
-
-In IELTS Academic Reading, questions run continuously from 1 to 40 (Passage 1: 1–13, Passage 2: 14–26, Passage 3: 27–40).
-- We enforce:
-  ```prisma
-  @@unique([testVersionId, questionNumber])
-  ```
-- No duplicate question numbers can exist within the same version.
-- Publishing validation verifies that questions form a contiguous set from 1 to `totalQuestions` (40).
-
-### 3.3. Protection of Published Versions from Modification and Deletion
-
-1. **Referential Restriction (`onDelete: Restrict`):**
-   - `TestAttempt` references `PublishedTestVersion` with `onDelete: Restrict`.
-   - `StudentAnswer` references `PublishedQuestion` with `onDelete: Restrict`.
-   - Once a student initiates an attempt, PostgreSQL will reject any `DELETE` operation on that `PublishedTestVersion` or its child questions.
-2. **Draft Deletion Protection:**
-   - `PublishedTestVersion` references `Test` with `onDelete: Restrict`. An administrator cannot delete a parent `Test` if published versions with user attempts exist.
-3. **Application Immutability:**
-   - The application exposes zero `UPDATE` or `DELETE` endpoints for published versions, sections, question groups, questions, or accepted answers.
-   - The only permissible administrative action on a published version is setting `isArchived: true` (soft archive) to hide it from new student attempt listings.
+Key features of this revised schema:
+- **Cleaned Up Redundancies:**
+  - Removed duplicate `@@index([email])` on `User.email` (already `@unique`).
+  - Removed duplicate `@@index([slug])` on `Test.slug` (already `@unique`).
+  - Removed duplicate `@@index([attemptId])` on `EvaluationResult.attemptId` (already `@unique`).
+  - Replaced boolean `Test.isPublished` with `TestStatus` enum (`DRAFT`, `ARCHIVED`) and `currentPublishedVersionNumber Int?`. Live playable state is determined by whether an active `PublishedTestVersion` exists.
+- **Future-Proof Auth:**
+  - `User.passwordHash` is `String?` (nullable) to accommodate future passwordless magic links or OAuth SSO without schema migrations.
+- **Deterministic Nullability:**
+  - `StudentAnswer.scoreAwarded` and `isCorrect` are nullable without default, accurately representing that grading only takes place upon submission or timeout finalization.
 
 ---
 
-## 4. Transaction Strategy & Idempotency
+## 5. Submission & Timeout Transaction Strategy
 
-### 4.1. Safe, Idempotent Submission & Scoring Transaction
+A single shared service handles both user-initiated submissions and automated timeout sweeps:
 
-When a student clicks "Submit" or when the server auto-submits an expired test:
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Client
-    participant Server as Next.js API / Action
-    participant DB as PostgreSQL Transaction
-
-    Client->>Server: POST /api/exam/[attemptId]/submit
-    Server->>DB: BEGIN TRANSACTION
-    Server->>DB: UPDATE "TestAttempt" SET status = 'SUBMITTED', submittedAt = NOW() WHERE id = attemptId AND status = 'IN_PROGRESS' RETURNING *
-    alt Attempt already submitted / timed out (0 rows updated)
-        DB-->>Server: 0 rows returned
-        Server->>DB: SELECT * FROM "EvaluationResult" WHERE attemptId = attemptId
-        Server->>DB: COMMIT
-        Server-->>Client: 200 OK (Return existing EvaluationResult)
-    else Attempt successfully locked (1 row updated)
-        DB-->>Server: Locked Attempt Row
-        Server->>DB: SELECT * FROM "PublishedQuestion" + "PublishedAcceptedAnswer" WHERE testVersionId = attempt.testVersionId
-        Server->>DB: SELECT * FROM "StudentAnswer" WHERE attemptId = attempt.id
-        Note over Server: Execute Deterministic Scoring Engine<br/>- Normalize whitespace & case<br/>- Enforce word limits<br/>- Match against explicit AcceptedAnswers
-        Server->>DB: BATCH UPDATE "StudentAnswer" (isCorrect, scoreAwarded)
-        Server->>DB: Calculate rawScore & lookup estimatedBand
-        Server->>DB: INSERT INTO "EvaluationResult" (...)
-        Server->>DB: UPDATE "TestAttempt" SET rawScore = ..., estimatedBand = ..., timeSpentSeconds = ...
-        Server->>DB: COMMIT
-        Server-->>Client: 200 OK (Scored Results)
-    end
+```
+finalizeAndScoreAttempt(attemptId: string, options: { reason: 'MANUAL' | 'TIMEOUT', actorUserId?: string })
 ```
 
-### 4.2. Atomic Autosave (`saveAnswer`)
-
-- Autosave uses an atomic upsert on `StudentAnswer` indexed by `(attemptId, questionId)`.
-- Condition: The attempt must be `IN_PROGRESS` and `NOW() <= expiresAt + GRACE_PERIOD (5 seconds)`.
-- If expired, the mutation is rejected with `403 Forbidden: Attempt has expired`.
-
----
-
-## 5. Strict Scoring Rules (No Fuzzy Matching)
-
-The scoring engine adheres strictly to deterministic IELTS marking principles:
-
-1. **No Fuzzy / Semantic Matching:**
-   - No Levenshtein distance, phonetic algorithms (Soundex), stemming, or LLM-based approximations.
-   - A student answer is correct if and only if its normalized string matches an explicit `AcceptedAnswer` record configured for that question.
-2. **Whitespace Normalization:**
-   - Leading and trailing spaces are trimmed.
-   - Internal sequences of whitespace (spaces, tabs, newlines) are collapsed into a single ASCII space ` ` (e.g. `"mass   production"` $\rightarrow$ `"mass production"`).
-3. **Case Insensitivity:**
-   - Normalized strings are compared case-insensitively using unicode-aware lowercasing, unless `isCaseSensitive: true` is explicitly marked on `AcceptedAnswer`.
-   - Examples: `"FALSE"` matches `"false"` and `"False"`. `"iii"` matches `"III"`.
-4. **Word Limit Enforcement:**
-   - Questions specifying word constraints (e.g., `NO MORE THAN TWO WORDS`) are strictly checked:
-     ```ts
-     const wordCount = answerText.trim().split(/\s+/).length;
-     if (group.wordLimit && wordCount > group.wordLimit) {
-       return { isCorrect: false, score: 0 }; // Exceeding word limit is strictly 0 marks
+### Concurrency & Atomicity Guarantee
+1. **Pessimistic Transition Mutex:**
+   ```typescript
+   const updated = await tx.testAttempt.updateMany({
+     where: {
+       id: attemptId,
+       status: AttemptStatus.IN_PROGRESS,
+     },
+     data: {
+       status: options.reason === 'TIMEOUT' ? AttemptStatus.TIMED_OUT : AttemptStatus.SUBMITTED,
+       submittedAt: now,
      }
-     ```
-   - Hyphenated words (e.g. `air-filled`, `life-cycle`) count as a single word in standard IELTS rules. Both hyphenated and spaced variants must be explicitly recorded in `AcceptedAnswer` if acceptable.
-5. **Alternative Accepted Answers:**
-   - Multiple valid answers (e.g. `fuel prices` vs `rising fuel prices`) must each be stored as separate `AcceptedAnswer` rows.
+   });
+   ```
+   If `updated.count === 0`, another concurrent request (or simultaneous timeout sweep) has already won the transition. The service gracefully queries and returns the committed `EvaluationResult` without duplicating work or throwing an error.
+2. **Authoritative Timestamping:**
+   - Attempt `expiresAt` is set strictly on the server at test creation: `now() + durationMinutes * 60 * 1000`.
+   - `timeSpentSeconds` is computed on the server: `min(round((now - startedAt) / 1000), durationMinutes * 60 + gracePeriod)`.
+3. **All-or-Nothing Atomicity:**
+   The status change, student answer scoring, band calculation, and `EvaluationResult` creation occur within the **same database transaction**. If scoring fails or an exception is thrown, the transaction aborts completely. An attempt is **never left in a dangling SUBMITTED or TIMED_OUT state without an EvaluationResult**.
+4. **Reproducibility Preservation:**
+   Every `EvaluationResult` stores:
+   - `scoringVersion`: e.g. `"reading_v1.0.0"`
+   - `scoringConfig`: JSON snapshot of the exact grading rules and band table.
+   - `questionBreakdown`: Detailed audit record containing the student's answer, correct alternatives, correctness, and marks awarded for every single question.
 
 ---
 
-## 6. Official Band Conversion Matrix (Mock Test 01)
+## 6. Official Mock Test 01 Band Conversion Resolution
 
-Inspected directly from `resource/Mock_01_Answer_Key.pdf` (Page 3).
+Inspected directly from `resource/Mock_01_Answer_Key.pdf` without guesswork:
 
-| Raw Score (out of 40) | Estimated IELTS Band | Official Calibration Note |
-| :---: | :---: | :--- |
-| **39–40** | **9.0** | Expert User |
-| **37–38** | **8.5** | Very Good User |
-| **35–36** | **8.0** | Very Good User |
-| **33–34** | **7.5** | Good User |
-| **30–32** | **7.0** | Good User |
-| **27–29** | **6.5** | Competent User |
-| **23–26** | **6.0** | Competent User |
-| **19–22** | **5.5** | Modest User |
-| **15–18** | **5.0** | Modest User |
-| **13–14** | **4.5** | Limited User |
-| **10–12** | **4.0** | Limited User |
-| **8–9** | **3.5** | Extremely Limited User |
-| **6–7** | **3.0** | Extremely Limited User |
-| **4–5** | **2.5** | Intermittent User (Official lower-bound extension) |
-| **2–3** | **2.0** | Intermittent User (Official lower-bound extension) |
-| **1** | **1.0** | Non User |
-| **0** | **0.0** | Did not attempt |
+| Raw Score (0–40) | Estimated IELTS Band |
+| :--- | :--- |
+| **39–40** | **9.0** |
+| **37–38** | **8.5** |
+| **35–36** | **8.0** |
+| **33–34** | **7.5** |
+| **30–32** | **7.0** |
+| **27–29** | **6.5** |
+| **23–26** | **6.0** |
+| **19–22** | **5.5** |
+| **15–18** | **5.0** |
+| **13–14** | **4.5** |
+| **10–12** | **4.0** |
+| **8–9** | **3.5** |
+| **6–7** | **3.0** |
+| **4–5** | **2.5** |
+| **3** | **2.0** |
+| **2** | **1.5** |
+| **1** | **1.0** |
+| **0** | **0.0** |
 
-### JSON Schema in `PublishedTestVersion.bandConversionTable`:
-```json
-{
-  "testSlug": "academic-reading-mock-01",
-  "totalMarks": 40,
-  "ranges": [
-    { "min": 39, "max": 40, "band": 9.0 },
-    { "min": 37, "max": 38, "band": 8.5 },
-    { "min": 35, "max": 36, "band": 8.0 },
-    { "min": 33, "max": 34, "band": 7.5 },
-    { "min": 30, "max": 32, "band": 7.0 },
-    { "min": 27, "max": 29, "band": 6.5 },
-    { "min": 23, "max": 26, "band": 6.0 },
-    { "min": 19, "max": 22, "band": 5.5 },
-    { "min": 15, "max": 18, "band": 5.0 },
-    { "min": 13, "max": 14, "band": 4.5 },
-    { "min": 10, "max": 12, "band": 4.0 },
-    { "min": 8,  "max": 9,  "band": 3.5 },
-    { "min": 6,  "max": 7,  "band": 3.0 },
-    { "min": 4,  "max": 5,  "band": 2.5 },
-    { "min": 2,  "max": 3,  "band": 2.0 },
-    { "min": 1,  "max": 1,  "band": 1.0 },
-    { "min": 0,  "max": 0,  "band": 0.0 }
-  ]
-}
-```
-
----
-
-## 7. Complete Prisma Schema (`prisma/schema.prisma`)
-
-*(See complete file in `prisma/schema.prisma`)*
+This mapping is stored directly in `PublishedTestVersion.bandConversionTable`, ensuring each published test can have its own calibrated conversion table.

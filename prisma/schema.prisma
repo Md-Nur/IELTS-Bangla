@@ -48,6 +48,11 @@ enum AttemptStatus {
   ABANDONED
 }
 
+enum TestStatus {
+  DRAFT
+  ARCHIVED
+}
+
 // -------------------------------------------------------------
 // USER & AUTHENTICATION
 // -------------------------------------------------------------
@@ -56,7 +61,7 @@ model User {
   id            String        @id @default(cuid())
   email         String        @unique
   name          String?
-  passwordHash  String
+  passwordHash  String?       // Nullable for future OAuth / SSO providers
   role          Role          @default(STUDENT)
   emailVerified DateTime?
   phone         String?
@@ -66,8 +71,6 @@ model User {
   attempts      TestAttempt[]
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
-
-  @@index([email])
 }
 
 // -------------------------------------------------------------
@@ -75,22 +78,22 @@ model User {
 // -------------------------------------------------------------
 
 model Test {
-  id                String                 @id @default(cuid())
-  title             String
-  slug              String                 @unique
-  module            ModuleType             @default(READING)
-  category          TestCategory           @default(ACADEMIC)
-  description       String?                @db.Text
-  durationMinutes   Int                    @default(60)
-  totalQuestions    Int                    @default(40)
-  isPublished       Boolean                @default(false)
-  draftSections     DraftSection[]
-  publishedVersions PublishedTestVersion[]
-  createdAt         DateTime               @default(now())
-  updatedAt         DateTime               @updatedAt
+  id                            String                 @id @default(cuid())
+  title                         String
+  slug                          String                 @unique
+  module                        ModuleType             @default(READING)
+  category                      TestCategory           @default(ACADEMIC)
+  status                        TestStatus             @default(DRAFT)
+  description                   String?                @db.Text
+  durationMinutes               Int                    @default(60)
+  totalQuestions                Int                    @default(40)
+  currentPublishedVersionNumber Int?                   // Denormalized quick lookup for latest version
+  draftSections                 DraftSection[]
+  publishedVersions             PublishedTestVersion[]
+  createdAt                     DateTime               @default(now())
+  updatedAt                     DateTime               @updatedAt
 
   @@index([module, category])
-  @@index([slug])
 }
 
 model DraftSection {
@@ -157,19 +160,18 @@ model DraftAcceptedAnswer {
 // -------------------------------------------------------------
 
 model PublishedTestVersion {
-  id                  String                   @id @default(cuid())
+  id                  String             @id @default(cuid())
   testId              String
-  test                Test                     @relation(fields: [testId], references: [id], onDelete: Restrict)
-  versionNumber       Int                      @default(1)
+  test                Test               @relation(fields: [testId], references: [id], onDelete: Restrict)
+  versionNumber       Int                @default(1)
   title               String
-  durationMinutes     Int                      @default(60)
-  totalQuestions      Int                      @default(40)
-  bandConversionTable Json                     // Exact conversion mapping array/object
-  isArchived          Boolean                  @default(false)
+  durationMinutes     Int                @default(60)
+  totalQuestions      Int                @default(40)
+  bandConversionTable Json               // Version-specific conversion mapping array/object
+  isArchived          Boolean            @default(false)
   sections            PublishedSection[]
-  questions           PublishedQuestion[]
   attempts            TestAttempt[]
-  publishedAt         DateTime                 @default(now())
+  publishedAt         DateTime           @default(now())
 
   @@unique([testId, versionNumber])
   @@index([testId])
@@ -178,21 +180,25 @@ model PublishedTestVersion {
 model PublishedSection {
   id            String                   @id @default(cuid())
   testVersionId String
-  testVersion   PublishedTestVersion     @relation(fields: [testVersionId], references: [id], onDelete: Cascade)
+  testVersion   PublishedTestVersion     @relation(fields: [testVersionId], references: [id], onDelete: Restrict)
   orderIndex    Int                      // 1 = Passage 1, 2 = Passage 2, 3 = Passage 3
   title         String
   passageText   String                   @db.Text
   groups        PublishedQuestionGroup[]
   createdAt     DateTime                 @default(now())
 
+  // Composite unique constraint enabling composite foreign key from PublishedQuestionGroup
+  @@unique([testVersionId, id])
   @@unique([testVersionId, orderIndex])
   @@index([testVersionId])
 }
 
 model PublishedQuestionGroup {
   id             String              @id @default(cuid())
+  testVersionId  String
   sectionId      String
-  section        PublishedSection    @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  // Enforces that question group belongs strictly to a section within the exact same testVersionId
+  section        PublishedSection    @relation(fields: [testVersionId, sectionId], references: [testVersionId, id], onDelete: Restrict)
   orderIndex     Int
   instruction    String              @db.Text
   questionType   QuestionType
@@ -201,16 +207,18 @@ model PublishedQuestionGroup {
   questions      PublishedQuestion[]
   createdAt      DateTime            @default(now())
 
-  @@index([sectionId, orderIndex])
+  // Composite unique constraint enabling composite foreign key from PublishedQuestion
+  @@unique([testVersionId, id])
+  @@index([testVersionId, sectionId, orderIndex])
 }
 
 model PublishedQuestion {
   id              String                    @id @default(cuid())
   testVersionId   String
-  testVersion     PublishedTestVersion      @relation(fields: [testVersionId], references: [id], onDelete: Cascade)
   questionGroupId String
-  questionGroup   PublishedQuestionGroup    @relation(fields: [questionGroupId], references: [id], onDelete: Cascade)
-  questionNumber  Int                       // 1 to 40, continuous across the entire test
+  // Enforces that question belongs strictly to a question group within the exact same testVersionId
+  questionGroup   PublishedQuestionGroup    @relation(fields: [testVersionId, questionGroupId], references: [testVersionId, id], onDelete: Restrict)
+  questionNumber  Int                       // 1 to 40, continuous across the entire published test version
   prompt          String                    @db.Text
   options         Json?
   explanation     String?                   @db.Text
@@ -218,22 +226,24 @@ model PublishedQuestion {
   studentAnswers  StudentAnswer[]
   createdAt       DateTime                  @default(now())
 
-  // Multi-column unique constraints for cross-table referential integrity and number uniqueness
-  @@unique([id, testVersionId])
+  // Multi-column unique constraints for cross-table referential integrity and question numbering uniqueness
+  @@unique([testVersionId, id])
   @@unique([testVersionId, questionNumber])
-  @@index([questionGroupId, questionNumber])
+  @@index([testVersionId, questionGroupId])
 }
 
 model PublishedAcceptedAnswer {
   id              String            @id @default(cuid())
+  testVersionId   String
   questionId      String
-  question        PublishedQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  // Enforces accepted answer belongs strictly to a question within the exact same testVersionId
+  question        PublishedQuestion @relation(fields: [testVersionId, questionId], references: [testVersionId, id], onDelete: Restrict)
   acceptedText    String
   isCaseSensitive Boolean           @default(false)
   orderIndex      Int               @default(0)
   createdAt       DateTime          @default(now())
 
-  @@index([questionId])
+  @@index([testVersionId, questionId])
 }
 
 // -------------------------------------------------------------
@@ -249,7 +259,7 @@ model TestAttempt {
   status           AttemptStatus        @default(IN_PROGRESS)
   startedAt        DateTime             @default(now())
   expiresAt        DateTime             // Server-authoritative submission deadline
-  submittedAt      DateTime?            // Server timestamp when finalized
+  submittedAt      DateTime?            // Server timestamp when finalized (manual submit or timeout)
   timeSpentSeconds Int                  @default(0)
   rawScore         Int?                 // 0 to 40
   estimatedBand    Float?               // e.g. 7.5
@@ -272,14 +282,14 @@ model StudentAnswer {
   answerText         String?           @db.Text
   isFlaggedForReview Boolean           @default(false)
   isCorrect          Boolean?
-  scoreAwarded       Int?              @default(0)
+  scoreAwarded       Int?              // Null while in-progress; 1 or 0 after evaluation
   lastSavedAt        DateTime          @default(now())
 
   // Composite foreign keys enforce:
   // (1) Attempt must exist with matching testVersionId
   // (2) Question must exist within the exact same testVersionId
   attempt            TestAttempt       @relation(fields: [attemptId, testVersionId], references: [id, testVersionId], onDelete: Cascade)
-  question           PublishedQuestion @relation(fields: [questionId, testVersionId], references: [id, testVersionId], onDelete: Restrict)
+  question           PublishedQuestion @relation(fields: [testVersionId, questionId], references: [testVersionId, id], onDelete: Restrict)
 
   @@unique([attemptId, questionId])
   @@index([attemptId])
@@ -287,17 +297,18 @@ model StudentAnswer {
 }
 
 model EvaluationResult {
-  id               String      @id @default(cuid())
-  attemptId        String      @unique
-  attempt          TestAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
-  totalQuestions   Int         @default(40)
-  totalAttempted   Int         @default(0)
-  totalCorrect     Int         @default(0)
-  totalIncorrect   Int         @default(0)
-  rawScore         Int         @default(0)
-  estimatedBand    Float       @default(0.0)
-  sectionBreakdown Json        // Passage-level breakdown: { "passage1": { "correct": 11, "total": 13 }, ... }
-  evaluatedAt      DateTime    @default(now())
-
-  @@index([attemptId])
+  id                String      @id @default(cuid())
+  attemptId         String      @unique
+  attempt           TestAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  totalQuestions    Int         @default(40)
+  totalAttempted    Int         @default(0)
+  totalCorrect      Int         @default(0)
+  totalIncorrect    Int         @default(0)
+  rawScore          Int         @default(0)
+  estimatedBand     Float       @default(0.0)
+  scoringVersion    String      @default("reading_v1.0.0") // Immutable grading logic version
+  scoringConfig     Json        // Immutable snapshot of conversion table and scoring rules used
+  sectionBreakdown  Json        // Passage-level breakdown: { "passage1": { "correct": 11, "total": 13 }, ... }
+  questionBreakdown Json        // Question-by-question scored detail for permanent historical audit
+  evaluatedAt       DateTime    @default(now())
 }

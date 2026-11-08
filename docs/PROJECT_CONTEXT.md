@@ -480,17 +480,25 @@ If the codebase and documentation disagree, investigate the actual implementatio
 - Package manager verified: `bun@1.2.18`.
 - Resource directory analyzed completely (`docs/RESOURCE_ANALYSIS.md`).
 - Neon PostgreSQL connection endpoint (`ep-holy-glitter-a1vqn8z1-pooler.ap-southeast-1.aws.neon.tech`) verified reachable over TLS.
-- Database architecture designed (`docs/DATABASE.md`).
-- Master implementation plan established (`docs/IMPLEMENTATION_PLAN.md`).
-- API specification established (`docs/API.md`).
+- Database architecture designed and revised (`docs/DATABASE.md`, `prisma/schema.prisma`):
+  - Strict separation of editable drafts from immutable published test snapshots.
+  - Multi-level composite foreign keys enforcing version isolation for sections, question groups, questions, accepted answers, and student answers.
+  - Question numbering uniqueness enforced across published test versions (`@@unique([testVersionId, questionNumber])`).
+  - Transaction-safe, idempotent finalization service designed for both manual submission (`SUBMITTED`) and timeout expiration (`TIMED_OUT`).
+  - Scoring reproducibility guaranteed via `scoringVersion` and `scoringConfig` JSON snapshots.
+  - Redundant indexes removed; `User.passwordHash` nullable for future OAuth; `StudentAnswer.scoreAwarded` nullability aligned.
+  - Exact band conversion table resolved directly from `resource/Mock_01_Answer_Key.pdf`.
+- Master implementation plan updated and prioritized for Reading MVP (`docs/IMPLEMENTATION_PLAN.md`).
+- API specification updated (`docs/API.md`).
 
 ## In Progress / Immediate Next Milestones
 
+- Pre-Migration Architectural Approval.
 - M1: Project Foundation & Tooling (Vitest test runner setup, base design tokens).
-- M2: Database & Prisma Configuration (Prisma schema, migrations on Neon, seed Mock Test 01).
-- M3: Authentication & Authorization (Roles: STUDENT, ADMIN).
-- M4 & M5: Admin Dashboard & Test Management.
-- M6 & M7: Reading Test Engine & Deterministic Scoring Engine.
+- M2: Database & Prisma Configuration (Prisma migration against Neon, seed Mock Test 01).
+- M3: Minimal Authentication (Credentials login/register, session cookie, role guard).
+- M4: Minimal Test Management & Publishing Service.
+- M5 & M6: Reading Examination Engine & Deterministic Scoring Engine.
 
 ---
 
