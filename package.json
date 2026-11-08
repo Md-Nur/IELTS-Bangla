@@ -4,14 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "test:watch": "vitest"
-  },
-  "prisma": {
-    "seed": "bun prisma/seed.ts"
+    "test:watch": "vitest",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.4.1",
