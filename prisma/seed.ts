@@ -109,7 +109,7 @@ async function main() {
     console.log(
       `Successfully published Version 1 (${publishResult.publishedVersionId}): ${publishResult.totalQuestions} questions across ${publishResult.sectionsCount} sections.`
     );
-  });
+  }, { timeout: 60000, maxWait: 15000 });
 
   console.log("Seed process completed successfully.");
 }
