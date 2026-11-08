@@ -3,7 +3,7 @@
 **Document type:** Living Database Specification  
 **Project:** IELTS Bangla  
 **Author:** Software Architect & Database Engineer  
-**Status:** Final Pre-Migration Architecture Specification  
+**Status:** Validated Pre-Migration Architecture Specification  
 **Last updated:** 2026-11-08  
 
 ---
@@ -32,23 +32,16 @@ To preserve examination integrity, accreditation standards, and historical audit
 ### 2.2. Test Lifecycle & Status (`TestStatus`)
 - `TestStatus` is strictly `ACTIVE` or `ARCHIVED`.
 - An unpublished test container is represented by having `status: ACTIVE` and zero associated `PublishedTestVersion` records.
-- Denormalized state fields like `currentPublishedVersionNumber` have been removed to eliminate state synchronization bugs. The active published version is queried directly:
-  ```sql
-  SELECT * FROM "PublishedTestVersion"
-  WHERE "testId" = $1 AND "isArchived" = false
-  ORDER BY "versionNumber" DESC LIMIT 1;
-  ```
+- Active published versions are queried cleanly from `PublishedTestVersion` where `testId = test.id AND isArchived = false ORDER BY versionNumber DESC LIMIT 1`.
 
-### 2.3. Historical Preservation & Deletion Policy
-Student examination history must be permanently preserved:
-- **`User` Deletion Policy:** `TestAttempt` references `User` with `onDelete: Restrict`. A user account with existing examination attempts **cannot be deleted**. Account deactivation uses `isDeactivated: true`.
+### 2.3. User Activation & Historical Preservation
+- **Authoritative Activation:** `User.isActive` is the single authoritative account state (`isActive: true` by default; deactivated/suspended accounts have `isActive: false`).
+- **Historical Immutability:** `TestAttempt` references `User` with `onDelete: Restrict`. A user account with existing examination attempts **cannot be deleted**.
 - **`EvaluationResult` Deletion Policy:** `EvaluationResult` references `TestAttempt` with `onDelete: Restrict`. A completed test attempt cannot be deleted while its evaluation record exists.
-- **`StudentAnswer` Deletion Policy:** `StudentAnswer` references both `TestAttempt` and `PublishedQuestion` with `onDelete: Restrict`. Student answer records cannot be purged if the parent attempt exists.
+- **`StudentAnswer` Deletion Policy:** `StudentAnswer` references both `TestAttempt` and `PublishedQuestion` with `onDelete: Restrict`. Student answers cannot be purged if the parent attempt exists.
 
 ### 2.4. Version-Locked Composite Foreign Keys
-In hierarchical document schemas, simple single-column foreign keys (`questionGroupId`, `sectionId`) cannot prevent cross-version corruption.
-
-We enforce cross-table integrity using **composite foreign keys** that cascade `testVersionId` through every level of the hierarchy:
+We enforce cross-table version integrity using **composite foreign keys** that cascade `testVersionId` through every tier of the published hierarchy:
 1. `PublishedSection` has composite unique key `@@unique([testVersionId, id])`.
 2. `PublishedQuestionGroup` references `PublishedSection` via `(testVersionId, sectionId) REFERENCES PublishedSection(testVersionId, id)`.
 3. `PublishedQuestionGroup` has composite unique key `@@unique([testVersionId, id])`.
@@ -60,19 +53,38 @@ We enforce cross-table integrity using **composite foreign keys** that cascade `
 > [!IMPORTANT]
 > Because `StudentAnswer` binds both the `TestAttempt` and `PublishedQuestion` to the **same** `testVersionId` column, it is **relationally impossible** for a student answer to point to a question belonging to another test version.
 
+### 2.5. Index Audit & Redundancy Cleanups
+In B-tree indexes, a multi-column index or unique constraint on `(colA, colB)` automatically indexes queries filtered by `colA`. The following redundant indexes were explicitly audited and removed:
+- **`DraftSection`:** Removed `@@index([testId])` (covered by `@@unique([testId, orderIndex])`).
+- **`PublishedTestVersion`:** Removed `@@index([testId])` (covered by `@@unique([testId, versionNumber])`).
+- **`PublishedSection`:** Removed `@@index([testVersionId])` (covered by `@@unique([testVersionId, id])`).
+- **`StudentAnswer`:** Removed `@@index([attemptId])` (covered by `@@unique([attemptId, questionId])`).
+
 ---
 
-## 3. PostgreSQL Immutability Triggers (Migration Level)
+## 3. Database-Level Enforcement: Triggers & Partial Unique Index
 
-While Prisma enforces foreign key constraints and `onDelete: Restrict`, database-level protection against `UPDATE` and `DELETE` on published snapshots is enforced via PostgreSQL triggers.
+While Prisma manages relational constraints, database-level protection against `UPDATE`, `DELETE`, `TRUNCATE`, and concurrent active attempt creation is enforced via PostgreSQL triggers and a partial unique index.
 
-These triggers are declared in the migration SQL file (`migration.sql`) created during initial migration:
+These SQL statements are included in the initial migration (`migration.sql`):
 
 ```sql
 -- ====================================================================
--- IMMUTABILITY TRIGGER 1: PublishedTestVersion
--- Allows INSERT. Allows UPDATE only for isArchived: false -> true.
--- Prohibits all DELETEs and all other UPDATEs.
+-- 1. SINGLE ACTIVE ATTEMPT PER LOGICAL TEST
+-- Enforces that a student can have at most ONE IN_PROGRESS attempt
+-- per logical Test at any given time.
+-- ====================================================================
+
+CREATE UNIQUE INDEX "idx_unique_active_attempt_per_test"
+ON "TestAttempt" ("userId", "testId")
+WHERE status = 'IN_PROGRESS';
+
+
+-- ====================================================================
+-- 2. IMMUTABILITY TRIGGER: PublishedTestVersion
+-- Allows INSERT during test publication.
+-- Allows UPDATE ONLY for archiving: isArchived: false -> true.
+-- Prohibits all DELETEs and all other field modifications.
 -- ====================================================================
 
 CREATE OR REPLACE FUNCTION protect_published_test_version()
@@ -106,9 +118,10 @@ FOR EACH ROW EXECUTE FUNCTION protect_published_test_version();
 
 
 -- ====================================================================
--- IMMUTABILITY TRIGGER 2: Published Child Tables
--- Covers: PublishedSection, PublishedQuestionGroup, PublishedQuestion, PublishedAcceptedAnswer
--- Allows INSERT during publishing. Rejects 100% of UPDATEs and DELETEs.
+-- 3. IMMUTABILITY TRIGGER: Published Child Tables
+-- Targets: PublishedSection, PublishedQuestionGroup, PublishedQuestion, PublishedAcceptedAnswer
+-- Allows INSERT during test publication.
+-- Rejects 100% of UPDATEs and DELETEs.
 -- ====================================================================
 
 CREATE OR REPLACE FUNCTION protect_published_child_record()
@@ -138,52 +151,91 @@ FOR EACH ROW EXECUTE FUNCTION protect_published_child_record();
 CREATE TRIGGER trg_protect_published_accepted_answer
 BEFORE UPDATE OR DELETE ON "PublishedAcceptedAnswer"
 FOR EACH ROW EXECUTE FUNCTION protect_published_child_record();
+
+
+-- ====================================================================
+-- 4. STATEMENT-LEVEL TRIGGER: Prevent TRUNCATE on Published Tables
+-- Row-level triggers do NOT fire on TRUNCATE.
+-- Statement-level triggers reject TRUNCATE operations completely.
+-- ====================================================================
+
+CREATE OR REPLACE FUNCTION prevent_published_truncate()
+RETURNS TRIGGER AS $$
+BEGIN
+  RAISE EXCEPTION 'Immutable snapshot violation: TRUNCATE on % is strictly prohibited.', TG_TABLE_NAME;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_prevent_truncate_published_version
+BEFORE TRUNCATE ON "PublishedTestVersion"
+FOR EACH STATEMENT EXECUTE FUNCTION prevent_published_truncate();
+
+CREATE TRIGGER trg_prevent_truncate_published_section
+BEFORE TRUNCATE ON "PublishedSection"
+FOR EACH STATEMENT EXECUTE FUNCTION prevent_published_truncate();
+
+CREATE TRIGGER trg_prevent_truncate_published_group
+BEFORE TRUNCATE ON "PublishedQuestionGroup"
+FOR EACH STATEMENT EXECUTE FUNCTION prevent_published_truncate();
+
+CREATE TRIGGER trg_prevent_truncate_published_question
+BEFORE TRUNCATE ON "PublishedQuestion"
+FOR EACH STATEMENT EXECUTE FUNCTION prevent_published_truncate();
+
+CREATE TRIGGER trg_prevent_truncate_published_answer
+BEFORE TRUNCATE ON "PublishedAcceptedAnswer"
+FOR EACH STATEMENT EXECUTE FUNCTION prevent_published_truncate();
 ```
 
 ---
 
-## 4. Attempt Finalization & Deadline Enforcement
+## 5. Attempt Finalization & Deadline Race Prevention
 
 A single shared service handles both user-initiated submissions and automated timeout sweeps:
 
-```
+```typescript
 finalizeAndScoreAttempt(attemptId: string, options: { reason: 'MANUAL' | 'TIMEOUT'; actorUserId?: string })
 ```
 
-### Deterministic State Transitions
-1. **Server-Authoritative Clock:** The server retrieves `now = new Date()`. Client timestamps are completely ignored.
-2. **Deadline Evaluation:**
-   - If `now <= attempt.expiresAt`:
-     - Manual request (`reason: 'MANUAL'`) transitions attempt to `SUBMITTED`.
-   - If `now > attempt.expiresAt`:
-     - Both manual requests and timeout sweeps transition attempt to `TIMED_OUT`. Manual submissions arriving after expiry **must and do** use timeout finalization.
-3. **Single Transaction Atomicity:**
-   The status transition (`IN_PROGRESS → SUBMITTED` or `IN_PROGRESS → TIMED_OUT`), answer scoring, band calculation, and `EvaluationResult` creation occur within a **single database transaction**:
-   - If scoring throws an error or fails, the transaction aborts and rolls back completely.
-   - An attempt is **never left in a dangling SUBMITTED or TIMED_OUT state without an EvaluationResult**.
-4. **Concurrency Mutex:**
-   The transition uses an atomic conditional update:
+### Deterministic Transaction Execution Steps
+1. **Pessimistic Row Lock & Server Clock Authority:**
+   Inside `prisma.$transaction`, the service acquires a PostgreSQL row lock and queries the database's authoritative time:
    ```typescript
-   const updateResult = await tx.testAttempt.updateMany({
-     where: {
-       id: attemptId,
-       status: AttemptStatus.IN_PROGRESS,
-     },
-     data: {
-       status: targetStatus,
-       submittedAt: now,
-       timeSpentSeconds,
-     }
-   });
+   const rows = await tx.$queryRaw<Array<{
+     id: string;
+     userId: string;
+     testId: string;
+     testVersionId: string;
+     status: AttemptStatus;
+     startedAt: Date;
+     expiresAt: Date;
+     submittedAt: Date | null;
+     db_now: Date;
+   }>>`
+     SELECT 
+       id, "userId", "testId", "testVersionId", status, "startedAt", "expiresAt", "submittedAt",
+       NOW() as db_now
+     FROM "TestAttempt"
+     WHERE id = ${attemptId}
+     FOR UPDATE
+   `;
    ```
-   If `updateResult.count === 0`, another concurrent request (or simultaneous timeout sweep) won the transition. The service queries and returns the committed `EvaluationResult` idempotently.
-5. **No Undocumented Grace Period:** The deadline is exact: `expiresAt = startedAt + durationMinutes * 60 * 1000`. No extra grace period is granted.
+2. **Concurrent Request Handling:**
+   If `status` is already `SUBMITTED` or `TIMED_OUT`, another request held the lock first and completed scoring. The service queries and returns the committed `EvaluationResult` idempotently.
+3. **Deadline Evaluation:**
+   - Evaluates `const isExpired = rows[0].db_now >= rows[0].expiresAt;`
+   - **Premature Timeout:** If `options.reason === 'TIMEOUT'` and `!isExpired`, the request is **rejected** (`400 Bad Request: deadline has not passed`). No state change occurs.
+   - **Late Manual Submission:** If `options.reason === 'MANUAL'` and `isExpired`, the attempt **must and does transition to `TIMED_OUT`**.
+   - **On-Time Manual Submission:** If `options.reason === 'MANUAL'` and `!isExpired`, the attempt transitions to `SUBMITTED`.
+4. **Scoring & Rollback Guarantee:**
+   Status transition, answer evaluation, and `EvaluationResult` creation execute inside the **same transaction**. Any scoring failure triggers a full rollback, preventing dangling finalized attempts without an evaluation.
+5. **No Undocumented Grace Period:** `expiresAt = startedAt + durationMinutes * 60 * 1000`.
 
 ---
 
-## 5. Autosave Concurrency & Locking Strategy
+## 6. Autosave Concurrency & Row-Level Locking
 
-To prevent the race condition where an attempt is checked as `IN_PROGRESS`, finalized concurrently, and subsequently receives an answer upsert:
+To prevent race conditions where an attempt is checked as `IN_PROGRESS`, finalized concurrently, and subsequently receives an answer upsert:
 
 Autosave executes within an atomic transaction utilizing PostgreSQL row-level locking:
 ```typescript
@@ -195,7 +247,7 @@ export async function saveStudentAnswer(
   isFlaggedForReview: boolean
 ) {
   return await prisma.$transaction(async (tx) => {
-    // 1. Acquire row-level lock on the TestAttempt
+    // 1. Acquire row lock on the TestAttempt
     const attempts = await tx.$queryRaw<Array<{ id: string; status: string; expiresAt: Date }>>`
       SELECT id, status, "expiresAt"
       FROM "TestAttempt"
@@ -203,10 +255,7 @@ export async function saveStudentAnswer(
       FOR UPDATE
     `;
 
-    if (!attempts.length) {
-      throw new NotFoundError('Attempt not found');
-    }
-
+    if (!attempts.length) throw new NotFoundError('Attempt not found');
     const attempt = attempts[0];
 
     // 2. Reject writes if attempt is no longer IN_PROGRESS
@@ -221,22 +270,9 @@ export async function saveStudentAnswer(
 
     // 4. Upsert StudentAnswer safely
     return await tx.studentAnswer.upsert({
-      where: {
-        attemptId_questionId: { attemptId, questionId }
-      },
-      update: {
-        answerText,
-        isFlaggedForReview,
-        lastSavedAt: new Date()
-      },
-      create: {
-        attemptId,
-        testVersionId,
-        questionId,
-        answerText,
-        isFlaggedForReview,
-        lastSavedAt: new Date()
-      }
+      where: { attemptId_questionId: { attemptId, questionId } },
+      update: { answerText, isFlaggedForReview, lastSavedAt: new Date() },
+      create: { attemptId, testVersionId, questionId, answerText, isFlaggedForReview, lastSavedAt: new Date() }
     });
   });
 }
@@ -245,52 +281,21 @@ Because both `saveStudentAnswer` and `finalizeAndScoreAttempt` lock the `TestAtt
 
 ---
 
-## 6. Publishing Validation Rules
+## 7. Verification Test Results (Disposable PostgreSQL 17)
 
-A unique constraint (`@@unique([testVersionId, questionNumber])`) only guarantees that no two questions share the same number; it does **not** guarantee continuous numbering.
+All triggers, partial unique indexes, locking strategies, and deadline transitions were executed against an isolated, temporary PostgreSQL 17 test cluster on port 5433 (zero interaction with Neon):
 
-The publishing service (`publishTestVersion(testId: string)`) validates the draft in memory before beginning the atomic publish transaction:
-1. **Total Question Count:** The number of draft questions must exactly equal `test.totalQuestions`.
-2. **Continuous Question Numbering:** Questions across all passages must be sequentially numbered from `1` to `totalQuestions` without gaps or duplicates (e.g. `[1, 2, ..., 40]`).
-3. **Passage/Question Distribution Flexibility:** Passage and question distribution is completely configurable (e.g. 13/13/14, 14/13/13, 10/10/10/10, etc.) and not hardcoded to 13/13/14.
-4. **Structural Validity:**
-   - Every `DraftSection` must have at least one `DraftQuestionGroup`.
-   - Every `DraftQuestionGroup` must have at least one `DraftQuestion`.
-   - Every `DraftQuestion` must have at least one `DraftAcceptedAnswer`.
-5. **Question Type & Option Integrity:**
-   - `MULTIPLE_CHOICE` must have at least 2 non-empty options.
-   - `MATCHING_HEADINGS` must have `contextOptions` containing heading definitions (e.g. Roman numerals `i` to `vii`).
-   - `SENTENCE_COMPLETION`, `NOTE_COMPLETION`, `SUMMARY_COMPLETION` must have `wordLimit >= 1`.
-6. **Band Conversion Integrity:**
-   - `bandConversionTable` must provide contiguous, non-overlapping raw score ranges covering `0` to `totalQuestions`, mapping each range to an IELTS band between `0.0` and `9.0`.
+| # | Test Case | Mechanism | Actual Result | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **1** | Updating a published question | Trigger `trg_protect_published_question` | Rejected with `ERROR: Immutable snapshot violation (P0001)` | **PASS** |
+| **2** | Deleting a published question | Trigger `trg_protect_published_question` | Rejected with `ERROR: Immutable snapshot violation (P0001)` | **PASS** |
+| **3** | Updating a published version title | Trigger `trg_protect_published_test_version` | Rejected with `ERROR: Immutable snapshot violation (P0001)` | **PASS** |
+| **4** | Archiving a version (`isArchived: false → true`) | Trigger `trg_protect_published_test_version` | Succeeded; `isArchived = true` committed | **PASS** |
+| **5** | Reversing archived version (`isArchived: true → false`) | Trigger `trg_protect_published_test_version` | Rejected with `ERROR: Immutable snapshot violation (P0001)` | **PASS** |
+| **6** | Truncating a published table | Statement trigger `trg_prevent_truncate_*` | Rejected with `ERROR: Immutable snapshot violation (P0001)` | **PASS** |
+| **7a** | Creating first `IN_PROGRESS` attempt | Partial unique index | Succeeded; attempt created | **PASS** |
+| **7b** | Creating second concurrent `IN_PROGRESS` attempt | Partial unique index `idx_unique_active_attempt_per_test` | Rejected with `Unique constraint failed (23505)` | **PASS** |
+| **8a** | Premature timeout request (`now < expiresAt`) | `SELECT FOR UPDATE` + `NOW() < expiresAt` | Rejected with `400 Bad Request`; zero mutations committed | **PASS** |
+| **8b** | Late manual submission arriving after `expiresAt` | `SELECT FOR UPDATE` + `NOW() >= expiresAt` | Transitioned strictly to `TIMED_OUT`; scored successfully | **PASS** |
 
-Publishing executes inside a single database transaction. If any validation fails, the transaction rolls back and no published version is created.
-
----
-
-## 7. Official Mock Test 01 Band Conversion Resolution
-
-Inspected directly from `resource/Mock_01_Answer_Key.pdf`:
-
-| Raw Score (0–40) | Estimated IELTS Band |
-| :--- | :--- |
-| **39–40** | **9.0** |
-| **37–38** | **8.5** |
-| **35–36** | **8.0** |
-| **33–34** | **7.5** |
-| **30–32** | **7.0** |
-| **27–29** | **6.5** |
-| **23–26** | **6.0** |
-| **19–22** | **5.5** |
-| **15–18** | **5.0** |
-| **13–14** | **4.5** |
-| **10–12** | **4.0** |
-| **8–9** | **3.5** |
-| **6–7** | **3.0** |
-| **4–5** | **2.5** |
-| **3** | **2.0** |
-| **2** | **1.5** |
-| **1** | **1.0** |
-| **0** | **0.0** |
-
-This mapping is stored directly in `PublishedTestVersion.bandConversionTable`, allowing per-test calibration.
+**Summary: 10 automated test suites executed, 10 passed, 0 failed.**

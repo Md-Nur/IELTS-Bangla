@@ -3,7 +3,7 @@
 **Document type:** Living API Contracts & Route Specification  
 **Project:** IELTS Bangla  
 **Author:** Software Architect & Full-Stack Developer  
-**Status:** Final Pre-Migration Architecture Specification  
+**Status:** Validated Pre-Migration API Specification  
 **Last updated:** 2026-11-08  
 
 ---
@@ -24,6 +24,7 @@ All API routes and server actions in IELTS Bangla adhere to standard RESTful and
 ### `POST /api/auth/register`
 - **Purpose:** Register a new student account.
 - **Role Assignment:** Always assigned `Role.STUDENT`. Any `role` field in the request body is stripped/ignored.
+- **Authoritative Activation:** Newly created users are assigned `isActive: true`.
 - **Request Body:**
   ```json
   {
@@ -32,13 +33,14 @@ All API routes and server actions in IELTS Bangla adhere to standard RESTful and
     "password": "StrongPassword123"
   }
   ```
-- **Response (201):** `{ "success": true, "user": { "id": "...", "name": "...", "email": "...", "role": "STUDENT" } }`
+- **Response (201):** `{ "success": true, "user": { "id": "...", "name": "...", "email": "...", "role": "STUDENT", "isActive": true } }`
 - **Errors:** 
   - `400 Bad Request` (validation failed).
   - `409 Conflict` (email already registered).
 
 ### `POST /api/auth/login`
 - **Purpose:** Authenticate user credentials and issue secure HTTP-only session cookie.
+- **Account Verification:** If `user.isActive === false`, authentication is rejected with `401 Unauthorized` (`"Account is deactivated"`).
 - **Request Body:** `{ "email": "...", "password": "..." }`
 - **Response (200):** `{ "success": true, "user": { "id": "...", "name": "...", "email": "...", "role": "..." } }`
 - **Errors:** `401 Unauthorized` (invalid credentials or deactivated account).
@@ -75,14 +77,17 @@ All API routes and server actions in IELTS Bangla adhere to standard RESTful and
 
 ### `POST /api/exam/start`
 - **Purpose:** Initialize a new test attempt for the authenticated student against an active published test version.
-- **Duplicate Active Attempt Policy:**
-  - A student can have at most ONE `IN_PROGRESS` attempt per test at any given time.
-  - If an attempt is already `IN_PROGRESS` and has not expired, the endpoint returns `409 Conflict` with `{ "error": "Active attempt already in progress", "attemptId": "...", "canResume": true }`.
+- **Database-Level Single Active Attempt Policy:**
+  - Enforced by PostgreSQL partial unique index:
+    `CREATE UNIQUE INDEX "idx_unique_active_attempt_per_test" ON "TestAttempt" ("userId", "testId") WHERE status = 'IN_PROGRESS';`
+  - A student can have at most ONE `IN_PROGRESS` attempt per logical test.
+  - If a concurrent attempt is initiated, the database constraint rejects the second insert with unique violation (`23505`), returning `409 Conflict` with `{ "error": "Active attempt already in progress", "attemptId": "...", "canResume": true }`.
 - **Request Body:** `{ "testSlug": "academic-reading-mock-01" }`
 - **Response (201):**
   ```json
   {
     "attemptId": "cuid_attempt_123",
+    "testId": "cuid_test_1",
     "testVersionId": "cuid_ver_01",
     "testTitle": "IELTS Academic Reading Mock Test 01",
     "startedAt": "2026-11-08T08:30:00.000Z",
@@ -131,7 +136,7 @@ All API routes and server actions in IELTS Bangla adhere to standard RESTful and
 - **Concurrency & Locking Rules:**
   - Acquires `SELECT FOR UPDATE` on `TestAttempt`.
   - Verifies `TestAttempt.status === 'IN_PROGRESS'`. If `SUBMITTED`, `TIMED_OUT`, or `ABANDONED`, returns `409 Conflict`.
-  - Verifies server time `now < expiresAt`. If `now >= expiresAt`, rejects write with `409 Conflict` (`"Attempt deadline has passed"`).
+  - Verifies server time `NOW() < expiresAt`. If `NOW() >= expiresAt`, rejects write with `409 Conflict` (`"Attempt deadline has passed"`).
 - **Response (200):** `{ "success": true, "lastSavedAt": "2026-11-08T08:35:12.000Z" }`
 - **Errors:**
   - `403 Forbidden` (attempt not owned by user).
@@ -140,10 +145,10 @@ All API routes and server actions in IELTS Bangla adhere to standard RESTful and
 
 ### `POST /api/exam/[attemptId]/submit`
 - **Purpose:** Final manual submission of an examination.
-- **Deadline Evaluation & Workflow:**
-  - Compares server time `now` against `expiresAt`.
-  - **If `now <= expiresAt`:** Transitions attempt to `SUBMITTED`, calculates scores, records `EvaluationResult`, and returns the result.
-  - **If `now > expiresAt`:** The manual submission arrived after expiry! It automatically routes through **timeout finalization**, transitioning the attempt to `TIMED_OUT`, calculates scores, and records `EvaluationResult`.
+- **Pessimistic Row Lock & Deadline Evaluation:**
+  - Inside a transaction, acquires `SELECT FOR UPDATE` on `TestAttempt` and queries `NOW() as db_now`.
+  - **If `db_now <= expiresAt`:** Transitions attempt to `SUBMITTED`, calculates scores, records `EvaluationResult`, and returns the result.
+  - **If `db_now > expiresAt`:** The manual submission arrived after expiry! It automatically routes through **timeout finalization**, transitioning the attempt to `TIMED_OUT`, calculates scores, and records `EvaluationResult`.
 - **Single Transaction Guarantee:** Transition, scoring, and `EvaluationResult` creation execute atomically. If scoring fails, status rollback occurs.
 - **Idempotency:** Repeated calls return the existing committed `EvaluationResult`.
 - **Response (200):**
@@ -163,11 +168,12 @@ All API routes and server actions in IELTS Bangla adhere to standard RESTful and
   ```
 
 ### `POST /api/exam/[attemptId]/timeout`
-- **Purpose:** Authoritative expiration endpoint triggered when the countdown reaches zero or during a timeout sweep.
-- **Authorization & Deadline Validation:**
-  - Evaluates server time: `now >= expiresAt`.
-  - If `now < expiresAt`: Rejects request with `400 Bad Request` (`"Attempt deadline has not passed"`).
-- **Transition:** Atomically transitions attempt from `IN_PROGRESS` to `TIMED_OUT`, scores saved answers, and records `EvaluationResult`.
+- **Purpose:** Authoritative expiration endpoint triggered when the countdown reaches zero or during an automated timeout sweep.
+- **Pessimistic Row Lock & Deadline Validation:**
+  - Inside a transaction, acquires `SELECT FOR UPDATE` on `TestAttempt` and queries `NOW() as db_now`.
+  - Evaluates `db_now >= expiresAt`.
+  - **If `db_now < expiresAt`:** Rejects request with `400 Bad Request` (`"Attempt deadline has not passed"`). No state mutation occurs.
+  - **If `db_now >= expiresAt`:** Transitions attempt from `IN_PROGRESS` to `TIMED_OUT`, scores saved answers, and records `EvaluationResult`.
 - **Response (200):** Same structure as `/submit`, with `"status": "TIMED_OUT"`.
 
 ### `GET /api/exam/[attemptId]/results`

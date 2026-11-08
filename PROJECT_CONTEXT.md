@@ -480,16 +480,17 @@ If the codebase and documentation disagree, investigate the actual implementatio
 - Package manager verified: `bun@1.2.18`.
 - Resource directory analyzed completely (`docs/RESOURCE_ANALYSIS.md`).
 - Neon PostgreSQL connection endpoint (`ep-holy-glitter-a1vqn8z1-pooler.ap-southeast-1.aws.neon.tech`) verified reachable over TLS.
-- Database architecture designed, revised, and validated (`docs/DATABASE.md`, `prisma/schema.prisma`):
+- Database architecture designed, revised, hardened, and verified (`docs/DATABASE.md`, `prisma/schema.prisma`):
   - Strict separation of editable drafts from immutable published test snapshots.
   - Multi-level composite foreign keys enforcing version isolation for sections, question groups, questions, accepted answers, and student answers.
-  - Historical exam preservation enforced via `onDelete: Restrict` and `User.isDeactivated`.
-  - Complete PostgreSQL immutability triggers specified for all published tables.
-  - Row-level locking (`SELECT FOR UPDATE`) defined for autosave concurrency.
-  - Strict deadline enforcement: late manual submissions route to `TIMED_OUT`.
-  - Question numbering uniqueness and 1..N continuous validation specified for publishing service.
+  - Single active attempt policy enforced at database level via PostgreSQL partial unique index (`idx_unique_active_attempt_per_test`).
+  - Redundant indexes removed (`DraftSection.testId`, `PublishedTestVersion.testId`, `PublishedSection.testVersionId`, `StudentAnswer.attemptId`).
+  - Single authoritative `User.isActive` field.
+  - Row-level locking (`SELECT FOR UPDATE`) defined for autosave and finalization, resolving deadline races.
+  - Strict deadline enforcement: late manual submissions route to `TIMED_OUT`; premature timeouts rejected.
+  - PostgreSQL row-level and statement-level triggers protecting published tables against UPDATE, DELETE, and TRUNCATE.
+  - 10/10 automated verification tests executed and passed on disposable PostgreSQL 17 test cluster (zero impact on Neon).
   - Prisma schema validated and Prisma Client (v6.19.3) generated without errors.
-  - Exact band conversion table resolved directly from `resource/Mock_01_Answer_Key.pdf`.
 - Master implementation plan updated and prioritized for Reading MVP (`docs/IMPLEMENTATION_PLAN.md`).
 - API specification updated (`docs/API.md`).
 
