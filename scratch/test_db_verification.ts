@@ -6,6 +6,18 @@ const prisma = new PrismaClient({
   }
 });
 
+interface LockedAttemptRow {
+  id: string;
+  status: string;
+  expiresAt: Date;
+  db_now: Date;
+}
+
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  return String(error);
+}
+
 async function runTests() {
   console.log('--- STARTING IMMUTABILITY & CONCURRENCY TESTS ---');
   let passed = 0;
@@ -84,8 +96,9 @@ async function runTests() {
       data: { prompt: 'Modified prompt?' }
     });
     assert(false, '1. Updating a published question should throw an error');
-  } catch (e: any) {
-    assert(e.message.includes('Immutable snapshot violation'), '1. Updating a published question rejected by trigger: ' + e.message.split('\n').pop());
+  } catch (e: unknown) {
+    const msg = getErrorMessage(e);
+    assert(msg.includes('Immutable snapshot violation'), '1. Updating a published question rejected by trigger: ' + msg.split('\n').pop());
   }
 
   // TEST 2: Deleting a published question
@@ -94,8 +107,9 @@ async function runTests() {
       where: { id: question.id }
     });
     assert(false, '2. Deleting a published question should throw an error');
-  } catch (e: any) {
-    assert(e.message.includes('Immutable snapshot violation'), '2. Deleting a published question rejected by trigger: ' + e.message.split('\n').pop());
+  } catch (e: unknown) {
+    const msg = getErrorMessage(e);
+    assert(msg.includes('Immutable snapshot violation'), '2. Deleting a published question rejected by trigger: ' + msg.split('\n').pop());
   }
 
   // TEST 3: Updating a published version title
@@ -105,8 +119,9 @@ async function runTests() {
       data: { title: 'Altered Title' }
     });
     assert(false, '3. Updating a published version title should throw an error');
-  } catch (e: any) {
-    assert(e.message.includes('Immutable snapshot violation'), '3. Updating a published version title rejected by trigger: ' + e.message.split('\n').pop());
+  } catch (e: unknown) {
+    const msg = getErrorMessage(e);
+    assert(msg.includes('Immutable snapshot violation'), '3. Updating a published version title rejected by trigger: ' + msg.split('\n').pop());
   }
 
   // TEST 4: Archiving a published version (isArchived: false -> true)
@@ -116,8 +131,8 @@ async function runTests() {
       data: { isArchived: true }
     });
     assert(updated.isArchived === true, '4. Archiving a published version (isArchived: false -> true) succeeds');
-  } catch (e: any) {
-    assert(false, '4. Archiving failed: ' + e.message);
+  } catch (e: unknown) {
+    assert(false, '4. Archiving failed: ' + getErrorMessage(e));
   }
 
   // TEST 5: Reversing an archived version (isArchived: true -> false)
@@ -127,16 +142,18 @@ async function runTests() {
       data: { isArchived: false }
     });
     assert(false, '5. Reversing an archived version should throw an error');
-  } catch (e: any) {
-    assert(e.message.includes('Immutable snapshot violation'), '5. Reversing an archived version rejected by trigger: ' + e.message.split('\n').pop());
+  } catch (e: unknown) {
+    const msg = getErrorMessage(e);
+    assert(msg.includes('Immutable snapshot violation'), '5. Reversing an archived version rejected by trigger: ' + msg.split('\n').pop());
   }
 
   // TEST 6: Truncating a published table
   try {
     await prisma.$executeRawUnsafe('TRUNCATE TABLE "PublishedQuestion" CASCADE;');
     assert(false, '6. Truncating a published table should throw an error');
-  } catch (e: any) {
-    assert(e.message.includes('Immutable snapshot violation'), '6. Truncating a published table rejected by statement trigger: ' + e.message.split('\n').pop());
+  } catch (e: unknown) {
+    const msg = getErrorMessage(e);
+    assert(msg.includes('Immutable snapshot violation'), '6. Truncating a published table rejected by statement trigger: ' + msg.split('\n').pop());
   }
 
   // TEST 7: Single active attempt enforcement via Partial Unique Index
@@ -162,15 +179,16 @@ async function runTests() {
       }
     });
     assert(false, '7b. Creating second concurrent active attempt should violate partial unique index');
-  } catch (e: any) {
-    assert(e.message.includes('Unique constraint failed') || e.message.includes('idx_unique_active_attempt_per_test'), '7b. Second concurrent active attempt prevented by partial unique index');
+  } catch (e: unknown) {
+    const msg = getErrorMessage(e);
+    assert(msg.includes('Unique constraint failed') || msg.includes('idx_unique_active_attempt_per_test'), '7b. Second concurrent active attempt prevented by partial unique index');
   }
 
   // TEST 8: Finalization with SELECT FOR UPDATE & Deadline Check
   // 8a: Premature timeout rejection
   try {
     await prisma.$transaction(async (tx) => {
-      const rows: any = await tx.$queryRaw`
+      const rows = await tx.$queryRaw<LockedAttemptRow[]>`
         SELECT id, status, "expiresAt", NOW() as db_now
         FROM "TestAttempt"
         WHERE id = ${attempt1.id}
@@ -182,8 +200,9 @@ async function runTests() {
       }
     });
     assert(false, '8a. Premature timeout should be rejected');
-  } catch (e: any) {
-    assert(e.message.includes('PREMATURE_TIMEOUT'), '8a. Premature timeout correctly rejected: ' + e.message);
+  } catch (e: unknown) {
+    const msg = getErrorMessage(e);
+    assert(msg.includes('PREMATURE_TIMEOUT'), '8a. Premature timeout correctly rejected: ' + msg);
   }
 
   // 8b: Late manual submission -> TIMED_OUT transition
@@ -201,7 +220,7 @@ async function runTests() {
   });
 
   const finalStatus = await prisma.$transaction(async (tx) => {
-    const rows: any = await tx.$queryRaw`
+    const rows = await tx.$queryRaw<LockedAttemptRow[]>`
       SELECT id, status, "expiresAt", NOW() as db_now
       FROM "TestAttempt"
       WHERE id = ${expiredAttempt.id}
