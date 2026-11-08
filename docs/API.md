@@ -309,40 +309,82 @@ All API routes and server actions in IELTS Bangla adhere to standard RESTful and
   - `404 Not Found` (`ATTEMPT_NOT_FOUND`).
   - `409 Conflict` (`ATTEMPT_NOT_IN_PROGRESS`).
 
-### `GET /api/exam/[attemptId]/results`
-- **Purpose:** Fetch detailed scored results, per-question correctness, and detailed explanations for review.
-- **Authorization & Pre-condition:**
-  - Allowed ONLY if `TestAttempt.status` is `SUBMITTED` or `TIMED_OUT`.
-  - Allowed ONLY if `EvaluationResult` exists.
-  - Allowed ONLY for the attempt's owner or an admin.
-  - If attempt is still `IN_PROGRESS`, returns `403 Forbidden`.
-- **Response (200):**
+### `GET /api/exam/[attemptId]/result` (and alias `/results`)
+- **Purpose:** Fetch authoritative examination result, score summary, estimated IELTS Reading band, and full question-by-question review grouped by reading passage.
+- **Authentication:** Required (`Bearer <token>` header or `ib_session` HTTP-only cookie).
+- **Authorization & Pre-conditions:**
+  - Allowed ONLY if `attempt.userId === session.user.id`. IDOR requests return `403 Forbidden` (`FORBIDDEN_ATTEMPT_ACCESS`).
+  - Allowed ONLY if `TestAttempt.status` is `SUBMITTED` or `TIMED_OUT`. If the attempt is still in progress, returns `409 Conflict` (`ATTEMPT_STILL_IN_PROGRESS`).
+  - Allowed ONLY if `EvaluationResult` has been committed to database.
+- **Security & Integrity Guarantee:**
+  - Results strictly reflect the immutable `EvaluationResult` created during finalization matching `scoringVersion: "reading_v1.0.0"`.
+  - Client-side calculation is never trusted or used as the source of truth.
+  - Scores are explicitly labeled as an estimated IELTS band based on the platform's published conversion table.
+- **Response (200 OK):**
   ```json
   {
-    "attemptId": "cuid_attempt_123",
-    "status": "SUBMITTED",
-    "rawScore": 38,
-    "estimatedBand": 8.5,
-    "scoringVersion": "reading_v1.0.0",
-    "timeSpentSeconds": 3120,
-    "sectionBreakdown": {
-      "passage1": { "correct": 12, "total": 13 },
-      "passage2": { "correct": 13, "total": 13 },
-      "passage3": { "correct": 13, "total": 14 }
-    },
-    "questionBreakdown": [
-      {
-        "questionNumber": 1,
-        "prompt": "The inventor of the early two-wheeled machine was an engineer.",
-        "studentAnswer": "FALSE",
-        "acceptedAnswers": ["FALSE"],
-        "isCorrect": true,
-        "scoreAwarded": 1,
-        "explanation": "Para 2 calls him 'a German forester', not an engineer."
-      }
-    ]
+    "success": true,
+    "data": {
+      "attemptId": "cuid_attempt_123",
+      "testId": "cuid_test_1",
+      "testSlug": "academic-reading-mock-01",
+      "testTitle": "Academic Reading · Mock Test 01",
+      "testVersionId": "cmw86bndp005wlqu6v8yuiwsx",
+      "versionNumber": 1,
+      "status": "SUBMITTED",
+      "startedAt": "2026-11-09T01:00:00.000Z",
+      "expiresAt": "2026-11-09T02:00:00.000Z",
+      "submittedAt": "2026-11-09T01:52:00.000Z",
+      "completionDate": "2026-11-09T01:52:00.000Z",
+      "timeSpentSeconds": 3120,
+      "totalQuestions": 40,
+      "totalAttempted": 40,
+      "totalCorrect": 38,
+      "totalIncorrect": 2,
+      "rawScore": 38,
+      "estimatedBand": 8.5,
+      "scoringVersion": "reading_v1.0.0",
+      "bandDisclaimer": "Estimated IELTS Academic Reading band calculated using the platform's published conversion table for Mock Test 01.",
+      "sectionBreakdown": {
+        "passage1": { "sectionIndex": 1, "totalQuestions": 13, "attempted": 13, "correct": 13, "rawScore": 13, "accuracyPercentage": 100 },
+        "passage2": { "sectionIndex": 2, "totalQuestions": 13, "attempted": 13, "correct": 12, "rawScore": 12, "accuracyPercentage": 92 },
+        "passage3": { "sectionIndex": 3, "totalQuestions": 14, "attempted": 14, "correct": 13, "rawScore": 13, "accuracyPercentage": 93 }
+      },
+      "sections": [
+        {
+          "sectionIndex": 1,
+          "title": "The Bicycle: From Wooden Hobby-Horse to Everyday Machine",
+          "passageText": "...",
+          "totalQuestions": 13,
+          "attempted": 13,
+          "correct": 13,
+          "accuracyPercentage": 100,
+          "questions": [
+            {
+              "questionId": "cmw86bne4005ylqu6j1a7h4q8",
+              "questionNumber": 1,
+              "prompt": "Karl von Drais was an engineer by profession.",
+              "questionType": "TRUE_FALSE_NOT_GIVEN",
+              "studentAnswer": "FALSE",
+              "acceptedAnswers": ["FALSE", "F"],
+              "primaryAcceptedAnswer": "FALSE",
+              "isCorrect": true,
+              "scoreAwarded": 1,
+              "wordLimitExceeded": false,
+              "explanation": "Para 2 calls him ‘a German forester’, not an engineer."
+            }
+          ]
+        }
+      ]
+    }
   }
   ```
+- **Errors:**
+  - `401 Unauthorized` (unauthenticated).
+  - `400 Bad Request` (`VALIDATION_ERROR`).
+  - `403 Forbidden` (`FORBIDDEN_ATTEMPT_ACCESS`).
+  - `404 Not Found` (`ATTEMPT_NOT_FOUND`).
+  - `409 Conflict` (`ATTEMPT_STILL_IN_PROGRESS` or `ATTEMPT_ABANDONED`).
 
 ---
 

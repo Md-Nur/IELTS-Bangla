@@ -1011,3 +1011,244 @@ export async function finalizeAndScoreAttempt(
     };
   });
 }
+
+export interface QuestionReviewDTO {
+  questionId: string;
+  questionNumber: number;
+  prompt: string;
+  questionType: string;
+  studentAnswer: string | null;
+  acceptedAnswers: string[];
+  primaryAcceptedAnswer: string;
+  isCorrect: boolean;
+  scoreAwarded: number;
+  wordLimitExceeded: boolean;
+  explanation: string | null;
+}
+
+export interface SectionReviewDTO {
+  sectionIndex: number;
+  title: string;
+  passageText: string;
+  totalQuestions: number;
+  attempted: number;
+  correct: number;
+  accuracyPercentage: number;
+  questions: QuestionReviewDTO[];
+}
+
+export interface ExamResultResponseDTO {
+  attemptId: string;
+  testId: string;
+  testSlug: string;
+  testTitle: string;
+  testVersionId: string;
+  versionNumber: number;
+  status: AttemptStatus;
+  startedAt: string;
+  expiresAt: string;
+  submittedAt: string;
+  completionDate: string;
+  timeSpentSeconds: number;
+  totalQuestions: number;
+  totalAttempted: number;
+  totalCorrect: number;
+  totalIncorrect: number;
+  rawScore: number;
+  estimatedBand: number;
+  scoringVersion: string;
+  bandDisclaimer: string;
+  sectionBreakdown: Record<string, SectionScoreSummary>;
+  sections: SectionReviewDTO[];
+}
+
+export interface GetExamResultOptions {
+  userId: string;
+  attemptId: string;
+}
+
+/**
+ * Retrieves the comprehensive examination result and question-by-question review
+ * for a finalized (SUBMITTED or TIMED_OUT) attempt.
+ *
+ * Security & Integrity Guarantees:
+ * - Scoped strictly to the attempt owner (IDOR prevention).
+ * - Only accessible after attempt has been finalized (SUBMITTED or TIMED_OUT).
+ * - Uses server-authoritative EvaluationResult matching the stored scoringVersion.
+ * - Never calculates or alters scores on the client.
+ */
+export async function getExamResult(options: GetExamResultOptions): Promise<ExamResultResponseDTO> {
+  const { userId, attemptId } = options;
+
+  // 1. Fetch Attempt with Test, Version, and Evaluation metadata
+  const attempt = await prisma.testAttempt.findUnique({
+    where: { id: attemptId },
+    include: {
+      test: {
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          durationMinutes: true,
+          totalQuestions: true,
+        },
+      },
+      testVersion: {
+        select: {
+          id: true,
+          versionNumber: true,
+          bandConversionTable: true,
+        },
+      },
+      evaluation: true,
+    },
+  });
+
+  if (!attempt) {
+    throw new ExamNotFoundError("Test attempt not found", "ATTEMPT_NOT_FOUND");
+  }
+
+  // 2. IDOR Protection: Scoped strictly to attempt owner
+  if (attempt.userId !== userId) {
+    throw new ExamForbiddenError(
+      "You do not have permission to view this examination result",
+      "FORBIDDEN_ATTEMPT_ACCESS"
+    );
+  }
+
+  // 3. Status Check: Must be finalized (SUBMITTED or TIMED_OUT)
+  if (attempt.status === AttemptStatus.IN_PROGRESS) {
+    throw new ExamConflictError(
+      "Examination results are not available while attempt is in progress",
+      "ATTEMPT_STILL_IN_PROGRESS"
+    );
+  }
+
+  if (attempt.status === AttemptStatus.ABANDONED) {
+    throw new ExamConflictError(
+      "This examination attempt was abandoned and cannot be evaluated",
+      "ATTEMPT_ABANDONED"
+    );
+  }
+
+  if (!attempt.evaluation) {
+    throw new ExamConflictError(
+      "Evaluation result has not been generated for this attempt",
+      "EVALUATION_NOT_FOUND"
+    );
+  }
+
+  // 4. Fetch published sections, groups, and questions to construct the detailed passage-by-passage review
+  const publishedSections = await prisma.publishedSection.findMany({
+    where: { testVersionId: attempt.testVersionId },
+    orderBy: { orderIndex: "asc" },
+    include: {
+      groups: {
+        orderBy: { orderIndex: "asc" },
+        include: {
+          questions: {
+            orderBy: { questionNumber: "asc" },
+            include: {
+              acceptedAnswers: {
+                orderBy: { orderIndex: "asc" },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // Map stored question evaluations from EvaluationResult.questionBreakdown
+  const evalQuestions = (attempt.evaluation.questionBreakdown as unknown as QuestionScoreResult[]) || [];
+  const evalMap = new Map<number, QuestionScoreResult>();
+  for (const item of evalQuestions) {
+    evalMap.set(item.questionNumber, item);
+  }
+
+  // 5. Structure sections with question reviews
+  const sectionsDTO: SectionReviewDTO[] = publishedSections.map((sec) => {
+    const questionsInSec: QuestionReviewDTO[] = [];
+    let secAttempted = 0;
+    let secCorrect = 0;
+
+    for (const grp of sec.groups) {
+      for (const q of grp.questions) {
+        const evalItem = evalMap.get(q.questionNumber);
+        const studentAns = evalItem?.studentAnswer ?? null;
+        const isCorrect = evalItem?.isCorrect ?? false;
+        const scoreAwarded = evalItem?.scoreAwarded ?? 0;
+        const wordLimitExceeded = evalItem?.wordLimitExceeded ?? false;
+        const explanation = q.explanation ?? evalItem?.explanation ?? null;
+
+        if (studentAns !== null && studentAns.trim().length > 0) {
+          secAttempted++;
+        }
+        if (isCorrect) {
+          secCorrect++;
+        }
+
+        const acceptedList = q.acceptedAnswers.map((a) => a.acceptedText);
+        const primaryAnswer = q.acceptedAnswers.find((a) => a.orderIndex === 0)?.acceptedText || acceptedList[0] || "";
+
+        questionsInSec.push({
+          questionId: q.id,
+          questionNumber: q.questionNumber,
+          prompt: q.prompt,
+          questionType: grp.questionType,
+          studentAnswer: studentAns,
+          acceptedAnswers: acceptedList,
+          primaryAcceptedAnswer: primaryAnswer,
+          isCorrect,
+          scoreAwarded,
+          wordLimitExceeded,
+          explanation,
+        });
+      }
+    }
+
+    questionsInSec.sort((a, b) => a.questionNumber - b.questionNumber);
+
+    const totalInSec = questionsInSec.length;
+    const accuracy = totalInSec > 0 ? Math.round((secCorrect / totalInSec) * 100) : 0;
+
+    return {
+      sectionIndex: sec.orderIndex,
+      title: sec.title,
+      passageText: sec.passageText,
+      totalQuestions: totalInSec,
+      attempted: secAttempted,
+      correct: secCorrect,
+      accuracyPercentage: accuracy,
+      questions: questionsInSec,
+    };
+  });
+
+  const submittedAtDate = attempt.submittedAt ?? attempt.evaluation.evaluatedAt;
+
+  return {
+    attemptId: attempt.id,
+    testId: attempt.test.id,
+    testSlug: attempt.test.slug,
+    testTitle: attempt.test.title,
+    testVersionId: attempt.testVersionId,
+    versionNumber: attempt.testVersion.versionNumber,
+    status: attempt.status,
+    startedAt: attempt.startedAt.toISOString(),
+    expiresAt: attempt.expiresAt.toISOString(),
+    submittedAt: submittedAtDate.toISOString(),
+    completionDate: submittedAtDate.toISOString(),
+    timeSpentSeconds: attempt.timeSpentSeconds,
+    totalQuestions: attempt.evaluation.totalQuestions,
+    totalAttempted: attempt.evaluation.totalAttempted,
+    totalCorrect: attempt.evaluation.totalCorrect,
+    totalIncorrect: attempt.evaluation.totalIncorrect,
+    rawScore: attempt.evaluation.rawScore,
+    estimatedBand: attempt.evaluation.estimatedBand,
+    scoringVersion: attempt.evaluation.scoringVersion,
+    bandDisclaimer:
+      "Estimated IELTS Academic Reading band calculated using the platform's published conversion table for Mock Test 01.",
+    sectionBreakdown: attempt.evaluation.sectionBreakdown as unknown as Record<string, SectionScoreSummary>,
+    sections: sectionsDTO,
+  };
+}

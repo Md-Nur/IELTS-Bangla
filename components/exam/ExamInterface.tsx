@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { ExamContentResponseDTO } from "@/lib/services/examAttemptService";
 import { useExamState } from "@/hooks/useExamState";
 import { useCountdownTimer } from "@/hooks/useCountdownTimer";
@@ -18,6 +19,9 @@ export interface ExamInterfaceProps {
 }
 
 export function ExamInterface({ examData }: ExamInterfaceProps) {
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // 1. Authoritative Countdown Timer
   const timer = useCountdownTimer({
     expiresAt: examData.attempt.expiresAt,
@@ -90,7 +94,7 @@ export function ExamInterface({ examData }: ExamInterfaceProps) {
 
   // If timer has expired according to server deadline, display expired state
   if (timer.isExpired) {
-    return <ExamExpiredState />;
+    return <ExamExpiredState attemptId={examData.attempt.id} />;
   }
 
   const currentSection = examData.sections[exam.currentSectionIndex] || examData.sections[0];
@@ -98,6 +102,28 @@ export function ExamInterface({ examData }: ExamInterfaceProps) {
     exam.currentQuestionInfo &&
       exam.answers[exam.currentQuestionInfo.questionId]?.isFlaggedForReview
   );
+
+  const handleSubmitExam = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(`/api/exam/${examData.attempt.id}/finalize`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reason: "MANUAL" }),
+      });
+      if (res.ok) {
+        router.push(`/results/${examData.attempt.id}`);
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        alert(errorData.error || "Failed to submit examination.");
+      }
+    } catch {
+      alert("Network error while submitting. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="h-screen flex flex-col bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 overflow-hidden font-sans">
@@ -166,6 +192,8 @@ export function ExamInterface({ examData }: ExamInterfaceProps) {
         onClose={() => exam.setIsReviewModalOpen(false)}
         questionStatusList={exam.questionStatusList}
         onSelectQuestion={exam.goToQuestion}
+        onSubmit={handleSubmitExam}
+        isSubmitting={isSubmitting}
       />
 
       <ExamExitModal

@@ -47,6 +47,17 @@ All notable changes, architectural decisions, and milestones for this project wi
   - Idempotency & Concurrency: handles repeated finalization and concurrent requests safely, returning committed evaluation snapshots without duplicate records or re-scoring.
   - Attempt closure enforcement: finalized attempts cannot be reopened or edited by autosave.
   - Authored test suite `app/api/exam/__tests__/examFinalize.test.ts` (13 tests passing covering 40/40 golden score, empty attempts, accepted alternatives, rejected alternatives, word limit violations, premature timeout rejection, expiration transitions, idempotency, concurrency, and rollback guarantees).
+- **Result Page & Detailed Answer Review API (`GET /api/exam/[attemptId]/result` & `/results/[attemptId]`):**
+  - Implemented `getExamResult` in `lib/services/examAttemptService.ts` retrieving evaluated exam results scoped strictly to attempt owner, prohibiting access to active in-progress attempts (`409 ATTEMPT_STILL_IN_PROGRESS`).
+  - Next.js 16 App Router endpoints `GET /api/exam/[attemptId]/result` and alias `GET /api/exam/[attemptId]/results`.
+  - Built comprehensive student-facing result page (`app/results/[attemptId]/page.tsx` & `components/results/`):
+    - Score summary card featuring prominent Estimated IELTS Reading Band with official conversion disclaimer, raw score out of 40, correct answers, incorrect/unanswered count, accuracy percentage, time taken, and passage-level performance bars.
+    - Interactive detailed review section (`DetailedReviewSection`) with passage tabs and status filters (`All`, `Incorrect`, `Correct`).
+    - Expandable reading passage viewer enabling students to read original passage text alongside questions.
+    - Side-by-side answer comparisons (student answer vs. accepted answer variants) with color-coded status badges and word-limit alerts.
+    - Full paragraph citations and rationales for all 40 questions.
+    - Navigation controls: Dashboard return button and printable report layout.
+  - Authored integration test suite `app/api/exam/__tests__/examResult.test.ts` (6 tests passing).
 
 ## [Unreleased] - 2026-11-08
 

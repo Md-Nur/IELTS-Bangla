@@ -330,5 +330,8 @@ The Reading Phase 1 (Exam Start & Content Retrieval), Phase 2 (Reliable Answer A
 | **20** | Finalization idempotency | Status check under row lock | Repeated finalization returns identical evaluation; no duplicate records | **PASS** |
 | **21** | Concurrent finalization safety | `SELECT ... FOR UPDATE` serialization | Simultaneous finalizations serialize cleanly, returning identical result | **PASS** |
 | **22** | Finalization transaction rollback | `prisma.$transaction` rollback | Error in transaction rolls back attempt status to `IN_PROGRESS` | **PASS** |
+| **23** | Result access for in-progress attempt | Status check (`IN_PROGRESS`) | Rejects result retrieval with 409 `ATTEMPT_STILL_IN_PROGRESS` | **PASS** |
+| **24** | Result IDOR protection | `attempt.userId === session.userId` | Cross-student result access blocked with 403 Forbidden | **PASS** |
+| **25** | Result detailed review payload | `getExamResult` query | Returns 3 passages, 40 questions, answers, rationales, and band estimate | **PASS** |
 
-**Total Live Integration & Unit Tests Passed: 102 tests across 10 test suites.**
+**Total Live Integration & Unit Tests Passed: 108 tests across 11 test suites.**

@@ -138,23 +138,24 @@ flowchart TD
 
 ---
 
-### Milestone 7: Results & Detailed Answer Review
-- **Objectives:** Present students with clear diagnostic feedback, band visualization, and question rationales.
-- **Tasks:**
-  - Result overview page `/results/[attemptId]`:
-    - Prominent estimated IELTS Band badge.
-    - Raw score summary (X / 40) and accuracy percentage.
-    - Passage-by-passage performance breakdown.
-    - Authoritative time spent.
-  - Detailed Answer Review UI:
-    - Side-by-side view: Passage, Student Answer, Correct Answer(s), and Explanation ("Where to find it / why").
-    - Visual indicators (Green check, Red cross, Grey dash for unanswered).
-- **Deliverables:**
-  - `/results/[attemptId]/page.tsx`
-  - Review components.
-- **Acceptance Criteria:**
-  - Answer keys and rationales are visible only after finalization.
-  - Students cannot view other students' attempts.
+### Milestone 7: Results & Detailed Answer Review Page (COMPLETED)
+- **Status:** COMPLETED
+- **Achievements:**
+  - Implemented `getExamResult` in `lib/services/examAttemptService.ts` retrieving server-authoritative score evaluation matching `scoringVersion: "reading_v1.0.0"`.
+  - Next.js 16 App Router API endpoint `GET /api/exam/[attemptId]/result` (and alias `/results`).
+  - Strict security & IDOR protection: verified attempt ownership, rejection of in-progress attempts (`409 ATTEMPT_STILL_IN_PROGRESS`), and strict exclusion of client-side score overrides.
+  - Student result overview page `/results/[attemptId]`:
+    - Prominent estimated IELTS Academic Reading band badge with platform conversion table disclaimer.
+    - Performance key metrics grid: raw score out of 40, correct count, incorrect/unanswered count, overall accuracy percentage, and time taken.
+    - Passage-by-passage breakdown cards with accuracy bars.
+  - Detailed Question-by-Question Review UI (`components/results/DetailedReviewSection.tsx`):
+    - Passage tabs (All Passages, Passage 1, Passage 2, Passage 3) and status filters (All, Incorrect, Correct).
+    - Toggleable passage reading view ("View Reading Passage") to read full passage context.
+    - Side-by-side answer comparison: student submitted answer vs. primary correct answer and accepted variants.
+    - Clear visual indicators for correct (green check), incorrect (red cross), and unanswered (slate dash) states.
+    - Word limit violation alerts.
+    - Citations and explanations for all 40 questions directly referencing the reading passages.
+  - Authored comprehensive integration test suite `app/api/exam/__tests__/examResult.test.ts` (6 tests passing).
 
 ---
 

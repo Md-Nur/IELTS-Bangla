@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-export function ExamExpiredState() {
+export function ExamExpiredState({ attemptId }: { attemptId?: string }) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-100 dark:bg-slate-900 p-6">
       <div className="max-w-lg w-full bg-white dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 p-8 text-center shadow-md space-y-5">
@@ -29,14 +29,22 @@ export function ExamExpiredState() {
             Examination Time Expired
           </h1>
           <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-sm mx-auto">
-            The allocated 60 minutes for this IELTS Academic Reading attempt has expired according to server-authoritative time.
+            The allocated 60 minutes for this IELTS Academic Reading attempt has expired according to server-authoritative time. Your saved answers have been recorded.
           </p>
         </div>
 
-        <div className="pt-3">
+        <div className="pt-3 flex flex-wrap justify-center gap-3">
+          {attemptId && (
+            <Link
+              href={`/results/${attemptId}`}
+              className="inline-block px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm transition-colors shadow-sm cursor-pointer"
+            >
+              View Examination Results
+            </Link>
+          )}
           <Link
             href="/"
-            className="inline-block px-6 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm transition-colors dark:bg-blue-600 dark:hover:bg-blue-500 shadow-sm"
+            className="inline-block px-6 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm transition-colors dark:bg-slate-800 dark:hover:bg-slate-700 shadow-sm cursor-pointer"
           >
             Return to Dashboard
           </Link>
