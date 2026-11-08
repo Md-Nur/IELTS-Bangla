@@ -50,6 +50,18 @@ export class UnpublishedTestError extends Error {
   }
 }
 
+export class ExamQuestionMismatchError extends Error {
+  code: string;
+  constructor(
+    message: string = "Question not found in the published test version associated with this attempt",
+    code: string = "QUESTION_NOT_IN_VERSION"
+  ) {
+    super(message);
+    this.name = "ExamQuestionMismatchError";
+    this.code = code;
+  }
+}
+
 // ====================================================================
 // Explicit Response DTOs
 // ====================================================================
@@ -521,4 +533,132 @@ export async function getExamContent(options: GetExamContentOptions): Promise<Ex
     sections: sectionsDTO,
     savedAnswers: savedAnswersDTO,
   };
+}
+
+export interface SaveAnswerOptions {
+  userId: string;
+  attemptId: string;
+  questionId: string;
+  answerText?: string | null;
+  isFlaggedForReview?: boolean;
+}
+
+export interface SaveAnswerResponseDTO {
+  questionId: string;
+  answerText: string | null;
+  isFlaggedForReview: boolean;
+  lastSavedAt: string;
+}
+
+/**
+ * Autosaves a student's answer for a specific question within an active attempt.
+ * - Authenticates attempt ownership (IDOR prevention).
+ * - Acquires row-level pessimistic lock (SELECT FOR UPDATE) on TestAttempt.
+ * - Verifies attempt is IN_PROGRESS and deadline has not expired using database time.
+ * - Verifies question belongs to the attempt's published test version.
+ * - Idempotently upserts StudentAnswer without calculating correctness or exposing answer keys.
+ */
+export async function saveStudentAnswer(options: SaveAnswerOptions): Promise<SaveAnswerResponseDTO> {
+  const { userId, attemptId, questionId, answerText, isFlaggedForReview } = options;
+
+  return await prisma.$transaction(async (tx) => {
+    // 1. Acquire row lock on TestAttempt (SELECT FOR UPDATE) and query server-authoritative time
+    const attempts = await tx.$queryRaw<Array<{
+      id: string;
+      userId: string;
+      status: AttemptStatus;
+      expiresAt: Date;
+      testVersionId: string;
+      db_now: Date;
+    }>>`
+      SELECT id, "userId", status, "expiresAt", "testVersionId", NOW() as db_now
+      FROM "TestAttempt"
+      WHERE id = ${attemptId}
+      FOR UPDATE
+    `;
+
+    if (!attempts.length) {
+      throw new ExamNotFoundError("Test attempt not found", "ATTEMPT_NOT_FOUND");
+    }
+
+    const attempt = attempts[0];
+    const dbNow = new Date(attempt.db_now);
+
+    // 2. IDOR Protection: Verify attempt ownership
+    if (attempt.userId !== userId) {
+      throw new ExamForbiddenError(
+        "You do not have permission to modify this examination attempt",
+        "FORBIDDEN_ATTEMPT_ACCESS"
+      );
+    }
+
+    // 3. Verify attempt is still IN_PROGRESS
+    if (attempt.status !== AttemptStatus.IN_PROGRESS) {
+      throw new ExamConflictError(
+        `Cannot save answer: attempt is no longer in progress (status: ${attempt.status})`,
+        "ATTEMPT_NOT_IN_PROGRESS"
+      );
+    }
+
+    // 4. Verify deadline has not passed (database-authoritative time)
+    if (dbNow >= new Date(attempt.expiresAt)) {
+      throw new ExamExpiredError(
+        "Cannot save answer: attempt deadline has expired",
+        "ATTEMPT_EXPIRED"
+      );
+    }
+
+    // 5. Verify that the question exists and belongs to the attempt's published test version
+    const question = await tx.publishedQuestion.findFirst({
+      where: {
+        id: questionId,
+        testVersionId: attempt.testVersionId,
+      },
+      select: { id: true, questionNumber: true },
+    });
+
+    if (!question) {
+      throw new ExamQuestionMismatchError(
+        "Question not found in the published test version associated with this attempt",
+        "QUESTION_NOT_IN_VERSION"
+      );
+    }
+
+    // 6. Idempotent upsert of StudentAnswer with version-locked composite foreign keys
+    // NOTE: isCorrect and scoreAwarded are strictly NOT set or evaluated during autosave
+    const saved = await tx.studentAnswer.upsert({
+      where: {
+        attemptId_questionId: {
+          attemptId: attempt.id,
+          questionId,
+        },
+      },
+      update: {
+        answerText: answerText !== undefined && answerText !== null ? answerText : null,
+        isFlaggedForReview: Boolean(isFlaggedForReview),
+        lastSavedAt: dbNow,
+      },
+      create: {
+        attemptId: attempt.id,
+        testVersionId: attempt.testVersionId,
+        questionId,
+        answerText: answerText !== undefined && answerText !== null ? answerText : null,
+        isFlaggedForReview: Boolean(isFlaggedForReview),
+        lastSavedAt: dbNow,
+      },
+      select: {
+        questionId: true,
+        answerText: true,
+        isFlaggedForReview: true,
+        lastSavedAt: true,
+      },
+    });
+
+    return {
+      questionId: saved.questionId,
+      answerText: saved.answerText,
+      isFlaggedForReview: saved.isFlaggedForReview,
+      lastSavedAt: saved.lastSavedAt.toISOString(),
+    };
+  });
 }

@@ -192,25 +192,46 @@ All API routes and server actions in IELTS Bangla adhere to standard RESTful and
   - `404 Not Found` (attempt not found).
   - `409 Conflict` (`ATTEMPT_NOT_IN_PROGRESS`).
 
-### `POST /api/exam/[attemptId]/save`
-- **Purpose:** Debounced autosave endpoint for student answers with row-level locking.
+### `PUT /api/exam/[attemptId]/answers`
+- **Purpose:** Reliable, debounced autosave endpoint for student answers and review flags with row-level locking.
+- **Authentication:** Required (`Bearer <token>` header or `ib_session` HTTP-only cookie).
+- **Concurrency & Locking Rules:**
+  - Inside a transaction, acquires pessimistic row lock `SELECT id, "userId", "testVersionId", status, "expiresAt" FROM "TestAttempt" WHERE id = $1 FOR UPDATE`.
+  - Verifies student ownership (`attempt.userId === session.user.id`). Any mismatch returns `403 Forbidden` (`FORBIDDEN_ATTEMPT_ACCESS`).
+  - Verifies server time against database clock (`SELECT NOW() as db_now`). If `db_now >= expiresAt`, returns `403 Forbidden` (`ATTEMPT_EXPIRED`).
+  - Verifies status is `IN_PROGRESS`. If `SUBMITTED`, `TIMED_OUT`, or `ABANDONED`, returns `409 Conflict` (`ATTEMPT_NOT_IN_PROGRESS`).
+  - Validates `questionId` belongs to the attempt's `testVersionId` via `PublishedQuestion` lookup. If not found or mismatch, returns `400 Bad Request` (`QUESTION_NOT_IN_VERSION`).
+  - Validates answer payload size ($\le 500$ characters) via Zod schema. If invalid, returns `400 Bad Request` (`VALIDATION_ERROR`).
+  - Performs an idempotent upsert on `StudentAnswer` using composite foreign keys `(attemptId, testVersionId)` and `(testVersionId, questionId)`.
+  - Sets `lastSavedAt: db_now`.
+  - **Security Guarantee:** Does NOT calculate or return correctness (`isCorrect` and `scoreAwarded` remain `null`). Never exposes accepted answers, answer keys, or evaluation data.
 - **Request Body:**
   ```json
   {
-    "questionId": "q_1",
+    "questionId": "cmw86bne4005ylqu6j1a7h4q8",
     "answerText": "FALSE",
     "isFlaggedForReview": false
   }
   ```
-- **Concurrency & Locking Rules:**
-  - Acquires `SELECT FOR UPDATE` on `TestAttempt`.
-  - Verifies `TestAttempt.status === 'IN_PROGRESS'`. If `SUBMITTED`, `TIMED_OUT`, or `ABANDONED`, returns `409 Conflict`.
-  - Verifies server time `NOW() < expiresAt`. If `NOW() >= expiresAt`, rejects write with `409 Conflict` (`"Attempt deadline has passed"`).
-- **Response (200):** `{ "success": true, "lastSavedAt": "2026-11-08T08:35:12.000Z" }`
+  *(Note: `answerText` can be `null` or a string up to 500 chars; `isFlaggedForReview` is a boolean)*
+- **Response (200 OK):**
+  ```json
+  {
+    "success": true,
+    "data": {
+      "questionId": "cmw86bne4005ylqu6j1a7h4q8",
+      "answerText": "FALSE",
+      "isFlaggedForReview": false,
+      "lastSavedAt": "2026-11-09T01:05:00.000Z"
+    }
+  }
+  ```
 - **Errors:**
-  - `403 Forbidden` (attempt not owned by user).
-  - `400 Bad Request` (question does not belong to attempt's published test version).
-  - `409 Conflict` (attempt finalized or deadline expired).
+  - `401 Unauthorized` (unauthenticated).
+  - `400 Bad Request` (`VALIDATION_ERROR` or `QUESTION_NOT_IN_VERSION`).
+  - `403 Forbidden` (`FORBIDDEN_ATTEMPT_ACCESS` or `ATTEMPT_EXPIRED`).
+  - `404 Not Found` (`ATTEMPT_NOT_FOUND`).
+  - `409 Conflict` (`ATTEMPT_NOT_IN_PROGRESS`).
 
 ### `POST /api/exam/[attemptId]/submit`
 - **Purpose:** Final manual submission of an examination.

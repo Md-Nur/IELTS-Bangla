@@ -304,7 +304,7 @@ All triggers, partial unique indexes, locking strategies, and deadline transitio
 
 ## 8. Verification Results on Dedicated Neon Database (`ielts_bangla`)
 
-The Reading Phase 1 exam start and content retrieval workflows were executed and verified against the live Neon database:
+The Reading Phase 1 (Exam Start & Content Retrieval) and Phase 2 (Reliable Answer Autosave) workflows were executed and verified against the live Neon database:
 
 | # | Test Scenario | Mechanism | Result | Status |
 | :--- | :--- | :--- | :--- | :--- |
@@ -316,5 +316,10 @@ The Reading Phase 1 exam start and content retrieval workflows were executed and
 | **6** | Expired attempt protection | `db_now >= attempt.expiresAt` | Expired attempt content blocked with 403 `ATTEMPT_EXPIRED` | **PASS** |
 | **7** | Zero answer key leakage | Strict projection & explicit DTO | 0% leakage of `acceptedAnswers`, `explanation`, or `scoringConfig` | **PASS** |
 | **8** | Continuous question numbering | Published order sorting | Continuous questions 1..40 across 3 sections | **PASS** |
+| **9** | Answer autosaving & row locking | `SELECT ... FOR UPDATE` + atomic transaction | Serialized concurrent saves; updates persisted safely | **PASS** |
+| **10** | Expired attempt write rejection | `db_now >= attempt.expiresAt` under row lock | Rejects autosave on expired attempt with 403 `ATTEMPT_EXPIRED` | **PASS** |
+| **11** | Submitted attempt write rejection | `status !== 'IN_PROGRESS'` under row lock | Rejects autosave on finalized attempt with 409 Conflict | **PASS** |
+| **12** | Cross-version question rejection | `PublishedQuestion` version validation | Rejects foreign question ID with 400 `QUESTION_NOT_IN_VERSION` | **PASS** |
+| **13** | Answer restoration on reload | `GET /api/exam/[attemptId]` query | Restores all saved answers with accurate lastSavedAt | **PASS** |
 
-**Total Live Neon Integration Tests Passed: 72 tests across 7 test suites.**
+**Total Live Integration & Unit Tests Passed: 89 tests across 9 test suites.**

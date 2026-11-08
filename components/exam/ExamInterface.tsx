@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { ExamContentResponseDTO } from "@/lib/services/examAttemptService";
 import { useExamState } from "@/hooks/useExamState";
 import { useCountdownTimer } from "@/hooks/useCountdownTimer";
+import { useExamAutosave } from "@/hooks/useExamAutosave";
 import { ExamHeader } from "./ExamHeader";
 import { ExamPassagePane } from "./ExamPassagePane";
 import { ExamQuestionsPane } from "./ExamQuestionsPane";
@@ -14,37 +15,63 @@ import { ExamExpiredState } from "./states/ExamExpiredState";
 
 export interface ExamInterfaceProps {
   examData: ExamContentResponseDTO;
-  onAnswerChange?: (questionId: string, answerText: string | null, isFlagged: boolean) => void;
 }
 
-export function ExamInterface({ examData, onAnswerChange }: ExamInterfaceProps) {
+export function ExamInterface({ examData }: ExamInterfaceProps) {
   // 1. Authoritative Countdown Timer
   const timer = useCountdownTimer({
     expiresAt: examData.attempt.expiresAt,
     initialRemainingSeconds: examData.attempt.remainingSeconds,
   });
 
-  // 2. Exam State Manager
-  const exam = useExamState({
-    examData,
-    onAnswerChange,
+  // 2. Reliable Autosave Hook
+  const autosave = useExamAutosave({
+    attemptId: examData.attempt.id,
+    initialAnswers: examData.savedAnswers,
   });
 
-  // 3. Prevent accidental tab close or page navigation
+  // Handle answer change with autosave debouncing
+  const handleAnswerChange = useCallback(
+    (questionId: string, answerText: string | null, isFlagged: boolean) => {
+      // Find question type to determine if debounce or immediate
+      const questionInfo = examData.sections
+        .flatMap((s) => s.questionGroups)
+        .find((g) => g.questions.some((q) => q.id === questionId));
+
+      const isTextCompletion =
+        questionInfo?.questionType === "NOTE_COMPLETION" ||
+        questionInfo?.questionType === "SENTENCE_COMPLETION" ||
+        questionInfo?.questionType === "SHORT_ANSWER";
+
+      // Immediate for discrete choices (radio, select, flag), debounced 600ms for text typing
+      const immediate = !isTextCompletion;
+      autosave.queueAnswerSave(questionId, answerText, isFlagged, immediate);
+    },
+    [autosave, examData.sections]
+  );
+
+  // 3. Exam State Manager
+  const exam = useExamState({
+    examData,
+    onAnswerChange: handleAnswerChange,
+  });
+
+  // 4. Prevent accidental tab close or page navigation; warn if unsaved changes exist
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = "You have an ongoing examination. Are you sure you want to leave?";
+      if (autosave.hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = "You have unsaved changes in your examination. Are you sure you want to leave?";
+      }
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, []);
+  }, [autosave.hasUnsavedChanges]);
 
-  // 4. Keyboard Navigation (ArrowLeft / ArrowRight for Prev / Next)
+  // 5. Keyboard Navigation (ArrowLeft / ArrowRight for Prev / Next)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't intercept if user is typing inside an input/textarea
       const target = e.target as HTMLElement;
       if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.tagName === "SELECT") {
         return;
@@ -80,6 +107,7 @@ export function ExamInterface({ examData, onAnswerChange }: ExamInterfaceProps) 
         sections={examData.sections}
         currentSectionIndex={exam.currentSectionIndex}
         timer={timer}
+        saveStatus={autosave.saveStatus}
         mobileActiveTab={exam.mobileActiveTab}
         onSelectSection={exam.goToSection}
         onSelectMobileTab={exam.setMobileActiveTab}

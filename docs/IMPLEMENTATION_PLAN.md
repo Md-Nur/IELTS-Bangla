@@ -103,6 +103,15 @@ flowchart TD
     - Window `beforeunload` leave protection.
     - State management hook (`useExamState`) structured for clean autosave hook integration.
     - Comprehensive test suite `components/exam/__tests__/examInterface.test.ts` (6 tests passing).
+  - **Phase 3 Reliable Answer Autosaving (`PUT /api/exam/[attemptId]/answers`):**
+    - Service layer `saveStudentAnswer` in `lib/services/examAttemptService.ts` executing inside atomic transaction with pessimistic row lock (`SELECT ... FOR UPDATE`).
+    - Authoritative database deadline verification (`NOW() < expiresAt`) and attempt ownership check (preventing IDOR).
+    - Composite relational validation ensuring `questionId` belongs to the attempt's `testVersionId`.
+    - Next.js 16 App Router route handler `PUT /api/exam/[attemptId]/answers` with Zod schema validation (max 500 chars).
+    - Strict answer-key protection: correctness (`isCorrect`, `scoreAwarded`) and accepted answers are never evaluated or leaked during autosave.
+    - Resilient frontend autosave hook (`useExamAutosave`): debounced text input (600ms), immediate discrete choice/flag updates (50ms), monotonic version checking to discard stale async responses, exponential backoff retries (1s, 2s, 4s), auto-retry on network reconnect (`online` event), and browser unsaved changes prompt (`beforeunload`).
+    - Visual autosave indicators in `ExamHeader`: saving spinner, green checkmark saved indicator, and offline / retrying alerts.
+    - Comprehensive integration and concurrency test suite in `app/api/exam/__tests__/examAutosave.test.ts` (11 tests passing).
 
 ---
 

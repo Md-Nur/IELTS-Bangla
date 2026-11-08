@@ -1,12 +1,14 @@
 import React from "react";
 import { CountdownTimerResult } from "@/hooks/useCountdownTimer";
 import { SectionDTO } from "@/lib/services/examAttemptService";
+import { SaveStatus } from "@/hooks/useExamAutosave";
 
 export interface ExamHeaderProps {
   testTitle: string;
   sections: SectionDTO[];
   currentSectionIndex: number;
   timer: CountdownTimerResult;
+  saveStatus?: SaveStatus;
   mobileActiveTab: "passage" | "questions";
   onSelectSection: (index: number) => void;
   onSelectMobileTab: (tab: "passage" | "questions") => void;
@@ -18,6 +20,7 @@ export function ExamHeader({
   sections,
   currentSectionIndex,
   timer,
+  saveStatus = "idle",
   mobileActiveTab,
   onSelectSection,
   onSelectMobileTab,
@@ -72,8 +75,37 @@ export function ExamHeader({
           })}
         </nav>
 
-        {/* Right: Countdown Timer & Exit */}
+        {/* Right: Autosave status, Countdown Timer & Exit */}
         <div className="flex items-center gap-3 shrink-0">
+          {/* Autosave Indicator */}
+          <div className="flex items-center gap-1 text-xs font-medium">
+            {saveStatus === "saving" && (
+              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800/80 text-slate-300 text-[11px] border border-slate-750">
+                <svg className="animate-spin h-3 w-3 text-blue-400" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                </svg>
+                <span className="hidden sm:inline">Saving...</span>
+              </span>
+            )}
+            {saveStatus === "saved" && (
+              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-950/50 text-emerald-400 text-[11px] border border-emerald-800/60">
+                <svg className="w-3 h-3 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="hidden sm:inline">Saved</span>
+              </span>
+            )}
+            {saveStatus === "failed" && (
+              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-950/80 text-amber-300 text-[11px] border border-amber-800/80">
+                <svg className="w-3 h-3 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span>Offline / Retrying</span>
+              </span>
+            )}
+          </div>
+
           {/* Prominent Timer */}
           <div
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md font-mono text-sm tracking-wider font-bold transition-all ${

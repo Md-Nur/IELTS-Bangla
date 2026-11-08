@@ -29,6 +29,15 @@ All notable changes, architectural decisions, and milestones for this project wi
   - Built client state hook (`useExamState`) managing answer map, navigation, and structured callbacks for autosave integration.
   - Updated landing page (`app/page.tsx`) with test catalog card and automatic session/attempt startup flow.
   - Authored comprehensive test suite in `components/exam/__tests__/examInterface.test.ts` (6 tests passing).
+- **Reliable Answer Autosaving (`PUT /api/exam/[attemptId]/answers`):**
+  - Implemented `saveStudentAnswer` in `lib/services/examAttemptService.ts` utilizing transaction-scoped `SELECT ... FOR UPDATE` row locking on `TestAttempt` to serialize writes and eliminate races with attempt finalization.
+  - Server-authoritative expiration enforcement reading `SELECT NOW()` directly from the PostgreSQL engine.
+  - Validates question belongs to the attempt's published test version (`QUESTION_NOT_IN_VERSION` check) and enforces payload limits via Zod.
+  - Idempotent upsert into `StudentAnswer` with composite foreign key verification.
+  - Absolute answer-key containment: `isCorrect` and `scoreAwarded` are explicitly not computed, and no accepted answers or evaluation data are exposed in API responses.
+  - Built frontend `useExamAutosave` hook with debounced text inputs (600ms), immediate discrete updates (50ms), monotonic version checking to ignore out-of-order responses, exponential retry backoff (1s, 2s, 4s), automatic re-sync on `online` event, and `beforeunload` warning when unsaved changes exist.
+  - Integrated visual autosave status indicators (`Saving...`, `Saved`, `Offline / Retrying`) in `ExamHeader`.
+  - Authored comprehensive test suite `app/api/exam/__tests__/examAutosave.test.ts` covering 11 concurrency, security, expiration, and idempotency test cases.
 
 ## [Unreleased] - 2026-11-08
 
