@@ -475,40 +475,22 @@ If the codebase and documentation disagree, investigate the actual implementatio
 
 ## Completed
 
-- Next.js project created using `create-next-app`.
-- Project directory: `ielts-bangla`.
-- Resource directory created.
-- Neon PostgreSQL connection URL added to `.env`.
+- Next.js project created using `create-next-app` (Next.js 16.4.5, React 19, Tailwind CSS v4).
+- Project directory verified: `ielts-bangla`.
+- Package manager verified: `bun@1.2.18`.
+- Resource directory analyzed completely (`docs/RESOURCE_ANALYSIS.md`).
+- Neon PostgreSQL connection endpoint (`ep-holy-glitter-a1vqn8z1-pooler.ap-southeast-1.aws.neon.tech`) verified reachable over TLS.
+- Database architecture designed (`docs/DATABASE.md`).
+- Master implementation plan established (`docs/IMPLEMENTATION_PLAN.md`).
+- API specification established (`docs/API.md`).
 
-These items have not yet been independently verified by the coding agent.
+## In Progress / Immediate Next Milestones
 
-## Not yet verified
-
-- Next.js configuration.
-- Prisma installation and configuration.
-- Database connectivity.
-- Database schema.
-- Authentication.
-- UI design system.
-- Admin dashboard.
-- Student dashboard.
-- Reading test engine.
-- Evaluation engine.
-- Deployment configuration.
-
-## Immediate next priorities
-
-1. Inspect repository.
-2. Inspect `resource/`.
-3. Verify environment configuration without exposing secrets.
-4. Analyse resources.
-5. Establish architecture.
-6. Configure Prisma and Neon.
-7. Design database schema.
-8. Implement authentication and roles.
-9. Build the admin question bank.
-10. Implement Reading mock tests.
-11. Implement Reading scoring and results.
+- M1: Project Foundation & Tooling (Vitest test runner setup, base design tokens).
+- M2: Database & Prisma Configuration (Prisma schema, migrations on Neon, seed Mock Test 01).
+- M3: Authentication & Authorization (Roles: STUDENT, ADMIN).
+- M4 & M5: Admin Dashboard & Test Management.
+- M6 & M7: Reading Test Engine & Deterministic Scoring Engine.
 
 ---
 
