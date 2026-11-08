@@ -318,8 +318,7 @@ Write your answers in boxes 20–23 on your answer sheet.`,
               prompt: "In older cities, heavy storms can cause [21] of untreated waste into rivers.",
               explanation: "Para C: ‘overflows of untreated waste into rivers’.",
               acceptedAnswers: [
-                { acceptedText: "overflows", isPrimary: true },
-                { acceptedText: "overflow" }
+                { acceptedText: "overflows", isPrimary: true }
               ]
             },
             {
@@ -327,8 +326,7 @@ Write your answers in boxes 20–23 on your answer sheet.`,
               prompt: "Ecologists compare roof habitats to [22], so animals must be able to reach them.",
               explanation: "Para D: ‘roof habitats are isolated islands’.",
               acceptedAnswers: [
-                { acceptedText: "islands", isPrimary: true },
-                { acceptedText: "isolated islands" }
+                { acceptedText: "islands", isPrimary: true }
               ]
             },
             {
@@ -570,9 +568,7 @@ Write the correct letter, A–H, in boxes 37–40 on your answer sheet.`,
               prompt: "The ability to shift attention quickly was once useful because it allowed our ancestors to notice a 37 [_______] while they were busy gathering food.",
               explanation: "Para 7: ‘notice a predator while they were gathering food’.",
               acceptedAnswers: [
-                { acceptedText: "A", isPrimary: true },
-                { acceptedText: "predator" },
-                { acceptedText: "A predator" }
+                { acceptedText: "A", isPrimary: true }
               ]
             },
             {
@@ -580,9 +576,7 @@ Write the correct letter, A–H, in boxes 37–40 on your answer sheet.`,
               prompt: "Today, technology provides constant 38 [_______] for this instinct,",
               explanation: "Para 7: ‘endless triggers for that instinct’.",
               acceptedAnswers: [
-                { acceptedText: "C", isPrimary: true },
-                { acceptedText: "triggers" },
-                { acceptedText: "C triggers" }
+                { acceptedText: "C", isPrimary: true }
               ]
             },
             {
@@ -590,9 +584,7 @@ Write the correct letter, A–H, in boxes 37–40 on your answer sheet.`,
               prompt: "and people have wrongly come to see the reflex as a 39 [_______].",
               explanation: "Para 7: ‘mistaken the reflex for a skill’.",
               acceptedAnswers: [
-                { acceptedText: "D", isPrimary: true },
-                { acceptedText: "skill" },
-                { acceptedText: "D skill" }
+                { acceptedText: "D", isPrimary: true }
               ]
             },
             {
@@ -600,9 +592,7 @@ Write the correct letter, A–H, in boxes 37–40 on your answer sheet.`,
               prompt: "Working on a single task may seem 40 [_______] at first, but it is probably more effective and less tiring.",
               explanation: "Para 7: ‘may feel unproductive at first’.",
               acceptedAnswers: [
-                { acceptedText: "E", isPrimary: true },
-                { acceptedText: "unproductive" },
-                { acceptedText: "E unproductive" }
+                { acceptedText: "E", isPrimary: true }
               ]
             }
           ]

@@ -100,7 +100,7 @@ async function runAudit() {
   assert(draftQuestions.length === 40, "R2.4: Exactly 40 DraftQuestion records exist (Q1 to Q40)");
 
   const draftAnswers = draftQuestions.flatMap((q) => q.acceptedAnswers);
-  assert(draftAnswers.length === 64, `R2.5: Exactly 64 DraftAcceptedAnswer records exist (found ${draftAnswers.length})`);
+  assert(draftAnswers.length === 54, `R2.5: Exactly 54 DraftAcceptedAnswer records exist (found ${draftAnswers.length})`);
 
   // 1.3 Published Version 1 counts
   const publishedVersions = test.publishedVersions;
@@ -118,7 +118,7 @@ async function runAudit() {
   assert(pubQuestions.length === 40, "R2.10: Exactly 40 PublishedQuestion records exist");
 
   const pubAnswers = pubQuestions.flatMap((q) => q.acceptedAnswers);
-  assert(pubAnswers.length === 64, `R2.11: Exactly 64 PublishedAcceptedAnswer records exist (found ${pubAnswers.length})`);
+  assert(pubAnswers.length === 54, `R2.11: Exactly 54 PublishedAcceptedAnswer records exist (found ${pubAnswers.length})`);
 
   // 1.4 Equality check between draft and published content
   assert(draftQuestions.length === pubQuestions.length, "R2.12: Draft question count matches published question count");

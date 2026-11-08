@@ -107,13 +107,18 @@ describe('Scoring Verification: Representative Answers Across All Question Types
   });
 
   describe('4. Sentence Completion (Passage 2: Q20–Q23, Word Limit: 2)', () => {
-    it('evaluates correct answers and accepted alternatives', () => {
+    it('evaluates correct answers per official answer key', () => {
       expect(evaluateSingleAnswer('growing material', getQ(20)).isCorrect).toBe(true);
       expect(evaluateSingleAnswer('overflows', getQ(21)).isCorrect).toBe(true);
-      expect(evaluateSingleAnswer('overflow', getQ(21)).isCorrect).toBe(true);
       expect(evaluateSingleAnswer('islands', getQ(22)).isCorrect).toBe(true);
-      expect(evaluateSingleAnswer('isolated islands', getQ(22)).isCorrect).toBe(true);
       expect(evaluateSingleAnswer('structural reinforcement', getQ(23)).isCorrect).toBe(true);
+    });
+
+    it('rejects unapproved inferred alternatives (Q21 overflow, Q22 isolated islands)', () => {
+      // Q21: only 'overflows' is supported by official key; singular 'overflow' rejected
+      expect(evaluateSingleAnswer('overflow', getQ(21)).isCorrect).toBe(false);
+      // Q22: only 'islands' is supported by official key; 'isolated islands' rejected
+      expect(evaluateSingleAnswer('isolated islands', getQ(22)).isCorrect).toBe(false);
     });
 
     it('rejects word-limit violations', () => {
@@ -165,34 +170,42 @@ describe('Scoring Verification: Representative Answers Across All Question Types
   });
 
   describe('7. Summary Completion with Word List (Passage 3: Q37–Q40)', () => {
-    it('accepts option letter (A, C, D, E), case-insensitive and formatted', () => {
+    it('accepts option letters only (A, C, D, E), case-insensitive and formatted', () => {
       expect(evaluateSingleAnswer('A', getQ(37)).isCorrect).toBe(true);
       expect(evaluateSingleAnswer('a', getQ(37)).isCorrect).toBe(true);
       expect(evaluateSingleAnswer('(A)', getQ(37)).isCorrect).toBe(true);
+      expect(evaluateSingleAnswer('A.', getQ(37)).isCorrect).toBe(true);
 
       expect(evaluateSingleAnswer('C', getQ(38)).isCorrect).toBe(true);
       expect(evaluateSingleAnswer('c', getQ(38)).isCorrect).toBe(true);
+      expect(evaluateSingleAnswer('(C)', getQ(38)).isCorrect).toBe(true);
 
       expect(evaluateSingleAnswer('D', getQ(39)).isCorrect).toBe(true);
       expect(evaluateSingleAnswer('d', getQ(39)).isCorrect).toBe(true);
+      expect(evaluateSingleAnswer('(D)', getQ(39)).isCorrect).toBe(true);
 
       expect(evaluateSingleAnswer('E', getQ(40)).isCorrect).toBe(true);
       expect(evaluateSingleAnswer('e', getQ(40)).isCorrect).toBe(true);
+      expect(evaluateSingleAnswer('(E)', getQ(40)).isCorrect).toBe(true);
     });
 
-    it('accepts matched word text and option + word combination', () => {
-      expect(evaluateSingleAnswer('predator', getQ(37)).isCorrect).toBe(true);
-      expect(evaluateSingleAnswer('PREDATOR', getQ(37)).isCorrect).toBe(true);
-      expect(evaluateSingleAnswer('A predator', getQ(37)).isCorrect).toBe(true);
+    it('strictly rejects word-based alternatives and letter+word combinations per instructions', () => {
+      // Q37: 'predator' or 'A predator' are rejected; only letter 'A' is accepted
+      expect(evaluateSingleAnswer('predator', getQ(37)).isCorrect).toBe(false);
+      expect(evaluateSingleAnswer('PREDATOR', getQ(37)).isCorrect).toBe(false);
+      expect(evaluateSingleAnswer('A predator', getQ(37)).isCorrect).toBe(false);
 
-      expect(evaluateSingleAnswer('triggers', getQ(38)).isCorrect).toBe(true);
-      expect(evaluateSingleAnswer('C triggers', getQ(38)).isCorrect).toBe(true);
+      // Q38: 'triggers' or 'C triggers' are rejected; only letter 'C' is accepted
+      expect(evaluateSingleAnswer('triggers', getQ(38)).isCorrect).toBe(false);
+      expect(evaluateSingleAnswer('C triggers', getQ(38)).isCorrect).toBe(false);
 
-      expect(evaluateSingleAnswer('skill', getQ(39)).isCorrect).toBe(true);
-      expect(evaluateSingleAnswer('D skill', getQ(39)).isCorrect).toBe(true);
+      // Q39: 'skill' or 'D skill' are rejected; only letter 'D' is accepted
+      expect(evaluateSingleAnswer('skill', getQ(39)).isCorrect).toBe(false);
+      expect(evaluateSingleAnswer('D skill', getQ(39)).isCorrect).toBe(false);
 
-      expect(evaluateSingleAnswer('unproductive', getQ(40)).isCorrect).toBe(true);
-      expect(evaluateSingleAnswer('E unproductive', getQ(40)).isCorrect).toBe(true);
+      // Q40: 'unproductive' or 'E unproductive' are rejected; only letter 'E' is accepted
+      expect(evaluateSingleAnswer('unproductive', getQ(40)).isCorrect).toBe(false);
+      expect(evaluateSingleAnswer('E unproductive', getQ(40)).isCorrect).toBe(false);
     });
 
     it('rejects incorrect words or letters from the list', () => {

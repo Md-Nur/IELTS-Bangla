@@ -177,8 +177,8 @@ describe("Mock Test 01 Seed Data Validation", () => {
       { questionId: "q-18", answerText: "vi" },
       { questionId: "q-19", answerText: "V" },
       { questionId: "q-20", answerText: "growing material" },
-      { questionId: "q-21", answerText: "overflow" }, // singular alternative
-      { questionId: "q-22", answerText: "isolated islands" }, // 2-word alternative
+      { questionId: "q-21", answerText: "  Overflows  " }, // whitespace/case variation
+      { questionId: "q-22", answerText: "Islands" }, // case variation
       { questionId: "q-23", answerText: "structural reinforcement" },
       { questionId: "q-24", answerText: "b" },
       { questionId: "q-25", answerText: "B" },
@@ -193,10 +193,10 @@ describe("Mock Test 01 Seed Data Validation", () => {
       { questionId: "q-34", answerText: "a" },
       { questionId: "q-35", answerText: "d" },
       { questionId: "q-36", answerText: "b" },
-      { questionId: "q-37", answerText: "predator" }, // word instead of letter
-      { questionId: "q-38", answerText: "triggers" },
-      { questionId: "q-39", answerText: "skill" },
-      { questionId: "q-40", answerText: "unproductive" },
+      { questionId: "q-37", answerText: "a" }, // lowercase letter variation
+      { questionId: "q-38", answerText: "(C)" }, // formatted letter variation
+      { questionId: "q-39", answerText: "d" }, // lowercase letter variation
+      { questionId: "q-40", answerText: "E." }, // formatted letter variation
     ];
 
     const result = evaluateReadingAttempt(allQuestions, alternativeAnswers);
