@@ -18,10 +18,17 @@ All notable changes, architectural decisions, and milestones for this project wi
   - `getExamContent`: Validates student ownership (IDOR prevention), verifies attempt is active (`IN_PROGRESS`) and unexpired, returns continuous 1..40 questions across 3 sections, and strictly excludes accepted answers, explanations, and scoring configurations from student payloads.
   - Defined explicit typed DTOs: `StartAttemptResponseDTO`, `ExamContentResponseDTO`, `SectionDTO`, `QuestionGroupDTO`, `QuestionDTO`, `SavedAnswerDTO`.
   - Authored integration test suite `lib/services/__tests__/examAttemptService.test.ts` (9 tests passing).
-- **Exam Next.js 16 App Router API Endpoints:**
-  - `POST /api/exam/start`: Starts or resumes an active exam attempt. Returns 201 for newly initialized attempts and 200 for resumed active attempts.
-  - `GET /api/exam/[attemptId]`: Retrieves published exam content and saved answers with asynchronous `params` handling for Next.js 16.
-  - Authored HTTP route test suite `app/api/exam/__tests__/examRoutes.test.ts` (8 tests passing).
+- **Student-Facing CD-IELTS Examination Interface (`/exam/[attemptId]`):**
+  - Built full desktop dual split-screen layout with independently scrollable passage viewer (`ExamPassagePane`) and question workspace (`ExamQuestionsPane`).
+  - Built mobile-responsive layout featuring single-column toggle (`[Passage | Questions]`) and touch-friendly controls.
+  - Implemented prominent countdown timer (`useCountdownTimer`) ticking against server-authoritative `expiresAt` with warning (10m) and urgent (5m) alert styling.
+  - Built interactive renderers for all 7 IELTS question types: `TrueFalseNotGiven`, `YesNoNotGiven`, `MultipleChoice`, `TextCompletion` (with real-time word limit validation), `MatchingHeadings` (Roman numerals i–ix dropdown with List of Headings reference card), and `SummaryCompletion` (letter A–H dropdown with word list reference card).
+  - Implemented 1..40 Question Palette (`ExamPalette` & `ExamBottomBar`) with answered, unanswered, flagged for review, and active focus states.
+  - Implemented examination overview modal (`ExamReviewModal`), exit confirmation dialog (`ExamExitModal`), and browser `beforeunload` prevention.
+  - Implemented lifecycle screens: `ExamLoadingState`, `ExamErrorState` with retry action, and `ExamExpiredState`.
+  - Built client state hook (`useExamState`) managing answer map, navigation, and structured callbacks for autosave integration.
+  - Updated landing page (`app/page.tsx`) with test catalog card and automatic session/attempt startup flow.
+  - Authored comprehensive test suite in `components/exam/__tests__/examInterface.test.ts` (6 tests passing).
 
 ## [Unreleased] - 2026-11-08
 

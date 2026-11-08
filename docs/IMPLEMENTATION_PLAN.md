@@ -78,39 +78,31 @@ flowchart TD
 
 ---
 
-### Milestone 5: Reading Examination Engine (Student Experience)
-- **Status:** PHASE 1 BACKEND COMPLETED | PHASE 2 FRONTEND PENDING
-- **Phase 1 Backend Achievements (COMPLETED):**
-  - Implemented `lib/services/examAttemptService.ts`:
-    - `startExamAttempt`: database-authoritative timing (`SELECT NOW()`), single active attempt enforcement via PostgreSQL partial unique index, seamless resumption of existing active attempt, and safe resolution of concurrent start races.
-    - `getExamContent`: IDOR-protected content delivery, expired attempt protection, continuous 1..40 question ordering, explicit response DTOs, and 100% answer-key/explanation containment.
-  - Implemented Next.js App Router API endpoints:
-    - `POST /api/exam/start`
-    - `GET /api/exam/[attemptId]`
-  - Authored comprehensive integration test suites:
-    - `lib/services/__tests__/examAttemptService.test.ts` (9 tests passing).
-    - `app/api/exam/__tests__/examRoutes.test.ts` (8 tests passing).
-- **Phase 2 Frontend Tasks (NEXT):**
-  - Examination split-screen layout:
-    - Left pane: Passage text with clear paragraph labeling (A, B, C...).
-    - Right pane: Interactive question rendering.
-    - Configurable layout: Accommodates any number of passages and questions defined by the test version.
-  - Authoritative countdown timer synchronized with server-issued `expiresAt`.
-  - Interactive question renderers (`TRUE_FALSE_NOT_GIVEN`, `MULTIPLE_CHOICE`, `SENTENCE_COMPLETION`, `MATCHING_HEADINGS`).
-  - Question palette navigation (1 to 40) with visual states.
-    - Matching Headings (dropdown selectors).
-  - Question palette navigation (1 to 40) with visual states: Unattempted, Answered, Flagged for Review.
-  - Debounced autosave to `/api/exam/[attemptId]/save` using `SELECT ... FOR UPDATE` row locking:
-    - Rejects writes if attempt is finalized or `now >= expiresAt`.
-  - Submission modal with warnings for unattempted questions.
-- **Deliverables:**
-  - `/exam/[testSlug]` examination page and components.
-  - `hooks/useExamAutosave.ts` and `hooks/useExamTimer.ts`.
-- **Acceptance Criteria:**
-  - Answers persist across page reloads.
-  - Timer enforces authoritative expiration without client clock trust.
-  - Autosave throttles safely with row-level locking.
-- **Testing Requirements:** Component render tests, timer synchronization tests, and autosave race-condition integration tests.
+### Milestone 5: Reading Examination Engine (Student Experience) (COMPLETED)
+- **Status:** COMPLETED
+- **Achievements:**
+  - **Phase 1 Backend APIs:**
+    - Implemented `lib/services/examAttemptService.ts` (`startExamAttempt`, `getExamContent`).
+    - Next.js 16 App Router API endpoints `POST /api/exam/start` and `GET /api/exam/[attemptId]`.
+    - Integration test suites `lib/services/__tests__/examAttemptService.test.ts` (9 tests) and `app/api/exam/__tests__/examRoutes.test.ts` (8 tests).
+  - **Phase 2 CD-IELTS Examination Interface:**
+    - Desktop dual split-screen layout with independently scrollable passage pane (`ExamPassagePane`) and question pane (`ExamQuestionsPane`).
+    - Responsive mobile layout with toggleable `[Passage | Questions]` views and touch-friendly controls.
+    - Top navigation bar (`ExamHeader`) with IELTS Bangla branding, passage range tabs (Q1–13, Q14–26, Q27–40), and leave test confirmation dialog (`ExamExitModal`).
+    - Authoritative countdown timer (`useCountdownTimer`) ticking against server `expiresAt` with warning (10m) and urgent (5m) visual alerts.
+    - Complete support for all 7 IELTS question types:
+      - `TrueFalseNotGiven` (radio pills)
+      - `YesNoNotGiven` (radio pills)
+      - `MultipleChoice` (options A–D)
+      - `TextCompletion` (inline word counter with IELTS hyphenation rules)
+      - `MatchingHeadings` (Roman numerals i–ix dropdown with List of Headings reference card)
+      - `SummaryCompletion` (letter A–H dropdown with word list reference card)
+    - Full 1 to 40 question navigator palette (`ExamPalette` & `ExamBottomBar`) with answered, unanswered, flagged for review, and current focus states.
+    - Examination overview and progress modal (`ExamReviewModal`).
+    - Lifecycle states: `ExamLoadingState`, `ExamErrorState` with retry, and `ExamExpiredState`.
+    - Window `beforeunload` leave protection.
+    - State management hook (`useExamState`) structured for clean autosave hook integration.
+    - Comprehensive test suite `components/exam/__tests__/examInterface.test.ts` (6 tests passing).
 
 ---
 
