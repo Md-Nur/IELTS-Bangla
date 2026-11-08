@@ -49,7 +49,7 @@ enum AttemptStatus {
 }
 
 enum TestStatus {
-  DRAFT
+  ACTIVE
   ARCHIVED
 }
 
@@ -67,7 +67,7 @@ model User {
   phone         String?
   targetBand    Float?
   examDate      DateTime?
-  isActive      Boolean       @default(true)
+  isActive      Boolean       @default(true) // Authoritative account status
   attempts      TestAttempt[]
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
@@ -78,29 +78,29 @@ model User {
 // -------------------------------------------------------------
 
 model Test {
-  id                            String                 @id @default(cuid())
-  title                         String
-  slug                          String                 @unique
-  module                        ModuleType             @default(READING)
-  category                      TestCategory           @default(ACADEMIC)
-  status                        TestStatus             @default(DRAFT)
-  description                   String?                @db.Text
-  durationMinutes               Int                    @default(60)
-  totalQuestions                Int                    @default(40)
-  currentPublishedVersionNumber Int?                   // Denormalized quick lookup for latest version
-  draftSections                 DraftSection[]
-  publishedVersions             PublishedTestVersion[]
-  createdAt                     DateTime               @default(now())
-  updatedAt                     DateTime               @updatedAt
+  id                String                 @id @default(cuid())
+  title             String
+  slug              String                 @unique
+  module            ModuleType             @default(READING)
+  category          TestCategory           @default(ACADEMIC)
+  status            TestStatus             @default(ACTIVE)
+  description       String?                @db.Text
+  durationMinutes   Int                    @default(60)
+  totalQuestions    Int                    @default(40)
+  draftSections     DraftSection[]
+  publishedVersions PublishedTestVersion[]
+  attempts          TestAttempt[]
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
 
-  @@index([module, category])
+  @@index([module, category, status])
 }
 
 model DraftSection {
   id          String               @id @default(cuid())
   testId      String
   test        Test                 @relation(fields: [testId], references: [id], onDelete: Cascade)
-  orderIndex  Int                  // 1 = Passage 1, 2 = Passage 2, 3 = Passage 3
+  orderIndex  Int                  // 1 = Passage 1, 2 = Passage 2, etc.
   title       String               // e.g. "The Bicycle: From Wooden Hobby-Horse to Everyday Machine"
   passageText String               @db.Text
   groups      DraftQuestionGroup[]
@@ -108,7 +108,7 @@ model DraftSection {
   updatedAt   DateTime             @updatedAt
 
   @@unique([testId, orderIndex])
-  @@index([testId])
+  // Redundant index on testId removed: covered by @@unique([testId, orderIndex])
 }
 
 model DraftQuestionGroup {
@@ -131,7 +131,7 @@ model DraftQuestion {
   id              String                @id @default(cuid())
   questionGroupId String
   questionGroup   DraftQuestionGroup    @relation(fields: [questionGroupId], references: [id], onDelete: Cascade)
-  questionNumber  Int                   // 1 to 40
+  questionNumber  Int                   // 1 to totalQuestions
   prompt          String                @db.Text
   options         Json?                 // ["A. ...", "B. ...", "C. ...", "D. ..."] for multiple choice
   explanation     String?               @db.Text
@@ -174,14 +174,14 @@ model PublishedTestVersion {
   publishedAt         DateTime           @default(now())
 
   @@unique([testId, versionNumber])
-  @@index([testId])
+  // Redundant index on testId removed: covered by @@unique([testId, versionNumber])
 }
 
 model PublishedSection {
   id            String                   @id @default(cuid())
   testVersionId String
   testVersion   PublishedTestVersion     @relation(fields: [testVersionId], references: [id], onDelete: Restrict)
-  orderIndex    Int                      // 1 = Passage 1, 2 = Passage 2, 3 = Passage 3
+  orderIndex    Int                      // 1 = Passage 1, 2 = Passage 2, etc.
   title         String
   passageText   String                   @db.Text
   groups        PublishedQuestionGroup[]
@@ -190,7 +190,7 @@ model PublishedSection {
   // Composite unique constraint enabling composite foreign key from PublishedQuestionGroup
   @@unique([testVersionId, id])
   @@unique([testVersionId, orderIndex])
-  @@index([testVersionId])
+  // Redundant index on testVersionId removed: covered by @@unique([testVersionId, id])
 }
 
 model PublishedQuestionGroup {
@@ -218,7 +218,7 @@ model PublishedQuestion {
   questionGroupId String
   // Enforces that question belongs strictly to a question group within the exact same testVersionId
   questionGroup   PublishedQuestionGroup    @relation(fields: [testVersionId, questionGroupId], references: [testVersionId, id], onDelete: Restrict)
-  questionNumber  Int                       // 1 to 40, continuous across the entire published test version
+  questionNumber  Int                       // 1 to totalQuestions, continuous across the entire published test version
   prompt          String                    @db.Text
   options         Json?
   explanation     String?                   @db.Text
@@ -253,7 +253,9 @@ model PublishedAcceptedAnswer {
 model TestAttempt {
   id               String               @id @default(cuid())
   userId           String
-  user             User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user             User                 @relation(fields: [userId], references: [id], onDelete: Restrict)
+  testId           String
+  test             Test                 @relation(fields: [testId], references: [id], onDelete: Restrict)
   testVersionId    String
   testVersion      PublishedTestVersion @relation(fields: [testVersionId], references: [id], onDelete: Restrict)
   status           AttemptStatus        @default(IN_PROGRESS)
@@ -261,7 +263,7 @@ model TestAttempt {
   expiresAt        DateTime             // Server-authoritative submission deadline
   submittedAt      DateTime?            // Server timestamp when finalized (manual submit or timeout)
   timeSpentSeconds Int                  @default(0)
-  rawScore         Int?                 // 0 to 40
+  rawScore         Int?                 // 0 to totalQuestions
   estimatedBand    Float?               // e.g. 7.5
   answers          StudentAnswer[]
   evaluation       EvaluationResult?
@@ -270,7 +272,7 @@ model TestAttempt {
 
   // Multi-column unique constraint enabling composite foreign key from StudentAnswer
   @@unique([id, testVersionId])
-  @@index([userId, status])
+  @@index([userId, testId, status])
   @@index([testVersionId])
 }
 
@@ -288,18 +290,19 @@ model StudentAnswer {
   // Composite foreign keys enforce:
   // (1) Attempt must exist with matching testVersionId
   // (2) Question must exist within the exact same testVersionId
-  attempt            TestAttempt       @relation(fields: [attemptId, testVersionId], references: [id, testVersionId], onDelete: Cascade)
+  // (3) OnDelete: Restrict prevents cascading deletion of answers
+  attempt            TestAttempt       @relation(fields: [attemptId, testVersionId], references: [id, testVersionId], onDelete: Restrict)
   question           PublishedQuestion @relation(fields: [testVersionId, questionId], references: [testVersionId, id], onDelete: Restrict)
 
   @@unique([attemptId, questionId])
-  @@index([attemptId])
+  // Redundant index on attemptId removed: covered by @@unique([attemptId, questionId])
   @@index([questionId])
 }
 
 model EvaluationResult {
   id                String      @id @default(cuid())
   attemptId         String      @unique
-  attempt           TestAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  attempt           TestAttempt @relation(fields: [attemptId], references: [id], onDelete: Restrict)
   totalQuestions    Int         @default(40)
   totalAttempted    Int         @default(0)
   totalCorrect      Int         @default(0)

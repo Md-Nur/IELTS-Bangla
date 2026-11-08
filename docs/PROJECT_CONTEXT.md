@@ -480,24 +480,26 @@ If the codebase and documentation disagree, investigate the actual implementatio
 - Package manager verified: `bun@1.2.18`.
 - Resource directory analyzed completely (`docs/RESOURCE_ANALYSIS.md`).
 - Neon PostgreSQL connection endpoint (`ep-holy-glitter-a1vqn8z1-pooler.ap-southeast-1.aws.neon.tech`) verified reachable over TLS.
-- Database architecture designed and revised (`docs/DATABASE.md`, `prisma/schema.prisma`):
+- Database architecture designed, revised, and validated (`docs/DATABASE.md`, `prisma/schema.prisma`):
   - Strict separation of editable drafts from immutable published test snapshots.
   - Multi-level composite foreign keys enforcing version isolation for sections, question groups, questions, accepted answers, and student answers.
-  - Question numbering uniqueness enforced across published test versions (`@@unique([testVersionId, questionNumber])`).
-  - Transaction-safe, idempotent finalization service designed for both manual submission (`SUBMITTED`) and timeout expiration (`TIMED_OUT`).
-  - Scoring reproducibility guaranteed via `scoringVersion` and `scoringConfig` JSON snapshots.
-  - Redundant indexes removed; `User.passwordHash` nullable for future OAuth; `StudentAnswer.scoreAwarded` nullability aligned.
+  - Historical exam preservation enforced via `onDelete: Restrict` and `User.isDeactivated`.
+  - Complete PostgreSQL immutability triggers specified for all published tables.
+  - Row-level locking (`SELECT FOR UPDATE`) defined for autosave concurrency.
+  - Strict deadline enforcement: late manual submissions route to `TIMED_OUT`.
+  - Question numbering uniqueness and 1..N continuous validation specified for publishing service.
+  - Prisma schema validated and Prisma Client (v6.19.3) generated without errors.
   - Exact band conversion table resolved directly from `resource/Mock_01_Answer_Key.pdf`.
 - Master implementation plan updated and prioritized for Reading MVP (`docs/IMPLEMENTATION_PLAN.md`).
 - API specification updated (`docs/API.md`).
 
 ## In Progress / Immediate Next Milestones
 
-- Pre-Migration Architectural Approval.
+- Final Technical Founder Approval for Database Migration.
 - M1: Project Foundation & Tooling (Vitest test runner setup, base design tokens).
-- M2: Database & Prisma Configuration (Prisma migration against Neon, seed Mock Test 01).
+- M2: Database Migration & Seeding with Triggers (Prisma migration against Neon, seed Mock Test 01).
 - M3: Minimal Authentication (Credentials login/register, session cookie, role guard).
-- M4: Minimal Test Management & Publishing Service.
+- M4: Publishing Service with Integrity Validation.
 - M5 & M6: Reading Examination Engine & Deterministic Scoring Engine.
 
 ---

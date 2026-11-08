@@ -3,7 +3,7 @@
 **Document type:** Living API Contracts & Route Specification  
 **Project:** IELTS Bangla  
 **Author:** Software Architect & Full-Stack Developer  
-**Status:** Revised Specification (Pre-Migration Architecture Review)  
+**Status:** Final Pre-Migration Architecture Specification  
 **Last updated:** 2026-11-08  
 
 ---
@@ -12,10 +12,10 @@
 
 All API routes and server actions in IELTS Bangla adhere to standard RESTful and Next.js App Router patterns:
 - **Authentication:** Stateless, secure HTTP-only session cookie verified on every protected route.
-- **Validation:** All incoming request bodies validated using Zod.
+- **Validation:** All incoming request bodies validated using Zod schemas.
 - **Error Responses:** Standard JSON structure `{ error: string, code?: string, details?: unknown }`.
 - **Authorization:** Handled strictly on the server; student actions are scoped strictly to `session.user.id`.
-- **Answer Key Protection:** Answer keys, rationales, and accepted alternatives are NEVER delivered to the client during an active test session.
+- **Answer Key Security:** Answer keys, rationales, and accepted alternatives are NEVER delivered to the client during an active test session.
 
 ---
 
@@ -23,6 +23,7 @@ All API routes and server actions in IELTS Bangla adhere to standard RESTful and
 
 ### `POST /api/auth/register`
 - **Purpose:** Register a new student account.
+- **Role Assignment:** Always assigned `Role.STUDENT`. Any `role` field in the request body is stripped/ignored.
 - **Request Body:**
   ```json
   {
@@ -32,13 +33,15 @@ All API routes and server actions in IELTS Bangla adhere to standard RESTful and
   }
   ```
 - **Response (201):** `{ "success": true, "user": { "id": "...", "name": "...", "email": "...", "role": "STUDENT" } }`
-- **Errors:** `400 Bad Request` (validation failed), `409 Conflict` (email already registered).
+- **Errors:** 
+  - `400 Bad Request` (validation failed).
+  - `409 Conflict` (email already registered).
 
 ### `POST /api/auth/login`
-- **Purpose:** Authenticate user and issue secure HTTP-only session cookie.
+- **Purpose:** Authenticate user credentials and issue secure HTTP-only session cookie.
 - **Request Body:** `{ "email": "...", "password": "..." }`
 - **Response (200):** `{ "success": true, "user": { "id": "...", "name": "...", "email": "...", "role": "..." } }`
-- **Errors:** `401 Unauthorized` (invalid credentials).
+- **Errors:** `401 Unauthorized` (invalid credentials or deactivated account).
 
 ### `POST /api/auth/logout`
 - **Purpose:** Invalidate session and clear session cookie.
@@ -49,12 +52,32 @@ All API routes and server actions in IELTS Bangla adhere to standard RESTful and
 ## 3. Examination Endpoints (Student)
 
 ### `GET /api/tests`
-- **Purpose:** List all currently published tests available for examination.
+- **Purpose:** List all active, published tests available for examination.
+- **Filter Rules:**
+  - `Test.status = 'ACTIVE'`
+  - `PublishedTestVersion.isArchived = false`
 - **Query Params:** `?module=READING&category=ACADEMIC`
-- **Response (200):** Array of active test summaries (id, title, slug, durationMinutes, totalQuestions).
+- **Response (200):**
+  ```json
+  [
+    {
+      "id": "cuid_test_1",
+      "title": "IELTS Academic Reading Mock Test 01",
+      "slug": "academic-reading-mock-01",
+      "module": "READING",
+      "category": "ACADEMIC",
+      "durationMinutes": 60,
+      "totalQuestions": 40,
+      "versionNumber": 1
+    }
+  ]
+  ```
 
 ### `POST /api/exam/start`
-- **Purpose:** Initialize a new test attempt for the authenticated student against an active `PublishedTestVersion`.
+- **Purpose:** Initialize a new test attempt for the authenticated student against an active published test version.
+- **Duplicate Active Attempt Policy:**
+  - A student can have at most ONE `IN_PROGRESS` attempt per test at any given time.
+  - If an attempt is already `IN_PROGRESS` and has not expired, the endpoint returns `409 Conflict` with `{ "error": "Active attempt already in progress", "attemptId": "...", "canResume": true }`.
 - **Request Body:** `{ "testSlug": "academic-reading-mock-01" }`
 - **Response (201):**
   ```json
@@ -93,10 +116,10 @@ All API routes and server actions in IELTS Bangla adhere to standard RESTful and
     ]
   }
   ```
-  *(Security Notice: Correct answers, accepted alternatives, and rationales are strictly stripped from this payload.)*
+  *(Answer keys, rationales, and accepted answers are strictly omitted from this payload.)*
 
 ### `POST /api/exam/[attemptId]/save`
-- **Purpose:** Debounced autosave endpoint for student answers.
+- **Purpose:** Debounced autosave endpoint for student answers with row-level locking.
 - **Request Body:**
   ```json
   {
@@ -105,20 +128,24 @@ All API routes and server actions in IELTS Bangla adhere to standard RESTful and
     "isFlaggedForReview": false
   }
   ```
+- **Concurrency & Locking Rules:**
+  - Acquires `SELECT FOR UPDATE` on `TestAttempt`.
+  - Verifies `TestAttempt.status === 'IN_PROGRESS'`. If `SUBMITTED`, `TIMED_OUT`, or `ABANDONED`, returns `409 Conflict`.
+  - Verifies server time `now < expiresAt`. If `now >= expiresAt`, rejects write with `409 Conflict` (`"Attempt deadline has passed"`).
 - **Response (200):** `{ "success": true, "lastSavedAt": "2026-11-08T08:35:12.000Z" }`
-- **Errors:** 
-  - `403 Forbidden` (attempt does not belong to authenticated user).
+- **Errors:**
+  - `403 Forbidden` (attempt not owned by user).
   - `400 Bad Request` (question does not belong to attempt's published test version).
-  - `409 Conflict` (attempt is already `SUBMITTED` or `TIMED_OUT`; writes are rejected).
+  - `409 Conflict` (attempt finalized or deadline expired).
 
 ### `POST /api/exam/[attemptId]/submit`
 - **Purpose:** Final manual submission of an examination.
-- **Behavior:**
-  - Invokes `finalizeAndScoreAttempt(attemptId, { reason: 'MANUAL', actorUserId })`.
-  - Atomically transitions attempt from `IN_PROGRESS` to `SUBMITTED`.
-  - Evaluates all answers deterministically and records `EvaluationResult`.
-  - Returns the evaluation summary.
-- **Idempotency:** Repeated calls return the existing `EvaluationResult` with `alreadyFinalized: true`.
+- **Deadline Evaluation & Workflow:**
+  - Compares server time `now` against `expiresAt`.
+  - **If `now <= expiresAt`:** Transitions attempt to `SUBMITTED`, calculates scores, records `EvaluationResult`, and returns the result.
+  - **If `now > expiresAt`:** The manual submission arrived after expiry! It automatically routes through **timeout finalization**, transitioning the attempt to `TIMED_OUT`, calculates scores, and records `EvaluationResult`.
+- **Single Transaction Guarantee:** Transition, scoring, and `EvaluationResult` creation execute atomically. If scoring fails, status rollback occurs.
+- **Idempotency:** Repeated calls return the existing committed `EvaluationResult`.
 - **Response (200):**
   ```json
   {
@@ -136,16 +163,20 @@ All API routes and server actions in IELTS Bangla adhere to standard RESTful and
   ```
 
 ### `POST /api/exam/[attemptId]/timeout`
-- **Purpose:** Authoritative expiration endpoint triggered automatically when the server-calculated deadline (`expiresAt`) is reached.
-- **Behavior:**
-  - Invokes `finalizeAndScoreAttempt(attemptId, { reason: 'TIMEOUT' })`.
-  - Atomically transitions attempt from `IN_PROGRESS` to `TIMED_OUT`.
-  - Evaluates saved answers and records `EvaluationResult`.
+- **Purpose:** Authoritative expiration endpoint triggered when the countdown reaches zero or during a timeout sweep.
+- **Authorization & Deadline Validation:**
+  - Evaluates server time: `now >= expiresAt`.
+  - If `now < expiresAt`: Rejects request with `400 Bad Request` (`"Attempt deadline has not passed"`).
+- **Transition:** Atomically transitions attempt from `IN_PROGRESS` to `TIMED_OUT`, scores saved answers, and records `EvaluationResult`.
 - **Response (200):** Same structure as `/submit`, with `"status": "TIMED_OUT"`.
 
 ### `GET /api/exam/[attemptId]/results`
-- **Purpose:** Fetch full scored results, per-question correctness, and detailed explanations for review.
-- **Access:** Only authorized after status is `SUBMITTED` or `TIMED_OUT`, and only for the attempt owner or an administrator.
+- **Purpose:** Fetch detailed scored results, per-question correctness, and detailed explanations for review.
+- **Authorization & Pre-condition:**
+  - Allowed ONLY if `TestAttempt.status` is `SUBMITTED` or `TIMED_OUT`.
+  - Allowed ONLY if `EvaluationResult` exists.
+  - Allowed ONLY for the attempt's owner or an admin.
+  - If attempt is still `IN_PROGRESS`, returns `403 Forbidden`.
 - **Response (200):**
   ```json
   {
@@ -176,10 +207,12 @@ All API routes and server actions in IELTS Bangla adhere to standard RESTful and
 
 ---
 
-## 4. Admin Test Authoring Endpoints (Admin Only)
+## 4. Admin Management Endpoints (Admin Only)
+
+All endpoints below require server session `role === 'ADMIN'`. Unauthorized requests return `403 Forbidden`.
 
 ### `GET /api/admin/tests`
-- **Purpose:** List all tests (drafts and published versions).
+- **Purpose:** List all tests (active, archived, drafts, and published versions).
 
 ### `POST /api/admin/tests`
 - **Purpose:** Create a new draft test container.
@@ -188,8 +221,15 @@ All API routes and server actions in IELTS Bangla adhere to standard RESTful and
 - **Purpose:** Update draft test metadata, sections, question groups, questions, and accepted answers.
 
 ### `POST /api/admin/tests/[testId]/publish`
-- **Purpose:** Freeze current draft and create a new immutable `PublishedTestVersion` with incremented version number.
+- **Purpose:** Validate draft integrity and create an immutable `PublishedTestVersion` in a single transaction.
+- **Validation Checked:**
+  - Continuous question numbering (1 to `totalQuestions`).
+  - Total question count matches test definition.
+  - Every question has accepted answers.
+  - Valid question types and options.
+  - Complete band conversion table covering 0 to `totalQuestions`.
 - **Response (201):** `{ "success": true, "versionNumber": 2, "publishedVersionId": "..." }`
+- **Errors:** `422 Unprocessable Entity` (publishing validation failed with detailed error list).
 
 ### `POST /api/admin/versions/[versionId]/archive`
-- **Purpose:** Set `isArchived: true` on a published version (removes from new student listings without deleting historical attempts).
+- **Purpose:** Set `isArchived: true` on a published version (removes it from student catalog without deleting historical attempt data).
