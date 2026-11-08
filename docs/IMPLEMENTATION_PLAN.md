@@ -3,7 +3,7 @@
 **Document type:** Master Engineering Roadmap & Milestone Specification  
 **Project:** IELTS Bangla  
 **Author:** Software Architect & Technical Lead  
-**Status:** Final Pre-Migration Roadmap  
+**Status:** Phase 1 (Reading MVP) — Testing, Content Extraction & Seed Staged  
 **Last updated:** 2026-11-08  
 
 ---
@@ -14,50 +14,40 @@ The primary directive is shipping a working, robust, verifiable **Reading MVP** 
 
 ```mermaid
 flowchart TD
-    M1[M1: Project Foundation & Unit Testing Harness] --> M2[M2: Database Migration & Seeding with Triggers]
-    M2 --> M3[M3: Minimal Authentication & Server-Side Roles]
-    M3 --> M4[M4: Publishing Service with Integrity Validation]
-    M4 --> M5[M5: Reading Examination Engine UI & Autosave Locking]
-    M5 --> M6[M6: Deterministic Scoring Engine & Timeout Handling]
-    M6 --> M7[M7: Results & Detailed Answer Review]
-    M7 --> M8[M8: Admin Authoring UI Enhancements]
-    M8 --> M9[M9: Listening Module]
-    M9 --> M10[M10: Writing Module & AI Evaluation]
-    M10 --> M11[M11: Speaking Module & AI Evaluation]
-    M11 --> M12[M12: Production Hardening & Deployment]
+    M1["M1: Foundation, Testing & Scoring Engine (COMPLETED)"] --> M2["M2: Neon DB Migration (COMPLETED) & Seed Preparation (COMPLETED)"]
+    M2 --> M3["M3: Mock 01 Founder Review & Seed Neon Execution"]
+    M3 --> M4["M4: Minimal Authentication & Session System"]
+    M4 --> M5["M5: Reading API Endpoints (Start, Autosave, Finalize)"]
+    M5 --> M6["M6: Reading Examination Engine UI (Split-Pane, Timer, Nav)"]
+    M6 --> M7["M7: Results & Detailed Answer Review Page"]
+    M7 --> M8["M8: Production Hardening & Deployment"]
 ```
 
 ---
 
 ## 2. Milestone Breakdown
 
-### Milestone 1: Project Foundation & Tooling
-- **Objectives:** Establish the developer toolchain, testing harness, and clean environment baseline.
-- **Tasks:**
-  - Verify Next.js 16.4.5, React 19, and Tailwind CSS v4 setup.
-  - Install and configure `vitest` with `@testing-library/react` for fast, bun-compatible unit tests.
-  - Set up base UI tokens, layout shell, and typography (Geist font).
-  - Verify `.env.example` contains safe placeholder values.
-- **Deliverables:**
-  - `vitest.config.mts`
-  - Smoke test suite verifying test runner.
-  - Passing `bun run lint` and `bun run build`.
-- **Acceptance Criteria:** Zero linting/type errors; test harness runs with `bun test`.
+### Milestone 1: Foundation, Testing Harness & Pure Scoring Engine (COMPLETED)
+- **Status:** COMPLETED
+- **Achievements:**
+  - Configured `vitest@5.1.0` with `@/*` path mapping in `vitest.config.mts`.
+  - Added `"test": "vitest run"` and `"test:watch": "vitest"` scripts to `package.json`.
+  - Implemented pure scoring engine: `lib/scoring/normalize.ts`, `lib/scoring/wordLimit.ts`, `lib/scoring/band.ts`, and `lib/scoring/reading.ts`.
+  - Comprehensive unit test suite in `lib/scoring/__tests__/scoring.test.ts` (15 tests passing).
 
 ---
 
-### Milestone 2: Database Migration & Seeding with Triggers
-- **Objectives:** Apply the normalized Prisma schema to Neon PostgreSQL, attach PostgreSQL immutability triggers, and seed Mock Test 01.
-- **Tasks:**
-  - Generate initial migration with `prisma migrate dev --create-only`.
-  - Append the PostgreSQL immutability triggers (`protect_published_test_version` and `protect_published_child_record`) directly to the migration SQL file.
-  - Apply migration to Neon PostgreSQL.
-  - Create database client singleton `lib/prisma.ts`.
-  - Implement seed script `prisma/seed.ts` to ingest `Mock_01_Test.pdf` and `Mock_01_Answer_Key.pdf` into a complete, verified `PublishedTestVersion`.
-- **Deliverables:**
-  - `lib/prisma.ts`
-  - `prisma/migrations/*_init_reading_schema/migration.sql`
-  - `prisma/seed.ts`
+### Milestone 2: Database Migration & Mock Test 01 Seed (MIGRATION COMPLETE, SEED PREPARED)
+- **Status:** MIGRATION COMPLETE, SEED STAGED & VERIFIED
+- **Achievements:**
+  - Initial migration applied to dedicated `ielts_bangla` Neon database (`20261108000000_init_reading_schema`).
+  - Immutability and TRUNCATE triggers, partial unique active-attempt index verified.
+  - Complete Mock Test 01 content extracted from `resource/Mock_01_Test.pdf` & `resource/Mock_01_Answer_Key.pdf` into `prisma/seeds/mock01Data.ts`.
+  - Comprehensive validation test suite authored in `lib/scoring/__tests__/mock01SeedValidation.test.ts` (9 tests passing).
+  - Draft-to-published publishing service implemented in `lib/services/testPublishing.ts` with unit test suite in `lib/services/__tests__/testPublishing.test.ts` (5 tests passing).
+  - Idempotent seed script authored in `prisma/seed.ts`.
+  - Content Verification Report published in `docs/MOCK_01_VERIFICATION.md`.
+  - Database safeguarded: 0 rows inserted into Neon awaiting founder sign-off.
 - **Acceptance Criteria:**
   - Migration runs against Neon PostgreSQL without data loss.
   - Triggers are active and verified: attempting to UPDATE or DELETE a published section/question/answer fails with PostgreSQL exception.

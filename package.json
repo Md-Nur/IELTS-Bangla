@@ -10,6 +10,9 @@
     "test": "vitest run",
     "test:watch": "vitest"
   },
+  "prisma": {
+    "seed": "bun prisma/seed.ts"
+  },
   "dependencies": {
     "@prisma/client": "^6.4.1",
     "next": "16.4.5",

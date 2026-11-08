@@ -34,6 +34,8 @@ export const DEFAULT_ACADEMIC_READING_BAND_TABLE: BandConversionRange[] = [
   { min: 0, max: 0, band: 0.0 },
 ];
 
+export const MOCK_01_BAND_TABLE = DEFAULT_ACADEMIC_READING_BAND_TABLE;
+
 /**
  * Maps a raw score (0 to totalQuestions) to an estimated IELTS Band (0.0 to 9.0)
  * using the test version's specific conversion table.
@@ -57,3 +59,5 @@ export function calculateEstimatedBand(
 
   return 0.0;
 }
+
+export const getAcademicReadingBandScore = calculateEstimatedBand;
