@@ -1,9 +1,9 @@
-# Implementation Plan — IELTS Bangla
+# Implementation Plan — IELTS Bangla (Revised)
 
 **Document type:** Master Engineering Roadmap & Milestone Specification  
 **Project:** IELTS Bangla  
 **Author:** Software Architect & Technical Lead  
-**Status:** Initial Plan Proposal  
+**Status:** Revised Plan Proposal  
 **Last updated:** 2026-11-08  
 
 ---
@@ -51,14 +51,19 @@ flowchart TD
 
 ---
 
-### Milestone 2: Database & Prisma Configuration
-- **Objectives:** Establish reliable, secure, type-safe database access with Neon PostgreSQL using Prisma ORM.
+### Milestone 2: Database & Prisma Configuration (Revised)
+- **Objectives:** Establish reliable, secure, type-safe database access with Neon PostgreSQL using Prisma ORM with draft/published separation and composite foreign key integrity.
 - **Tasks:**
   - Install `prisma` (devDependencies) and `@prisma/client`.
-  - Ensure `DATABASE_URL` is configured cleanly in `.env` without exposing secrets.
-  - Write `prisma/schema.prisma` supporting Users, Tests, PublishedTestVersions, TestSections, QuestionGroups, Questions, AcceptedAnswers, TestAttempts, StudentAnswers, EvaluationResults.
-  - Run initial Prisma migration against Neon PostgreSQL.
-  - Build `prisma/seed.ts` to ingest Mock Test 01 from `resource/Mock_01_Test.pdf` & `resource/Mock_01_Answer_Key.pdf`.
+  - Ensure `DATABASE_URL` is configured in `.env` without exposing secrets.
+  - Implement `prisma/schema.prisma` featuring:
+    - User model with extensible auth/profile fields.
+    - Editable draft tree: `Test`, `DraftSection`, `DraftQuestionGroup`, `DraftQuestion`, `DraftAcceptedAnswer`.
+    - Immutable published tree: `PublishedTestVersion`, `PublishedSection`, `PublishedQuestionGroup`, `PublishedQuestion`, `PublishedAcceptedAnswer`.
+    - Composite unique and foreign key constraints on `StudentAnswer(attemptId, testVersionId)` and `StudentAnswer(questionId, testVersionId)`.
+    - Question number uniqueness `@@unique([testVersionId, questionNumber])`.
+  - Generate Prisma Client and create migration.
+  - Build `prisma/seed.ts` to ingest Mock Test 01 from `resource/Mock_01_Test.pdf` & `resource/Mock_01_Answer_Key.pdf` into both draft and initial published version 1.
   - Create singleton database client `lib/prisma.ts`.
 - **Dependencies:** Milestone 1.
 - **Deliverables:**
@@ -69,18 +74,18 @@ flowchart TD
 - **Acceptance Criteria:**
   - Prisma client generates without error.
   - Migration applies cleanly to Neon DB.
-  - Seeding populates Mock Test 01 (3 passages, 40 questions, answers, rationales, band conversion table).
-- **Testing Requirements:** DB connectivity integration test verifying read/write of test records.
+  - Seeding populates Mock Test 01 (3 passages, 40 continuous questions, exact accepted answers, rationales, and calibrated band conversion table).
+- **Testing Requirements:** DB connectivity integration test verifying that cross-version student answer insertions are rejected by the database.
 
 ---
 
 ### Milestone 3: Authentication & Server-Side Authorization
 - **Objectives:** Provide secure authentication for Students and Admins with role-based access control.
 - **Tasks:**
-  - Implement secure credential-based auth using bcrypt/argon2 password hashing with secure HTTP-only cookies / JWT session management (or Auth.js v5 / Jose lightweight session).
+  - Implement secure credential-based auth using bcrypt password hashing with secure HTTP-only cookies and lightweight edge-compatible JWT session management via `jose`.
   - Create Registration and Login forms with Zod validation.
   - Create auth helper utilities: `getCurrentUser()`, `requireAuth()`, `requireRole('ADMIN')`.
-  - Add middleware/route protection for `/admin/*` and `/exam/*` and `/dashboard/*`.
+  - Add middleware/route protection for `/admin/*`, `/exam/*`, and `/dashboard/*`.
 - **Dependencies:** Milestone 2.
 - **Deliverables:**
   - `/login` and `/register` pages.
@@ -111,30 +116,31 @@ flowchart TD
 
 ---
 
-### Milestone 5: Question Bank & Test Management
-- **Objectives:** Allow administrators to author, edit, preview, and publish tests.
+### Milestone 5: Question Bank & Test Management (Authoring & Publishing)
+- **Objectives:** Allow administrators to author, edit, preview, and publish tests using the draft/published snapshot pipeline.
 - **Tasks:**
-  - CRUD operations for Tests (Draft status).
-  - Passage and Question Group authoring interface (rich text or markdown passage, question prompt, option setup, word limits).
-  - Accepted Answer configuration (multiple alternatives, case sensitivity flag, rationales/explanations).
-  - Band conversion table editor/preview.
-  - Test Publish workflow (creates immutable `PublishedTestVersion`).
+  - Draft authoring CRUD: Passages, Question Groups, Questions, Accepted Answers, Explanations.
+  - Admin preview interface rendering the draft exactly as a student would see it.
+  - Publish transaction service:
+    - Pre-flight checks: All 3 passages present, continuous questions 1 to 40, all accepted answers configured, valid band table.
+    - Deep-copies draft tree into `PublishedTestVersion` snapshot.
+    - Increments `versionNumber`.
 - **Dependencies:** Milestone 4.
 - **Deliverables:**
   - `/admin/tests/` management routes.
-  - Test builder and preview UI.
+  - Draft authoring UI & publish button with validation modal.
   - Zod validation schemas for test authoring.
 - **Acceptance Criteria:**
-  - Admin can create, preview, and publish a test.
-  - Publishing creates an immutable version with frozen question snapshots.
+  - Admin can author, preview, and publish a test.
+  - Published versions are frozen; editing the draft does not mutate the published version.
 - **Testing Requirements:** Unit tests for test publishing service; validation schema tests.
 
 ---
 
 ### Milestone 6: Reading Test Engine (Student Examination Experience)
-- **Objectives:** Provide a computer-delivered IELTS (CD-IELTS) testing environment.
+- **Objectives:** Provide an authentic, computer-delivered IELTS (CD-IELTS) testing environment.
 - **Tasks:**
-  - Split-screen examination layout (Passage on left, Questions on right, resizable/collapsible).
+  - Split-screen examination layout (Passage on left with paragraph markers A–G, Questions on right).
   - Countdown timer synchronized with server-authoritative `expiresAt`.
   - Interactive question renderers:
     - Multiple choice (single select radio).
@@ -143,10 +149,10 @@ flowchart TD
     - Matching Headings (dropdown selector).
   - Question Navigator bar (Questions 1–40):
     - Shows answered status, current question, and "Review" flag.
-  - Debounced autosave to `/api/exam/[attemptId]/save` storing `StudentAnswer`.
+  - Debounced autosave to `/api/exam/[attemptId]/save` storing `StudentAnswer(attemptId, testVersionId, questionId)`.
   - Passage tab navigation (Passage 1, Passage 2, Passage 3).
   - Submit confirmation modal displaying warning if questions are unanswered.
-  - Automatic submission when time expires.
+  - Automatic submission when server expiration is reached.
 - **Dependencies:** Milestone 5.
 - **Deliverables:**
   - `/exam/[testSlug]` route.
@@ -160,19 +166,20 @@ flowchart TD
 
 ---
 
-### Milestone 7: Reading Scoring Engine
-- **Objectives:** Server-side deterministic evaluation and band calculation.
+### Milestone 7: Reading Scoring Engine (Strict, Deterministic)
+- **Objectives:** Server-side deterministic evaluation and band calculation without fuzzy matching.
 - **Tasks:**
   - Implement scoring engine `lib/scoring/reading.ts`:
-    - Case-insensitive comparison.
-    - Whitespace and punctuation trimming/normalization.
-    - Multiple accepted answer matching (e.g. `fuel prices` vs `fuel-prices` vs `rising fuel prices`).
-    - Word limit enforcement (reject answers exceeding specified word count).
+    - Strict whitespace normalization (trim + collapse consecutive spaces).
+    - Unicode case insensitivity (unless `isCaseSensitive: true`).
+    - Multiple accepted answer matching (matching explicit `AcceptedAnswer` records only).
+    - Word limit enforcement (reject answers exceeding specified word count with score 0).
     - Roman numeral normalization for Headings (`i` vs `I`).
-  - Compute raw score (0–40).
-  - Map raw score to estimated IELTS Band (1.0–9.0) using test-specific band table.
-  - Compute section breakdowns (Passage 1, 2, 3 raw scores).
-  - Store results idempotently in `EvaluationResult`.
+  - Idempotent submission transaction:
+    - Conditional locking on `status = 'IN_PROGRESS'`.
+    - Idempotent return of existing `EvaluationResult` on duplicate submission.
+  - Calculate `rawScore` (0–40) and map to `estimatedBand` (1.0–9.0) using test-specific band table.
+  - Store results in `EvaluationResult`.
 - **Dependencies:** Milestone 6.
 - **Deliverables:**
   - `lib/scoring/reading.ts`
@@ -201,7 +208,7 @@ flowchart TD
   - Student Dashboard `/dashboard`:
     - Historical mock test attempts list.
     - Band score trend chart over time.
-    - Strengths & weaknesses by question type (e.g. True/False accuracy vs Matching Headings accuracy).
+    - Strengths & weaknesses by question type.
 - **Dependencies:** Milestone 7.
 - **Deliverables:**
   - `/results/[attemptId]/page.tsx`
@@ -216,42 +223,18 @@ flowchart TD
 
 ### Milestone 9: Listening Module (Phase 2)
 - **Objectives:** Audio-driven 4-section IELTS Listening examination system.
-- **Tasks:**
-  - Audio storage and streaming setup.
-  - Audio player component with one-time playback constraints or standard practice controls.
-  - Listening question groups (Form completion, Map/diagram labelling, Multiple choice).
-  - Timed sections and deterministic scoring engine.
-- **Dependencies:** Milestone 8.
 
 ---
 
 ### Milestone 10: Writing Module & AI Evaluation (Phase 3)
 - **Objectives:** Academic Writing Task 1 and Task 2 with IELTS rubric AI grading.
-- **Tasks:**
-  - Writing exam interface with live word count and task prompt switcher.
-  - LLM evaluation adapter using IELTS 4-criteria rubrics (Task Achievement, Coherence & Cohesion, Lexical Resource, Grammatical Range & Accuracy).
-  - Structured feedback, identified weaknesses, and improvement suggestions.
-- **Dependencies:** Milestone 8.
 
 ---
 
 ### Milestone 11: Speaking Module & AI Evaluation (Phase 4)
 - **Objectives:** Browser-based speaking test with audio recording, transcription, and multimodal evaluation.
-- **Tasks:**
-  - Audio recording in browser using MediaRecorder API.
-  - Audio upload to cloud object storage.
-  - Speech-to-text transcription.
-  - Pronunciation analysis using audio acoustic features (never transcript alone).
-  - 4-criteria evaluation.
-- **Dependencies:** Milestone 8.
 
 ---
 
 ### Milestone 12: Production Hardening, Security & Deployment
 - **Objectives:** Final security auditing, performance optimizations, database indexes, and deployment to production.
-- **Tasks:**
-  - Audit rate limiting, CSRF, and SQL injection protections.
-  - Optimize asset caching and serverless cold starts.
-  - Perform load and accessibility (WCAG 2.1 AA) audits.
-  - Configure production deployment on Vercel or cloud provider.
-- **Dependencies:** Milestones 1–8.

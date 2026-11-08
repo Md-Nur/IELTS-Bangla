@@ -1,0 +1,303 @@
+// IELTS Bangla - Prisma Schema
+// Database: PostgreSQL (Neon Serverless)
+// Architectural Phase: Phase 1 Reading MVP
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+enum ModuleType {
+  READING
+  LISTENING
+  WRITING
+  SPEAKING
+}
+
+enum TestCategory {
+  ACADEMIC
+  GENERAL_TRAINING
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  TRUE_FALSE_NOT_GIVEN
+  YES_NO_NOT_GIVEN
+  SENTENCE_COMPLETION
+  NOTE_COMPLETION
+  SUMMARY_COMPLETION
+  MATCHING_HEADINGS
+  MATCHING_INFORMATION
+  MATCHING_FEATURES
+  SHORT_ANSWER
+}
+
+enum AttemptStatus {
+  IN_PROGRESS
+  SUBMITTED
+  TIMED_OUT
+  ABANDONED
+}
+
+// -------------------------------------------------------------
+// USER & AUTHENTICATION
+// -------------------------------------------------------------
+
+model User {
+  id            String        @id @default(cuid())
+  email         String        @unique
+  name          String?
+  passwordHash  String
+  role          Role          @default(STUDENT)
+  emailVerified DateTime?
+  phone         String?
+  targetBand    Float?
+  examDate      DateTime?
+  isActive      Boolean       @default(true)
+  attempts      TestAttempt[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([email])
+}
+
+// -------------------------------------------------------------
+// DRAFT TEST AUTHORING (EDITABLE BY ADMIN)
+// -------------------------------------------------------------
+
+model Test {
+  id                String                 @id @default(cuid())
+  title             String
+  slug              String                 @unique
+  module            ModuleType             @default(READING)
+  category          TestCategory           @default(ACADEMIC)
+  description       String?                @db.Text
+  durationMinutes   Int                    @default(60)
+  totalQuestions    Int                    @default(40)
+  isPublished       Boolean                @default(false)
+  draftSections     DraftSection[]
+  publishedVersions PublishedTestVersion[]
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+
+  @@index([module, category])
+  @@index([slug])
+}
+
+model DraftSection {
+  id          String               @id @default(cuid())
+  testId      String
+  test        Test                 @relation(fields: [testId], references: [id], onDelete: Cascade)
+  orderIndex  Int                  // 1 = Passage 1, 2 = Passage 2, 3 = Passage 3
+  title       String               // e.g. "The Bicycle: From Wooden Hobby-Horse to Everyday Machine"
+  passageText String               @db.Text
+  groups      DraftQuestionGroup[]
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  @@unique([testId, orderIndex])
+  @@index([testId])
+}
+
+model DraftQuestionGroup {
+  id             String          @id @default(cuid())
+  sectionId      String
+  section        DraftSection    @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  orderIndex     Int
+  instruction    String          @db.Text
+  questionType   QuestionType
+  wordLimit      Int?            // e.g. 2 for "NO MORE THAN TWO WORDS"
+  contextOptions Json?           // Options list, e.g. heading list { "i": "...", "ii": "..." } or summary words { "A": "predator" }
+  questions      DraftQuestion[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@index([sectionId, orderIndex])
+}
+
+model DraftQuestion {
+  id              String                @id @default(cuid())
+  questionGroupId String
+  questionGroup   DraftQuestionGroup    @relation(fields: [questionGroupId], references: [id], onDelete: Cascade)
+  questionNumber  Int                   // 1 to 40
+  prompt          String                @db.Text
+  options         Json?                 // ["A. ...", "B. ...", "C. ...", "D. ..."] for multiple choice
+  explanation     String?               @db.Text
+  acceptedAnswers DraftAcceptedAnswer[]
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  @@index([questionGroupId, questionNumber])
+}
+
+model DraftAcceptedAnswer {
+  id              String        @id @default(cuid())
+  questionId      String
+  question        DraftQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  acceptedText    String
+  isCaseSensitive Boolean       @default(false)
+  orderIndex      Int           @default(0)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([questionId])
+}
+
+// -------------------------------------------------------------
+// IMMUTABLE PUBLISHED TEST SNAPSHOTS
+// -------------------------------------------------------------
+
+model PublishedTestVersion {
+  id                  String                   @id @default(cuid())
+  testId              String
+  test                Test                     @relation(fields: [testId], references: [id], onDelete: Restrict)
+  versionNumber       Int                      @default(1)
+  title               String
+  durationMinutes     Int                      @default(60)
+  totalQuestions      Int                      @default(40)
+  bandConversionTable Json                     // Exact conversion mapping array/object
+  isArchived          Boolean                  @default(false)
+  sections            PublishedSection[]
+  questions           PublishedQuestion[]
+  attempts            TestAttempt[]
+  publishedAt         DateTime                 @default(now())
+
+  @@unique([testId, versionNumber])
+  @@index([testId])
+}
+
+model PublishedSection {
+  id            String                   @id @default(cuid())
+  testVersionId String
+  testVersion   PublishedTestVersion     @relation(fields: [testVersionId], references: [id], onDelete: Cascade)
+  orderIndex    Int                      // 1 = Passage 1, 2 = Passage 2, 3 = Passage 3
+  title         String
+  passageText   String                   @db.Text
+  groups        PublishedQuestionGroup[]
+  createdAt     DateTime                 @default(now())
+
+  @@unique([testVersionId, orderIndex])
+  @@index([testVersionId])
+}
+
+model PublishedQuestionGroup {
+  id             String              @id @default(cuid())
+  sectionId      String
+  section        PublishedSection    @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  orderIndex     Int
+  instruction    String              @db.Text
+  questionType   QuestionType
+  wordLimit      Int?
+  contextOptions Json?
+  questions      PublishedQuestion[]
+  createdAt      DateTime            @default(now())
+
+  @@index([sectionId, orderIndex])
+}
+
+model PublishedQuestion {
+  id              String                    @id @default(cuid())
+  testVersionId   String
+  testVersion     PublishedTestVersion      @relation(fields: [testVersionId], references: [id], onDelete: Cascade)
+  questionGroupId String
+  questionGroup   PublishedQuestionGroup    @relation(fields: [questionGroupId], references: [id], onDelete: Cascade)
+  questionNumber  Int                       // 1 to 40, continuous across the entire test
+  prompt          String                    @db.Text
+  options         Json?
+  explanation     String?                   @db.Text
+  acceptedAnswers PublishedAcceptedAnswer[]
+  studentAnswers  StudentAnswer[]
+  createdAt       DateTime                  @default(now())
+
+  // Multi-column unique constraints for cross-table referential integrity and number uniqueness
+  @@unique([id, testVersionId])
+  @@unique([testVersionId, questionNumber])
+  @@index([questionGroupId, questionNumber])
+}
+
+model PublishedAcceptedAnswer {
+  id              String            @id @default(cuid())
+  questionId      String
+  question        PublishedQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  acceptedText    String
+  isCaseSensitive Boolean           @default(false)
+  orderIndex      Int               @default(0)
+  createdAt       DateTime          @default(now())
+
+  @@index([questionId])
+}
+
+// -------------------------------------------------------------
+// STUDENT TEST ATTEMPTS & EVALUATION
+// -------------------------------------------------------------
+
+model TestAttempt {
+  id               String               @id @default(cuid())
+  userId           String
+  user             User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  testVersionId    String
+  testVersion      PublishedTestVersion @relation(fields: [testVersionId], references: [id], onDelete: Restrict)
+  status           AttemptStatus        @default(IN_PROGRESS)
+  startedAt        DateTime             @default(now())
+  expiresAt        DateTime             // Server-authoritative submission deadline
+  submittedAt      DateTime?            // Server timestamp when finalized
+  timeSpentSeconds Int                  @default(0)
+  rawScore         Int?                 // 0 to 40
+  estimatedBand    Float?               // e.g. 7.5
+  answers          StudentAnswer[]
+  evaluation       EvaluationResult?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  // Multi-column unique constraint enabling composite foreign key from StudentAnswer
+  @@unique([id, testVersionId])
+  @@index([userId, status])
+  @@index([testVersionId])
+}
+
+model StudentAnswer {
+  id                 String            @id @default(cuid())
+  attemptId          String
+  testVersionId      String
+  questionId         String
+  answerText         String?           @db.Text
+  isFlaggedForReview Boolean           @default(false)
+  isCorrect          Boolean?
+  scoreAwarded       Int?              @default(0)
+  lastSavedAt        DateTime          @default(now())
+
+  // Composite foreign keys enforce:
+  // (1) Attempt must exist with matching testVersionId
+  // (2) Question must exist within the exact same testVersionId
+  attempt            TestAttempt       @relation(fields: [attemptId, testVersionId], references: [id, testVersionId], onDelete: Cascade)
+  question           PublishedQuestion @relation(fields: [questionId, testVersionId], references: [id, testVersionId], onDelete: Restrict)
+
+  @@unique([attemptId, questionId])
+  @@index([attemptId])
+  @@index([questionId])
+}
+
+model EvaluationResult {
+  id               String      @id @default(cuid())
+  attemptId        String      @unique
+  attempt          TestAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  totalQuestions   Int         @default(40)
+  totalAttempted   Int         @default(0)
+  totalCorrect     Int         @default(0)
+  totalIncorrect   Int         @default(0)
+  rawScore         Int         @default(0)
+  estimatedBand    Float       @default(0.0)
+  sectionBreakdown Json        // Passage-level breakdown: { "passage1": { "correct": 11, "total": 13 }, ... }
+  evaluatedAt      DateTime    @default(now())
+
+  @@index([attemptId])
+}
