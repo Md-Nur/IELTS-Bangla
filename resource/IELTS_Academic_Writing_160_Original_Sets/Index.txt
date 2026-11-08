@@ -1,0 +1,160 @@
+Set 001: Task 1 = bar chart; Task 2 = {a} is creating challenges for communities and governments
+Set 002: Task 1 = line graph; Task 2 = The growing use of {a} is changing how people live and work
+Set 003: Task 1 = table; Task 2 = Governments must choose between solving immediate problems and investing in long-term improvements such as {a}
+Set 004: Task 1 = pie charts; Task 2 = In many places, {a} is becoming more common
+Set 005: Task 1 = process diagram; Task 2 = It is often claimed that {a} matters more than {b} in determining long-term social progress
+Set 006: Task 1 = maps / plans; Task 2 = Governments must choose between solving immediate problems and investing in long-term improvements such as {a}
+Set 007: Task 1 = bar chart; Task 2 = In many places, {a} is becoming more common
+Set 008: Task 1 = line graph; Task 2 = It is often claimed that {a} matters more than {b} in determining long-term social progress
+Set 009: Task 1 = table; Task 2 = Some people say that children should learn more about {a} at school, while others believe school time should focus on traditional subjects
+Set 010: Task 1 = pie charts; Task 2 = Some argue that {a} is the best way to address a social problem, while others prefer {b}
+Set 011: Task 1 = process diagram; Task 2 = Some think responsibility for {a} lies mainly with individuals, while others believe governments and institutions should lead
+Set 012: Task 1 = maps / plans; Task 2 = Some people say that children should learn more about {a} at school, while others believe school time should focus on traditional subjects
+Set 013: Task 1 = bar chart; Task 2 = Some argue that {a} is the best way to address a social problem, while others prefer {b}
+Set 014: Task 1 = line graph; Task 2 = Some think responsibility for {a} lies mainly with individuals, while others believe governments and institutions should lead
+Set 015: Task 1 = table; Task 2 = A proposal has been made to prioritise {a}, even if this reduces investment in {b}
+Set 016: Task 1 = pie charts; Task 2 = Some people believe that {a} should receive more public funding than {b}
+Set 017: Task 1 = process diagram; Task 2 = {a} is creating challenges for communities and governments
+Set 018: Task 1 = maps / plans; Task 2 = A proposal has been made to prioritise {a}, even if this reduces investment in {b}
+Set 019: Task 1 = bar chart; Task 2 = Some people believe that {a} should receive more public funding than {b}
+Set 020: Task 1 = line graph; Task 2 = {a} is creating challenges for communities and governments
+Set 021: Task 1 = table; Task 2 = The growing use of {a} is changing how people live and work
+Set 022: Task 1 = pie charts; Task 2 = Governments must choose between solving immediate problems and investing in long-term improvements such as {a}
+Set 023: Task 1 = process diagram; Task 2 = In many places, {a} is becoming more common
+Set 024: Task 1 = maps / plans; Task 2 = The growing use of {a} is changing how people live and work
+Set 025: Task 1 = bar chart; Task 2 = Governments must choose between solving immediate problems and investing in long-term improvements such as {a}
+Set 026: Task 1 = line graph; Task 2 = In many places, {a} is becoming more common
+Set 027: Task 1 = table; Task 2 = It is often claimed that {a} matters more than {b} in determining long-term social progress
+Set 028: Task 1 = pie charts; Task 2 = Some people say that children should learn more about {a} at school, while others believe school time should focus on traditional subjects
+Set 029: Task 1 = process diagram; Task 2 = Some argue that {a} is the best way to address a social problem, while others prefer {b}
+Set 030: Task 1 = maps / plans; Task 2 = It is often claimed that {a} matters more than {b} in determining long-term social progress
+Set 031: Task 1 = bar chart; Task 2 = Some people say that children should learn more about {a} at school, while others believe school time should focus on traditional subjects
+Set 032: Task 1 = line graph; Task 2 = Some argue that {a} is the best way to address a social problem, while others prefer {b}
+Set 033: Task 1 = table; Task 2 = Some think responsibility for {a} lies mainly with individuals, while others believe governments and institutions should lead
+Set 034: Task 1 = pie charts; Task 2 = A proposal has been made to prioritise {a}, even if this reduces investment in {b}
+Set 035: Task 1 = process diagram; Task 2 = Some people believe that {a} should receive more public funding than {b}
+Set 036: Task 1 = maps / plans; Task 2 = Some think responsibility for {a} lies mainly with individuals, while others believe governments and institutions should lead
+Set 037: Task 1 = bar chart; Task 2 = A proposal has been made to prioritise {a}, even if this reduces investment in {b}
+Set 038: Task 1 = line graph; Task 2 = Some people believe that {a} should receive more public funding than {b}
+Set 039: Task 1 = table; Task 2 = {a} is creating challenges for communities and governments
+Set 040: Task 1 = pie charts; Task 2 = The growing use of {a} is changing how people live and work
+Set 041: Task 1 = process diagram; Task 2 = Governments must choose between solving immediate problems and investing in long-term improvements such as {a}
+Set 042: Task 1 = maps / plans; Task 2 = {a} is creating challenges for communities and governments
+Set 043: Task 1 = bar chart; Task 2 = The growing use of {a} is changing how people live and work
+Set 044: Task 1 = line graph; Task 2 = Governments must choose between solving immediate problems and investing in long-term improvements such as {a}
+Set 045: Task 1 = table; Task 2 = In many places, {a} is becoming more common
+Set 046: Task 1 = pie charts; Task 2 = It is often claimed that {a} matters more than {b} in determining long-term social progress
+Set 047: Task 1 = process diagram; Task 2 = Some people say that children should learn more about {a} at school, while others believe school time should focus on traditional subjects
+Set 048: Task 1 = maps / plans; Task 2 = In many places, {a} is becoming more common
+Set 049: Task 1 = bar chart; Task 2 = It is often claimed that {a} matters more than {b} in determining long-term social progress
+Set 050: Task 1 = line graph; Task 2 = Some people say that children should learn more about {a} at school, while others believe school time should focus on traditional subjects
+Set 051: Task 1 = table; Task 2 = Some argue that {a} is the best way to address a social problem, while others prefer {b}
+Set 052: Task 1 = pie charts; Task 2 = Some think responsibility for {a} lies mainly with individuals, while others believe governments and institutions should lead
+Set 053: Task 1 = process diagram; Task 2 = A proposal has been made to prioritise {a}, even if this reduces investment in {b}
+Set 054: Task 1 = maps / plans; Task 2 = Some argue that {a} is the best way to address a social problem, while others prefer {b}
+Set 055: Task 1 = bar chart; Task 2 = Some think responsibility for {a} lies mainly with individuals, while others believe governments and institutions should lead
+Set 056: Task 1 = line graph; Task 2 = A proposal has been made to prioritise {a}, even if this reduces investment in {b}
+Set 057: Task 1 = table; Task 2 = Some people believe that {a} should receive more public funding than {b}
+Set 058: Task 1 = pie charts; Task 2 = {a} is creating challenges for communities and governments
+Set 059: Task 1 = process diagram; Task 2 = The growing use of {a} is changing how people live and work
+Set 060: Task 1 = maps / plans; Task 2 = Some people believe that {a} should receive more public funding than {b}
+Set 061: Task 1 = bar chart; Task 2 = {a} is creating challenges for communities and governments
+Set 062: Task 1 = line graph; Task 2 = The growing use of {a} is changing how people live and work
+Set 063: Task 1 = table; Task 2 = Governments must choose between solving immediate problems and investing in long-term improvements such as {a}
+Set 064: Task 1 = pie charts; Task 2 = In many places, {a} is becoming more common
+Set 065: Task 1 = process diagram; Task 2 = It is often claimed that {a} matters more than {b} in determining long-term social progress
+Set 066: Task 1 = maps / plans; Task 2 = Governments must choose between solving immediate problems and investing in long-term improvements such as {a}
+Set 067: Task 1 = bar chart; Task 2 = In many places, {a} is becoming more common
+Set 068: Task 1 = line graph; Task 2 = It is often claimed that {a} matters more than {b} in determining long-term social progress
+Set 069: Task 1 = table; Task 2 = Some people say that children should learn more about {a} at school, while others believe school time should focus on traditional subjects
+Set 070: Task 1 = pie charts; Task 2 = Some argue that {a} is the best way to address a social problem, while others prefer {b}
+Set 071: Task 1 = process diagram; Task 2 = Some think responsibility for {a} lies mainly with individuals, while others believe governments and institutions should lead
+Set 072: Task 1 = maps / plans; Task 2 = Some people say that children should learn more about {a} at school, while others believe school time should focus on traditional subjects
+Set 073: Task 1 = bar chart; Task 2 = Some argue that {a} is the best way to address a social problem, while others prefer {b}
+Set 074: Task 1 = line graph; Task 2 = Some think responsibility for {a} lies mainly with individuals, while others believe governments and institutions should lead
+Set 075: Task 1 = table; Task 2 = A proposal has been made to prioritise {a}, even if this reduces investment in {b}
+Set 076: Task 1 = pie charts; Task 2 = Some people believe that {a} should receive more public funding than {b}
+Set 077: Task 1 = process diagram; Task 2 = {a} is creating challenges for communities and governments
+Set 078: Task 1 = maps / plans; Task 2 = A proposal has been made to prioritise {a}, even if this reduces investment in {b}
+Set 079: Task 1 = bar chart; Task 2 = Some people believe that {a} should receive more public funding than {b}
+Set 080: Task 1 = line graph; Task 2 = {a} is creating challenges for communities and governments
+Set 081: Task 1 = table; Task 2 = The growing use of {a} is changing how people live and work
+Set 082: Task 1 = pie charts; Task 2 = Governments must choose between solving immediate problems and investing in long-term improvements such as {a}
+Set 083: Task 1 = process diagram; Task 2 = In many places, {a} is becoming more common
+Set 084: Task 1 = maps / plans; Task 2 = The growing use of {a} is changing how people live and work
+Set 085: Task 1 = bar chart; Task 2 = Governments must choose between solving immediate problems and investing in long-term improvements such as {a}
+Set 086: Task 1 = line graph; Task 2 = In many places, {a} is becoming more common
+Set 087: Task 1 = table; Task 2 = It is often claimed that {a} matters more than {b} in determining long-term social progress
+Set 088: Task 1 = pie charts; Task 2 = Some people say that children should learn more about {a} at school, while others believe school time should focus on traditional subjects
+Set 089: Task 1 = process diagram; Task 2 = Some argue that {a} is the best way to address a social problem, while others prefer {b}
+Set 090: Task 1 = maps / plans; Task 2 = It is often claimed that {a} matters more than {b} in determining long-term social progress
+Set 091: Task 1 = bar chart; Task 2 = Some people say that children should learn more about {a} at school, while others believe school time should focus on traditional subjects
+Set 092: Task 1 = line graph; Task 2 = Some argue that {a} is the best way to address a social problem, while others prefer {b}
+Set 093: Task 1 = table; Task 2 = Some think responsibility for {a} lies mainly with individuals, while others believe governments and institutions should lead
+Set 094: Task 1 = pie charts; Task 2 = A proposal has been made to prioritise {a}, even if this reduces investment in {b}
+Set 095: Task 1 = process diagram; Task 2 = Some people believe that {a} should receive more public funding than {b}
+Set 096: Task 1 = maps / plans; Task 2 = Some think responsibility for {a} lies mainly with individuals, while others believe governments and institutions should lead
+Set 097: Task 1 = bar chart; Task 2 = A proposal has been made to prioritise {a}, even if this reduces investment in {b}
+Set 098: Task 1 = line graph; Task 2 = Some people believe that {a} should receive more public funding than {b}
+Set 099: Task 1 = table; Task 2 = {a} is creating challenges for communities and governments
+Set 100: Task 1 = pie charts; Task 2 = The growing use of {a} is changing how people live and work
+Set 101: Task 1 = process diagram; Task 2 = Governments must choose between solving immediate problems and investing in long-term improvements such as {a}
+Set 102: Task 1 = maps / plans; Task 2 = {a} is creating challenges for communities and governments
+Set 103: Task 1 = bar chart; Task 2 = The growing use of {a} is changing how people live and work
+Set 104: Task 1 = line graph; Task 2 = Governments must choose between solving immediate problems and investing in long-term improvements such as {a}
+Set 105: Task 1 = table; Task 2 = In many places, {a} is becoming more common
+Set 106: Task 1 = pie charts; Task 2 = It is often claimed that {a} matters more than {b} in determining long-term social progress
+Set 107: Task 1 = process diagram; Task 2 = Some people say that children should learn more about {a} at school, while others believe school time should focus on traditional subjects
+Set 108: Task 1 = maps / plans; Task 2 = In many places, {a} is becoming more common
+Set 109: Task 1 = bar chart; Task 2 = It is often claimed that {a} matters more than {b} in determining long-term social progress
+Set 110: Task 1 = line graph; Task 2 = Some people say that children should learn more about {a} at school, while others believe school time should focus on traditional subjects
+Set 111: Task 1 = table; Task 2 = Some argue that {a} is the best way to address a social problem, while others prefer {b}
+Set 112: Task 1 = pie charts; Task 2 = Some think responsibility for {a} lies mainly with individuals, while others believe governments and institutions should lead
+Set 113: Task 1 = process diagram; Task 2 = A proposal has been made to prioritise {a}, even if this reduces investment in {b}
+Set 114: Task 1 = maps / plans; Task 2 = Some argue that {a} is the best way to address a social problem, while others prefer {b}
+Set 115: Task 1 = bar chart; Task 2 = Some think responsibility for {a} lies mainly with individuals, while others believe governments and institutions should lead
+Set 116: Task 1 = line graph; Task 2 = A proposal has been made to prioritise {a}, even if this reduces investment in {b}
+Set 117: Task 1 = table; Task 2 = Some people believe that {a} should receive more public funding than {b}
+Set 118: Task 1 = pie charts; Task 2 = {a} is creating challenges for communities and governments
+Set 119: Task 1 = process diagram; Task 2 = The growing use of {a} is changing how people live and work
+Set 120: Task 1 = maps / plans; Task 2 = Some people believe that {a} should receive more public funding than {b}
+Set 121: Task 1 = bar chart; Task 2 = {a} is creating challenges for communities and governments
+Set 122: Task 1 = line graph; Task 2 = The growing use of {a} is changing how people live and work
+Set 123: Task 1 = table; Task 2 = Governments must choose between solving immediate problems and investing in long-term improvements such as {a}
+Set 124: Task 1 = pie charts; Task 2 = In many places, {a} is becoming more common
+Set 125: Task 1 = process diagram; Task 2 = It is often claimed that {a} matters more than {b} in determining long-term social progress
+Set 126: Task 1 = maps / plans; Task 2 = Governments must choose between solving immediate problems and investing in long-term improvements such as {a}
+Set 127: Task 1 = bar chart; Task 2 = In many places, {a} is becoming more common
+Set 128: Task 1 = line graph; Task 2 = It is often claimed that {a} matters more than {b} in determining long-term social progress
+Set 129: Task 1 = table; Task 2 = Some people say that children should learn more about {a} at school, while others believe school time should focus on traditional subjects
+Set 130: Task 1 = pie charts; Task 2 = Some argue that {a} is the best way to address a social problem, while others prefer {b}
+Set 131: Task 1 = process diagram; Task 2 = Some think responsibility for {a} lies mainly with individuals, while others believe governments and institutions should lead
+Set 132: Task 1 = maps / plans; Task 2 = Some people say that children should learn more about {a} at school, while others believe school time should focus on traditional subjects
+Set 133: Task 1 = bar chart; Task 2 = Some argue that {a} is the best way to address a social problem, while others prefer {b}
+Set 134: Task 1 = line graph; Task 2 = Some think responsibility for {a} lies mainly with individuals, while others believe governments and institutions should lead
+Set 135: Task 1 = table; Task 2 = A proposal has been made to prioritise {a}, even if this reduces investment in {b}
+Set 136: Task 1 = pie charts; Task 2 = Some people believe that {a} should receive more public funding than {b}
+Set 137: Task 1 = process diagram; Task 2 = {a} is creating challenges for communities and governments
+Set 138: Task 1 = maps / plans; Task 2 = A proposal has been made to prioritise {a}, even if this reduces investment in {b}
+Set 139: Task 1 = bar chart; Task 2 = Some people believe that {a} should receive more public funding than {b}
+Set 140: Task 1 = line graph; Task 2 = {a} is creating challenges for communities and governments
+Set 141: Task 1 = table; Task 2 = The growing use of {a} is changing how people live and work
+Set 142: Task 1 = pie charts; Task 2 = Governments must choose between solving immediate problems and investing in long-term improvements such as {a}
+Set 143: Task 1 = process diagram; Task 2 = In many places, {a} is becoming more common
+Set 144: Task 1 = maps / plans; Task 2 = The growing use of {a} is changing how people live and work
+Set 145: Task 1 = bar chart; Task 2 = Governments must choose between solving immediate problems and investing in long-term improvements such as {a}
+Set 146: Task 1 = line graph; Task 2 = In many places, {a} is becoming more common
+Set 147: Task 1 = table; Task 2 = It is often claimed that {a} matters more than {b} in determining long-term social progress
+Set 148: Task 1 = pie charts; Task 2 = Some people say that children should learn more about {a} at school, while others believe school time should focus on traditional subjects
+Set 149: Task 1 = process diagram; Task 2 = Some argue that {a} is the best way to address a social problem, while others prefer {b}
+Set 150: Task 1 = maps / plans; Task 2 = It is often claimed that {a} matters more than {b} in determining long-term social progress
+Set 151: Task 1 = bar chart; Task 2 = Some people say that children should learn more about {a} at school, while others believe school time should focus on traditional subjects
+Set 152: Task 1 = line graph; Task 2 = Some argue that {a} is the best way to address a social problem, while others prefer {b}
+Set 153: Task 1 = table; Task 2 = Some think responsibility for {a} lies mainly with individuals, while others believe governments and institutions should lead
+Set 154: Task 1 = pie charts; Task 2 = A proposal has been made to prioritise {a}, even if this reduces investment in {b}
+Set 155: Task 1 = process diagram; Task 2 = Some people believe that {a} should receive more public funding than {b}
+Set 156: Task 1 = maps / plans; Task 2 = Some think responsibility for {a} lies mainly with individuals, while others believe governments and institutions should lead
+Set 157: Task 1 = bar chart; Task 2 = A proposal has been made to prioritise {a}, even if this reduces investment in {b}
+Set 158: Task 1 = line graph; Task 2 = Some people believe that {a} should receive more public funding than {b}
+Set 159: Task 1 = table; Task 2 = {a} is creating challenges for communities and governments
+Set 160: Task 1 = pie charts; Task 2 = The growing use of {a} is changing how people live and work

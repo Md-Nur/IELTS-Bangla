@@ -1,0 +1,142 @@
+IELTS ACADEMIC READING PRACTICE — SET 38
+Unofficial original practice material | Time: 60 minutes | Questions: 40
+
+
+==============================================================================
+PASSAGE 1: Productivity scores
+==============================================================================
+
+Debate about productivity scores has often been framed as a contest between an appealing promise and a practical obstacle. That framing is too simple. The more useful question is what the intervention changes, for whom, and under which conditions. In workplace studies, apparently straightforward improvements can alter incentives elsewhere in a system. Researchers therefore examined work-rate metrics as a process rather than as a single outcome, separating what could be measured directly from what had to be inferred.
+
+The investigation combined route-time records with worker diaries. The first source made it possible to compare cases consistently, while the second helped explain anomalies that a numerical summary concealed. Researchers recorded a baseline before the intervention and used a reference group where feasible. They also distinguished a change that occurred after a programme from a change caused by it: weather, staffing, local policy and participant selection could all produce similar patterns. This caution matters because a persuasive before-and-after graph is not, by itself, a causal explanation.
+
+The results were more conditional than the initial proposal had predicted. Benefits appeared most clearly where the system already possessed a supporting resource, but were smaller where that resource was absent. In one comparison, an early improvement was followed by a plateau; adding more of the same input did not produce proportional gains. The team also found that an average concealed differences between groups. A design that suited frequent users, for example, could impose new burdens on occasional users. The researchers therefore reported both the overall result and the distribution of outcomes.
+
+A second finding concerned behaviour. People adapt to the systems used to evaluate them. When a measure became a target, some participants changed their choices in ways that improved the score without necessarily improving the underlying service. Interviews helped identify such responses, although interview accounts were not treated as infallible: people may forget, rationalise or describe what they believe an investigator expects to hear. The strongest conclusions emerged when accounts, records and direct observations converged, while disagreements were retained for further analysis rather than averaged away.
+
+The study has limits. The sample covered a restricted range of settings, and safety trade-offs prevented a complete comparison across every relevant condition. It would therefore be unjustified to claim that the findings apply universally. The authors recommend a staged approach: publish the method in advance, define outcomes that would count as failure, test the intervention on a modest scale, and invite independent scrutiny before expansion. Negative results should be reported as carefully as positive ones, since they reveal where an explanation stops working.
+
+The wider implication is not that decisions must wait until uncertainty disappears. It is that uncertainty should be made visible and connected to the decision at hand. A pilot may be worthwhile even when evidence is incomplete, provided that the risks are reversible and the monitoring plan can detect harm. Future work should examine whether gains survive after specialist support or temporary funding ends, and should compare the full life-cycle cost with the cost of the alternative. In this sense, good evaluation is less a final verdict than a disciplined way of learning.
+
+QUESTIONS 1–13
+1. [TRUE / FALSE / NOT GIVEN] The researchers treated a before-and-after change as sufficient proof of causation.
+2. [TRUE / FALSE / NOT GIVEN] The team collected baseline information before evaluating the intervention.
+3. [TRUE / FALSE / NOT GIVEN] The intervention produced equal benefits for every group studied.
+4. [TRUE / FALSE / NOT GIVEN] The study gives the exact number of people interviewed.
+5. [MULTIPLE CHOICE] Why did the researchers combine different evidence sources?
+A. To eliminate the need for measurement
+B. To combine consistent comparisons with explanations of anomalies
+C. To ensure every participant agreed
+D. To prove the proposal correct
+6. [MULTIPLE CHOICE] What happened when the team added more of the same input?
+A. Gains increased without limit
+B. The programme was abandoned immediately
+C. Gains levelled off rather than rising proportionally
+D. The reference group disappeared
+7. [MULTIPLE CHOICE] What is the main purpose of reporting differences between groups?
+A. An average may conceal who benefits and who bears costs
+B. Differences between groups are always errors
+C. Only the largest group matters
+D. Interviews cannot provide useful information
+8. [SENTENCE COMPLETION (ONE WORD)] Researchers recorded a ______ before the intervention.
+9. [SENTENCE COMPLETION (ONE WORD)] When a measure became a target, participants sometimes changed their ______.
+10. [SENTENCE COMPLETION (ONE WORD)] The authors recommend a ______ approach before expansion.
+11. [MATCHING HEADINGS] Which heading best describes paragraph 3?
+Headings: i. The value of mixed evidence; ii. A universal solution; iii. Benefits that depend on context; iv. The history of the field; v. Limits and a cautious next step
+12. [MATCHING HEADINGS] Which heading best describes paragraph 5?
+Headings: i. The value of mixed evidence; ii. A universal solution; iii. Benefits that depend on context; iv. The history of the field; v. Limits and a cautious next step
+13. [SHORT ANSWER (NO MORE THAN TWO WORDS)] What type of cost should future research compare with the alternative?
+
+
+==============================================================================
+PASSAGE 2: Heat-responsive textiles
+==============================================================================
+
+The public story of heat-responsive textiles tends to begin with a striking innovation. The less visible story concerns the methods used to decide whether it works. A team working in materials science investigated adaptive fibres, comparing optimistic claims with observations from routine settings. Their aim was not to dismiss innovation, but to establish which claims survived when the intervention encountered competing needs, uneven resources and ordinary human behaviour.
+
+The investigation combined wear trials with thermal cameras. The first source made it possible to compare cases consistently, while the second helped explain anomalies that a numerical summary concealed. Researchers recorded a baseline before the intervention and used a reference group where feasible. They also distinguished a change that occurred after a programme from a change caused by it: weather, staffing, local policy and participant selection could all produce similar patterns. This caution matters because a persuasive before-and-after graph is not, by itself, a causal explanation.
+
+The results were more conditional than the initial proposal had predicted. Benefits appeared most clearly where the system already possessed a supporting resource, but were smaller where that resource was absent. In one comparison, an early improvement was followed by a plateau; adding more of the same input did not produce proportional gains. The team also found that an average concealed differences between groups. A design that suited frequent users, for example, could impose new burdens on occasional users. The researchers therefore reported both the overall result and the distribution of outcomes.
+
+A second finding concerned behaviour. People adapt to the systems used to evaluate them. When a measure became a target, some participants changed their choices in ways that improved the score without necessarily improving the underlying service. Interviews helped identify such responses, although interview accounts were not treated as infallible: people may forget, rationalise or describe what they believe an investigator expects to hear. The strongest conclusions emerged when accounts, records and direct observations converged, while disagreements were retained for further analysis rather than averaged away.
+
+The study has limits. The sample covered a restricted range of settings, and laundry durability prevented a complete comparison across every relevant condition. It would therefore be unjustified to claim that the findings apply universally. The authors recommend a staged approach: publish the method in advance, define outcomes that would count as failure, test the intervention on a modest scale, and invite independent scrutiny before expansion. Negative results should be reported as carefully as positive ones, since they reveal where an explanation stops working.
+
+The wider implication is not that decisions must wait until uncertainty disappears. It is that uncertainty should be made visible and connected to the decision at hand. A pilot may be worthwhile even when evidence is incomplete, provided that the risks are reversible and the monitoring plan can detect harm. Future work should examine whether gains survive after specialist support or temporary funding ends, and should compare the full life-cycle cost with the cost of the alternative. In this sense, good evaluation is less a final verdict than a disciplined way of learning.
+
+QUESTIONS 14–26
+14. [TRUE / FALSE / NOT GIVEN] The researchers treated a before-and-after change as sufficient proof of causation.
+15. [TRUE / FALSE / NOT GIVEN] The team collected baseline information before evaluating the intervention.
+16. [TRUE / FALSE / NOT GIVEN] The intervention produced equal benefits for every group studied.
+17. [TRUE / FALSE / NOT GIVEN] The study gives the exact number of people interviewed.
+18. [MULTIPLE CHOICE] Why did the researchers combine different evidence sources?
+A. To eliminate the need for measurement
+B. To combine consistent comparisons with explanations of anomalies
+C. To ensure every participant agreed
+D. To prove the proposal correct
+19. [MULTIPLE CHOICE] What happened when the team added more of the same input?
+A. Gains increased without limit
+B. The programme was abandoned immediately
+C. Gains levelled off rather than rising proportionally
+D. The reference group disappeared
+20. [MULTIPLE CHOICE] What is the main purpose of reporting differences between groups?
+A. An average may conceal who benefits and who bears costs
+B. Differences between groups are always errors
+C. Only the largest group matters
+D. Interviews cannot provide useful information
+21. [SENTENCE COMPLETION (ONE WORD)] Researchers recorded a ______ before the intervention.
+22. [SENTENCE COMPLETION (ONE WORD)] When a measure became a target, participants sometimes changed their ______.
+23. [SENTENCE COMPLETION (ONE WORD)] The authors recommend a ______ approach before expansion.
+24. [MATCHING HEADINGS] Which heading best describes paragraph 3?
+Headings: i. The value of mixed evidence; ii. A universal solution; iii. Benefits that depend on context; iv. The history of the field; v. Limits and a cautious next step
+25. [MATCHING HEADINGS] Which heading best describes paragraph 5?
+Headings: i. The value of mixed evidence; ii. A universal solution; iii. Benefits that depend on context; iv. The history of the field; v. Limits and a cautious next step
+26. [SHORT ANSWER (NO MORE THAN TWO WORDS)] What type of cost should future research compare with the alternative?
+
+
+==============================================================================
+PASSAGE 3: Freshwater monitoring
+==============================================================================
+
+Many debates about freshwater monitoring rely on a measure that is easy to collect and difficult to interpret. Researchers in environmental science argue that this can turn a useful indicator into a misleading target. Their investigation of river sensors combined controlled comparisons with evidence from real-world use, asking whether apparent gains persisted after the conditions of an initial demonstration had changed.
+
+The investigation combined laboratory benchmarks with seasonal readings. The first source made it possible to compare cases consistently, while the second helped explain anomalies that a numerical summary concealed. Researchers recorded a baseline before the intervention and used a reference group where feasible. They also distinguished a change that occurred after a programme from a change caused by it: weather, staffing, local policy and participant selection could all produce similar patterns. This caution matters because a persuasive before-and-after graph is not, by itself, a causal explanation.
+
+The results were more conditional than the initial proposal had predicted. Benefits appeared most clearly where the system already possessed a supporting resource, but were smaller where that resource was absent. In one comparison, an early improvement was followed by a plateau; adding more of the same input did not produce proportional gains. The team also found that an average concealed differences between groups. A design that suited frequent users, for example, could impose new burdens on occasional users. The researchers therefore reported both the overall result and the distribution of outcomes.
+
+A second finding concerned behaviour. People adapt to the systems used to evaluate them. When a measure became a target, some participants changed their choices in ways that improved the score without necessarily improving the underlying service. Interviews helped identify such responses, although interview accounts were not treated as infallible: people may forget, rationalise or describe what they believe an investigator expects to hear. The strongest conclusions emerged when accounts, records and direct observations converged, while disagreements were retained for further analysis rather than averaged away.
+
+The study has limits. The sample covered a restricted range of settings, and sensor maintenance prevented a complete comparison across every relevant condition. It would therefore be unjustified to claim that the findings apply universally. The authors recommend a staged approach: publish the method in advance, define outcomes that would count as failure, test the intervention on a modest scale, and invite independent scrutiny before expansion. Negative results should be reported as carefully as positive ones, since they reveal where an explanation stops working.
+
+The wider implication is not that decisions must wait until uncertainty disappears. It is that uncertainty should be made visible and connected to the decision at hand. A pilot may be worthwhile even when evidence is incomplete, provided that the risks are reversible and the monitoring plan can detect harm. Future work should examine whether gains survive after specialist support or temporary funding ends, and should compare the full life-cycle cost with the cost of the alternative. In this sense, good evaluation is less a final verdict than a disciplined way of learning.
+
+QUESTIONS 27–40
+27. [TRUE / FALSE / NOT GIVEN] The researchers treated a before-and-after change as sufficient proof of causation.
+28. [TRUE / FALSE / NOT GIVEN] The team collected baseline information before evaluating the intervention.
+29. [TRUE / FALSE / NOT GIVEN] The intervention produced equal benefits for every group studied.
+30. [TRUE / FALSE / NOT GIVEN] The study gives the exact number of people interviewed.
+31. [MULTIPLE CHOICE] Why did the researchers combine different evidence sources?
+A. To eliminate the need for measurement
+B. To combine consistent comparisons with explanations of anomalies
+C. To ensure every participant agreed
+D. To prove the proposal correct
+32. [MULTIPLE CHOICE] What happened when the team added more of the same input?
+A. Gains increased without limit
+B. The programme was abandoned immediately
+C. Gains levelled off rather than rising proportionally
+D. The reference group disappeared
+33. [MULTIPLE CHOICE] What is the main purpose of reporting differences between groups?
+A. An average may conceal who benefits and who bears costs
+B. Differences between groups are always errors
+C. Only the largest group matters
+D. Interviews cannot provide useful information
+34. [SENTENCE COMPLETION (ONE WORD)] Researchers recorded a ______ before the intervention.
+35. [SENTENCE COMPLETION (ONE WORD)] When a measure became a target, participants sometimes changed their ______.
+36. [SENTENCE COMPLETION (ONE WORD)] The authors recommend a ______ approach before expansion.
+37. [MATCHING HEADINGS] Which heading best describes paragraph 3?
+Headings: i. The value of mixed evidence; ii. A universal solution; iii. Benefits that depend on context; iv. The history of the field; v. Limits and a cautious next step
+38. [MATCHING HEADINGS] Which heading best describes paragraph 5?
+Headings: i. The value of mixed evidence; ii. A universal solution; iii. Benefits that depend on context; iv. The history of the field; v. Limits and a cautious next step
+39. [SHORT ANSWER (NO MORE THAN TWO WORDS)] What type of cost should future research compare with the alternative?
+40. [YES / NO / NOT GIVEN] The writer believes that uncertainty must disappear before any decision can be made.
+

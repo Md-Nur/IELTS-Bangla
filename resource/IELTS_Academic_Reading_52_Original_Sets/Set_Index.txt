@@ -1,0 +1,52 @@
+Set 01: Public transport economics | Why old roads persist | Microplastics in lakes
+Set 02: Parks and mental restoration | Fog harvesting | Counting city cycling
+Set 03: Lessons from bridge failures | The history of timekeeping | Wetlands and industrial water
+Set 04: Craft knowledge in factories | Sleep-friendly lighting | Slow festivals
+Set 05: Public squares | Second-hand book markets | Ancient desert trade
+Set 06: Resilient school meals | Languages online | The history of refrigeration
+Set 07: Public fountains in dry cities | Translation in research | The evolution of writing
+Set 08: Warning sirens | Libraries as civic infrastructure | Museum labels
+Set 09: Oyster reef restoration | Architecture for extreme heat | The psychology of waiting
+Set 10: Music and memory | Battery recycling | Community repair cafés
+Set 11: Heat-responsive textiles | Freshwater monitoring | Cooperative housing
+Set 12: Predictive policing | Reconstructing past climates | Vertical farming
+Set 13: Scientific uncertainty | Urban trees and inequality | Productivity scores
+Set 14: Digital archives | Underground utility maps | Durable concrete
+Set 15: Robots in elder care | Lighthouse automation | Soil microbial networks
+Set 16: Ancient theatre acoustics | Cooling classrooms | Citizen science and migration
+Set 17: Open-source software | Handwritten notes | Quiet hospitals
+Set 18: The mathematics of weaving | Deep-sea sound | Green roofs
+Set 19: Trust in scientific instruments | Fermentation and food preservation | Railways and regional growth
+Set 20: Repairing electronics | Lessons from bridge failures | The history of timekeeping
+Set 21: Maps and spatial memory | Craft knowledge in factories | Sleep-friendly lighting
+Set 22: Water harvesting | Food packaging | Describing pain
+Set 23: Seasonal food markets | Facial recognition | Public bathing
+Set 24: Wild pollinators | Conservation and relocation | Community gardens
+Set 25: River sediment | Warning sirens | Libraries as civic infrastructure
+Set 26: Microplastics in lakes | Oyster reef restoration | Architecture for extreme heat
+Set 27: Counting city cycling | Urban wetlands | Archaeology of meals
+Set 28: Wetlands and industrial water | Public transport economics | Why old roads persist
+Set 29: Slow festivals | Parks and mental restoration | Fog harvesting
+Set 30: Ancient desert trade | Scientific uncertainty | Urban trees and inequality
+Set 31: The history of refrigeration | Digital archives | Underground utility maps
+Set 32: The evolution of writing | Public squares | Second-hand book markets
+Set 33: Museum labels | Resilient school meals | Languages online
+Set 34: The psychology of waiting | Public fountains in dry cities | Translation in research
+Set 35: Community repair cafés | The mathematics of weaving | Deep-sea sound
+Set 36: Cooperative housing | Trust in scientific instruments | Fermentation and food preservation
+Set 37: Vertical farming | Music and memory | Battery recycling
+Set 38: Productivity scores | Heat-responsive textiles | Freshwater monitoring
+Set 39: Durable concrete | Predictive policing | Reconstructing past climates
+Set 40: Soil microbial networks | Seasonal food markets | Facial recognition
+Set 41: Citizen science and migration | Wild pollinators | Conservation and relocation
+Set 42: Quiet hospitals | Robots in elder care | Lighthouse automation
+Set 43: Green roofs | Ancient theatre acoustics | Cooling classrooms
+Set 44: Railways and regional growth | Open-source software | Handwritten notes
+Set 45: The history of timekeeping | Wetlands and industrial water | Public transport economics
+Set 46: Sleep-friendly lighting | Slow festivals | Parks and mental restoration
+Set 47: Describing pain | Repairing electronics | Lessons from bridge failures
+Set 48: Public bathing | Maps and spatial memory | Craft knowledge in factories
+Set 49: Community gardens | Water harvesting | Food packaging
+Set 50: Libraries as civic infrastructure | Museum labels | Resilient school meals
+Set 51: Architecture for extreme heat | The psychology of waiting | Public fountains in dry cities
+Set 52: Archaeology of meals | River sediment | Warning sirens

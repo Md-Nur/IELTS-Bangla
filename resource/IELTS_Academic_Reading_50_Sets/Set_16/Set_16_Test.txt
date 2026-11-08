@@ -1,0 +1,156 @@
+IELTS ACADEMIC READING PRACTICE — SET 16
+
+Time allowed: 60 minutes
+Questions: 40
+
+
+========================================================================
+PASSAGE 1: Urban wetlands
+========================================================================
+
+At first glance, urban wetlands appears to be a specialised concern for ecology researchers. In practice, it raises a broader question: how can a system be improved without mistaking a convenient indicator for the thing that matters? The project examined here treats wetland restoration not as a single intervention but as a chain of decisions, each shaped by local conditions. Earlier reports often emphasised a visible result, whereas the newer approach asks which mechanisms produced it, who benefited, and what costs were shifted elsewhere.
+
+The team began by combining flood storage with water quality. Neither source was sufficient on its own. Measurements could show a change over time but rarely explained why it occurred; interviews and historical records offered context but were vulnerable to selective recall. Researchers therefore established a baseline before making comparisons, recorded unusual conditions, and repeated observations across more than one season. This procedure slowed the project, yet it made it easier to distinguish a durable pattern from a temporary fluctuation.
+
+One important finding concerned bird surveys. The relationship was not linear. Improvements were strongest up to a threshold, after which additional investment produced smaller gains or created a competing problem. In one comparison, Site A received the intervention first and Site B served as a reference. A second comparison reversed the order, reducing the risk that a single unusually favourable location would determine the conclusion. The results suggested that context mattered as much as the headline technique: the same design performed differently when staff training, local behaviour, or background conditions changed.
+
+The researchers also considered the social consequences of the intervention. A technically successful programme could still fail if people found it expensive, confusing, or unfair. Feedback was collected from groups who were often missing from formal evaluations, and the team documented disagreements rather than averaging them away. Some participants valued immediate convenience; others prioritised long-term reliability. These differences did not invalidate the evidence. Instead, they showed that a policy choice involves explicit trade-offs and that a single score cannot represent every legitimate objective.
+
+Several limitations remain. The sample was not large enough to support universal claims, and maintenance funding restricted the number of comparisons that could be completed. The researchers recommend publishing methods, negative results, and uncertainty ranges alongside positive outcomes. They also argue for a staged rollout: begin with a limited pilot, set clear stopping rules, and expand only when independent checks support the expected benefit. Such caution is sometimes described as resistance to innovation, but the authors see it differently. A carefully tested improvement is more likely to survive contact with real-world complexity than a dramatic solution announced before its weaknesses are understood.
+
+The broader lesson is methodological rather than technological. Progress depends on asking the right question, collecting evidence that could disprove an attractive explanation, and making the limits of a conclusion visible. Future work should examine whether the observed benefits persist after funding or specialist supervision ends. It should also compare the full life-cycle cost with the cost of doing nothing. Until then, the study offers a credible framework for decisions, not a universal recipe.
+
+QUESTIONS 1–13
+1. [TRUE / FALSE / NOT GIVEN] The researchers relied on only one type of evidence.
+2. [TRUE / FALSE / NOT GIVEN] The project established a baseline before comparing results.
+3. [TRUE / FALSE / NOT GIVEN] The intervention produced identical results in every location.
+4. [TRUE / FALSE / NOT GIVEN] The study states the exact number of participants interviewed.
+5. [MULTIPLE CHOICE] Why did the team use more than one evidence source?
+A. To avoid collecting any qualitative evidence
+   B. To combine measurable change with contextual explanation
+   C. To make the project finish more quickly
+   D. To replace baseline measurements with opinions
+6. [MULTIPLE CHOICE] What did the threshold finding suggest?
+A. Gains increased without limit
+   B. The intervention had no measurable effect
+   C. Additional investment eventually brought smaller gains or new problems
+   D. All sites needed exactly the same investment
+7. [MULTIPLE CHOICE] Why was the order of the site comparisons reversed?
+A. To reduce the influence of one unusually favourable location
+   B. To ensure Site A always performed better
+   C. To avoid repeating measurements
+   D. To remove the need for a reference site
+8. [MULTIPLE CHOICE] Which approach do the researchers recommend?
+A. Expand immediately and publish only positive results
+   B. Ignore local feedback and use one score
+   C. Stop all future research
+   D. Pilot the intervention, set stopping rules, and expand after independent checks
+9. [SENTENCE COMPLETION] Measurements alone rarely explained ______ a change occurred.
+10. [SENTENCE COMPLETION] The team documented disagreements instead of ______ them away.
+11. [SENTENCE COMPLETION] The authors recommend a staged ______ before wider expansion.
+12. [MATCHING INFORMATION] Evidence collection included interviews and historical records.
+13. [MATCHING INFORMATION] The study warns that one indicator cannot capture every objective.
+
+========================================================================
+PASSAGE 2: The evolution of writing systems
+========================================================================
+
+At first glance, the evolution of writing systems appears to be a specialised concern for linguistics researchers. In practice, it raises a broader question: how can a system be improved without mistaking a convenient indicator for the thing that matters? The project examined here treats writing system change not as a single intervention but as a chain of decisions, each shaped by local conditions. Earlier reports often emphasised a visible result, whereas the newer approach asks which mechanisms produced it, who benefited, and what costs were shifted elsewhere.
+
+The team began by combining inscription analysis with scribal training. Neither source was sufficient on its own. Measurements could show a change over time but rarely explained why it occurred; interviews and historical records offered context but were vulnerable to selective recall. Researchers therefore established a baseline before making comparisons, recorded unusual conditions, and repeated observations across more than one season. This procedure slowed the project, yet it made it easier to distinguish a durable pattern from a temporary fluctuation.
+
+One important finding concerned reading direction. The relationship was not linear. Improvements were strongest up to a threshold, after which additional investment produced smaller gains or created a competing problem. In one comparison, Site A received the intervention first and Site B served as a reference. A second comparison reversed the order, reducing the risk that a single unusually favourable location would determine the conclusion. The results suggested that context mattered as much as the headline technique: the same design performed differently when staff training, local behaviour, or background conditions changed.
+
+The researchers also considered the social consequences of the intervention. A technically successful programme could still fail if people found it expensive, confusing, or unfair. Feedback was collected from groups who were often missing from formal evaluations, and the team documented disagreements rather than averaging them away. Some participants valued immediate convenience; others prioritised long-term reliability. These differences did not invalidate the evidence. Instead, they showed that a policy choice involves explicit trade-offs and that a single score cannot represent every legitimate objective.
+
+Several limitations remain. The sample was not large enough to support universal claims, and archival access restricted the number of comparisons that could be completed. The researchers recommend publishing methods, negative results, and uncertainty ranges alongside positive outcomes. They also argue for a staged rollout: begin with a limited pilot, set clear stopping rules, and expand only when independent checks support the expected benefit. Such caution is sometimes described as resistance to innovation, but the authors see it differently. A carefully tested improvement is more likely to survive contact with real-world complexity than a dramatic solution announced before its weaknesses are understood.
+
+The broader lesson is methodological rather than technological. Progress depends on asking the right question, collecting evidence that could disprove an attractive explanation, and making the limits of a conclusion visible. Future work should examine whether the observed benefits persist after funding or specialist supervision ends. It should also compare the full life-cycle cost with the cost of doing nothing. Until then, the study offers a credible framework for decisions, not a universal recipe.
+
+QUESTIONS 14–26
+14. [TRUE / FALSE / NOT GIVEN] The researchers relied on only one type of evidence.
+15. [TRUE / FALSE / NOT GIVEN] The project established a baseline before comparing results.
+16. [TRUE / FALSE / NOT GIVEN] The intervention produced identical results in every location.
+17. [TRUE / FALSE / NOT GIVEN] The study states the exact number of participants interviewed.
+18. [MULTIPLE CHOICE] Why did the team use more than one evidence source?
+A. To avoid collecting any qualitative evidence
+   B. To combine measurable change with contextual explanation
+   C. To make the project finish more quickly
+   D. To replace baseline measurements with opinions
+19. [MULTIPLE CHOICE] What did the threshold finding suggest?
+A. Gains increased without limit
+   B. The intervention had no measurable effect
+   C. Additional investment eventually brought smaller gains or new problems
+   D. All sites needed exactly the same investment
+20. [MULTIPLE CHOICE] Why was the order of the site comparisons reversed?
+A. To reduce the influence of one unusually favourable location
+   B. To ensure Site A always performed better
+   C. To avoid repeating measurements
+   D. To remove the need for a reference site
+21. [MULTIPLE CHOICE] Which approach do the researchers recommend?
+A. Expand immediately and publish only positive results
+   B. Ignore local feedback and use one score
+   C. Stop all future research
+   D. Pilot the intervention, set stopping rules, and expand after independent checks
+22. [SENTENCE COMPLETION] Measurements alone rarely explained ______ a change occurred.
+23. [SENTENCE COMPLETION] The team documented disagreements instead of ______ them away.
+24. [SENTENCE COMPLETION] The authors recommend a staged ______ before wider expansion.
+25. [MATCHING INFORMATION] Evidence collection included interviews and historical records.
+26. [MATCHING INFORMATION] The study warns that one indicator cannot capture every objective.
+
+========================================================================
+PASSAGE 3: Reconstructing past climates
+========================================================================
+
+At first glance, reconstructing past climates appears to be a specialised concern for climate science researchers. In practice, it raises a broader question: how can a system be improved without mistaking a convenient indicator for the thing that matters? The project examined here treats palaeoclimate proxies not as a single intervention but as a chain of decisions, each shaped by local conditions. Earlier reports often emphasised a visible result, whereas the newer approach asks which mechanisms produced it, who benefited, and what costs were shifted elsewhere.
+
+The team began by combining tree rings with lake sediments. Neither source was sufficient on its own. Measurements could show a change over time but rarely explained why it occurred; interviews and historical records offered context but were vulnerable to selective recall. Researchers therefore established a baseline before making comparisons, recorded unusual conditions, and repeated observations across more than one season. This procedure slowed the project, yet it made it easier to distinguish a durable pattern from a temporary fluctuation.
+
+One important finding concerned instrument records. The relationship was not linear. Improvements were strongest up to a threshold, after which additional investment produced smaller gains or created a competing problem. In one comparison, Site A received the intervention first and Site B served as a reference. A second comparison reversed the order, reducing the risk that a single unusually favourable location would determine the conclusion. The results suggested that context mattered as much as the headline technique: the same design performed differently when staff training, local behaviour, or background conditions changed.
+
+The researchers also considered the social consequences of the intervention. A technically successful programme could still fail if people found it expensive, confusing, or unfair. Feedback was collected from groups who were often missing from formal evaluations, and the team documented disagreements rather than averaging them away. Some participants valued immediate convenience; others prioritised long-term reliability. These differences did not invalidate the evidence. Instead, they showed that a policy choice involves explicit trade-offs and that a single score cannot represent every legitimate objective.
+
+Several limitations remain. The sample was not large enough to support universal claims, and core sampling restricted the number of comparisons that could be completed. The researchers recommend publishing methods, negative results, and uncertainty ranges alongside positive outcomes. They also argue for a staged rollout: begin with a limited pilot, set clear stopping rules, and expand only when independent checks support the expected benefit. Such caution is sometimes described as resistance to innovation, but the authors see it differently. A carefully tested improvement is more likely to survive contact with real-world complexity than a dramatic solution announced before its weaknesses are understood.
+
+The broader lesson is methodological rather than technological. Progress depends on asking the right question, collecting evidence that could disprove an attractive explanation, and making the limits of a conclusion visible. Future work should examine whether the observed benefits persist after funding or specialist supervision ends. It should also compare the full life-cycle cost with the cost of doing nothing. Until then, the study offers a credible framework for decisions, not a universal recipe.
+
+QUESTIONS 27–39
+27. [TRUE / FALSE / NOT GIVEN] The researchers relied on only one type of evidence.
+28. [TRUE / FALSE / NOT GIVEN] The project established a baseline before comparing results.
+29. [TRUE / FALSE / NOT GIVEN] The intervention produced identical results in every location.
+30. [TRUE / FALSE / NOT GIVEN] The study states the exact number of participants interviewed.
+31. [MULTIPLE CHOICE] Why did the team use more than one evidence source?
+A. To avoid collecting any qualitative evidence
+   B. To combine measurable change with contextual explanation
+   C. To make the project finish more quickly
+   D. To replace baseline measurements with opinions
+32. [MULTIPLE CHOICE] What did the threshold finding suggest?
+A. Gains increased without limit
+   B. The intervention had no measurable effect
+   C. Additional investment eventually brought smaller gains or new problems
+   D. All sites needed exactly the same investment
+33. [MULTIPLE CHOICE] Why was the order of the site comparisons reversed?
+A. To reduce the influence of one unusually favourable location
+   B. To ensure Site A always performed better
+   C. To avoid repeating measurements
+   D. To remove the need for a reference site
+34. [MULTIPLE CHOICE] Which approach do the researchers recommend?
+A. Expand immediately and publish only positive results
+   B. Ignore local feedback and use one score
+   C. Stop all future research
+   D. Pilot the intervention, set stopping rules, and expand after independent checks
+35. [SENTENCE COMPLETION] Measurements alone rarely explained ______ a change occurred.
+36. [SENTENCE COMPLETION] The team documented disagreements instead of ______ them away.
+37. [SENTENCE COMPLETION] The authors recommend a staged ______ before wider expansion.
+38. [MATCHING INFORMATION] Evidence collection included interviews and historical records.
+39. [MATCHING INFORMATION] The study warns that one indicator cannot capture every objective.
+
+40. [MULTIPLE CHOICE] Which statement best expresses the overall approach taken in these passages?
+A. Adopt the newest intervention immediately
+   B. Prefer a single simple measure over mixed evidence
+   C. Treat local context and limitations as irrelevant
+   D. Test claims carefully, compare evidence, and state uncertainty
+A. Adopt the newest intervention immediately.
+B. Prefer a single simple measure over mixed evidence.
+C. Treat local context and limitations as irrelevant.
+D. Test claims carefully, compare evidence, and state uncertainty.

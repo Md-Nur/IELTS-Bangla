@@ -1,0 +1,52 @@
+SET INDEX — ORIGINAL IELTS ACADEMIC READING PRACTICE
+
+Set 01: Ancient desert trade | Battery recycling networks | Robots in elder care
+Set 02: Measuring deep-sea sound | Markets and seasonal food | The history of timekeeping
+Set 03: How maps shape memory | Why old roads persist | Designing resilient school meals
+Set 04: Architecture for extreme heat | The design of trustworthy archives | The rise of cooperative housing
+Set 05: The ethics of predictive policing | Railways and regional development | When conservation relocates people
+Set 06: Designing quieter hospitals | Food packaging and waste | Repairing consumer electronics
+Set 07: The language of scientific uncertainty | The value of repair cafés | Measuring deep-sea sound
+Set 08: The ecology of city rooftops | The limits of facial recognition | How maps shape memory
+Set 09: Craft knowledge in modern manufacturing | Microplastics in mountain lakes | Architecture for extreme heat
+Set 10: The psychology of waiting | Mapping invisible urban infrastructure | The ethics of predictive policing
+Set 11: Reconstructing past climates | The mathematics of music | Designing quieter hospitals
+Set 12: Robots in elder care | The hidden life of soil | Learning from failed bridges
+Set 13: The history of timekeeping | The economics of public transport | Museum labels and visitor learning
+Set 14: The acoustics of ancient theatres | Citizen science and migration | Craft knowledge in modern manufacturing
+Set 15: The science of sleep-friendly lighting | Public parks and mental restoration | The psychology of waiting
+Set 16: Urban wetlands | The evolution of writing systems | Reconstructing past climates
+Set 17: Ancient desert trade | Battery recycling networks | Robots in elder care
+Set 18: Measuring deep-sea sound | Markets and seasonal food | The history of timekeeping
+Set 19: How maps shape memory | Why old roads persist | Designing resilient school meals
+Set 20: Architecture for extreme heat | The design of trustworthy archives | The rise of cooperative housing
+Set 21: Water harvesting in dry regions | The science of fog harvesting | Urban wetlands
+Set 22: The archaeology of ordinary meals | The cultural role of public squares | Ancient desert trade
+Set 23: The language of scientific uncertainty | The value of repair cafés | Measuring deep-sea sound
+Set 24: The ecology of city rooftops | The limits of facial recognition | How maps shape memory
+Set 25: Craft knowledge in modern manufacturing | Microplastics in mountain lakes | Architecture for extreme heat
+Set 26: The psychology of waiting | Mapping invisible urban infrastructure | The ethics of predictive policing
+Set 27: Reconstructing past climates | The mathematics of music | Designing quieter hospitals
+Set 28: How rivers move sediment | Libraries as civic infrastructure | The language of scientific uncertainty
+Set 29: Urban trees and inequality | Textiles and climate adaptation | The ecology of city rooftops
+Set 30: The acoustics of ancient theatres | Citizen science and migration | Craft knowledge in modern manufacturing
+Set 31: The science of sleep-friendly lighting | Public parks and mental restoration | The psychology of waiting
+Set 32: Urban wetlands | The evolution of writing systems | Reconstructing past climates
+Set 33: Ancient desert trade | Battery recycling networks | Robots in elder care
+Set 34: Measuring deep-sea sound | Markets and seasonal food | The history of timekeeping
+Set 35: The history of refrigeration | The future of freshwater monitoring | The acoustics of ancient theatres
+Set 36: The science of fermentation | Pollinators beyond honeybees | The science of sleep-friendly lighting
+Set 37: Water harvesting in dry regions | The science of fog harvesting | Urban wetlands
+Set 38: The archaeology of ordinary meals | The cultural role of public squares | Ancient desert trade
+Set 39: The language of scientific uncertainty | The value of repair cafés | Measuring deep-sea sound
+Set 40: The ecology of city rooftops | The limits of facial recognition | How maps shape memory
+Set 41: Craft knowledge in modern manufacturing | Microplastics in mountain lakes | Architecture for extreme heat
+Set 42: Railways and regional development | When conservation relocates people | Water harvesting in dry regions
+Set 43: Food packaging and waste | Repairing consumer electronics | The archaeology of ordinary meals
+Set 44: How rivers move sediment | Libraries as civic infrastructure | The language of scientific uncertainty
+Set 45: Urban trees and inequality | Textiles and climate adaptation | The ecology of city rooftops
+Set 46: The acoustics of ancient theatres | Citizen science and migration | Craft knowledge in modern manufacturing
+Set 47: The science of sleep-friendly lighting | Public parks and mental restoration | The psychology of waiting
+Set 48: Urban wetlands | The evolution of writing systems | Reconstructing past climates
+Set 49: The hidden life of soil | Learning from failed bridges | How rivers move sediment
+Set 50: The economics of public transport | Museum labels and visitor learning | Urban trees and inequality
