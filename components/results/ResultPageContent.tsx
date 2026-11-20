@@ -108,7 +108,7 @@ export function ResultPageContent({ attemptId }: { attemptId: string }) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#F8F8F9] text-[#20395F] flex flex-col font-sans">
       <ResultHeader />
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8">
@@ -116,9 +116,9 @@ export function ResultPageContent({ attemptId }: { attemptId: string }) {
         <DetailedReviewSection sections={result.sections} />
       </main>
 
-      <footer className="border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500 dark:text-slate-400">
+      <footer className="border-t border-[#20395F]/10 bg-white py-6 text-center text-xs text-[#20395F]/60">
         <div className="max-w-6xl mx-auto px-4">
-          <p>© {new Date().getFullYear()} IELTS Bangla. All Mock Test content and scoring calibrated for standard IELTS Academic preparation.</p>
+          <p>© {new Date().getFullYear()} IELTS বাংলা · অফিসিয়াল IELTS একাডেমিক স্ট্যান্ডার্ডের সাথে সামঞ্জস্যপূর্ণ মক টেস্ট ও মূল্যায়ন।</p>
         </div>
       </footer>
     </div>

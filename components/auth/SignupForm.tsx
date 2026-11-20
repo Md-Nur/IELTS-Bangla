@@ -86,23 +86,23 @@ export function SignupForm() {
 
   return (
     <div className="w-full max-w-md">
-      <div className="bg-white rounded-2xl border border-[#20395F]/15 p-7 sm:p-9 shadow-lg space-y-6">
+      <div className="bg-white rounded-xl border border-[#20395F]/15 p-7 sm:p-8 shadow-2xs space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
           <div className="inline-block mb-1">
             <Logo size="md" href="/" />
           </div>
-          <h1 className="text-2xl font-bold text-[#20395F]">
+          <h1 className="text-xl sm:text-2xl font-bold text-[#20395F]">
             নতুন স্টুডেন্ট অ্যাকাউন্ট
           </h1>
-          <p className="text-xs sm:text-sm text-[#20395F]/75">
+          <p className="text-xs text-[#20395F]/75">
             কয়েক সেকেন্ডেই রেজিস্ট্রেশন করে মক টেস্ট শুরু করুন
           </p>
         </div>
 
         {/* Error Alert */}
         {errorMessage && (
-          <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2 animate-fadeIn">
+          <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2 animate-fadeIn">
             <svg className="w-4 h-4 text-red-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -123,7 +123,7 @@ export function SignupForm() {
               onChange={(e) => setName(e.target.value)}
               placeholder="যেমন: মোঃ সাব্বির আহমেদ"
               autoComplete="name"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-[#20395F]/20 text-sm text-[#20395F] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#087653] focus:border-transparent transition-all"
+              className="w-full px-3.5 py-2.5 rounded-lg border border-[#20395F]/20 text-sm text-[#20395F] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#087653] focus:border-transparent transition-all"
             />
           </div>
 
@@ -138,7 +138,7 @@ export function SignupForm() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="student@example.com"
               autoComplete="email"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-[#20395F]/20 text-sm text-[#20395F] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#087653] focus:border-transparent transition-all"
+              className="w-full px-3.5 py-2.5 rounded-lg border border-[#20395F]/20 text-sm text-[#20395F] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#087653] focus:border-transparent transition-all"
             />
           </div>
 
@@ -155,7 +155,7 @@ export function SignupForm() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="কমপক্ষে ৮ অক্ষর"
                 autoComplete="new-password"
-                className="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-[#20395F]/20 text-sm text-[#20395F] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#087653] focus:border-transparent transition-all"
+                className="w-full px-3.5 py-2.5 pr-10 rounded-lg border border-[#20395F]/20 text-sm text-[#20395F] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#087653] focus:border-transparent transition-all"
               />
               <button
                 type="button"
@@ -189,7 +189,7 @@ export function SignupForm() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="পাসওয়ার্ডটি আবার লিখুন"
               autoComplete="new-password"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-[#20395F]/20 text-sm text-[#20395F] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#087653] focus:border-transparent transition-all"
+              className="w-full px-3.5 py-2.5 rounded-lg border border-[#20395F]/20 text-sm text-[#20395F] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#087653] focus:border-transparent transition-all"
             />
           </div>
 
@@ -217,7 +217,7 @@ export function SignupForm() {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full py-3 px-4 rounded-xl font-bold text-sm text-white transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer ${
+            className={`w-full py-2.5 px-4 rounded-lg font-bold text-xs text-white transition-all shadow-2xs flex items-center justify-center gap-2 cursor-pointer ${
               isLoading
                 ? "bg-[#087653]/70 cursor-wait"
                 : "bg-[#087653] hover:bg-[#065e42] active:scale-[0.99]"

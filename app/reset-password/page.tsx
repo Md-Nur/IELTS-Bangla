@@ -115,8 +115,8 @@ function ResetPasswordContent() {
   // Token is invalid or expired
   if (tokenError) {
     return (
-      <div className="w-full max-w-md bg-white rounded-2xl border border-[#20395F]/15 p-8 shadow-lg space-y-5 text-center animate-fadeIn">
-        <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto">
+      <div className="w-full max-w-md bg-white rounded-xl border border-[#20395F]/15 p-8 shadow-2xs space-y-5 text-center animate-fadeIn">
+        <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto">
           <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
@@ -130,7 +130,7 @@ function ResetPasswordContent() {
         <div className="pt-2">
           <Link
             href="/forgot-password"
-            className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-white bg-[#087653] hover:bg-[#065e42] transition-colors shadow-sm"
+            className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-lg font-bold text-xs sm:text-sm text-white bg-[#087653] hover:bg-[#065e42] transition-colors shadow-2xs"
           >
             নতুন লিংক পাঠান
           </Link>
@@ -142,14 +142,14 @@ function ResetPasswordContent() {
   // Success State
   if (isSuccess) {
     return (
-      <div className="w-full max-w-md bg-white rounded-2xl border border-[#20395F]/15 p-8 shadow-lg space-y-6 text-center animate-fadeIn">
-        <div className="w-14 h-14 rounded-full bg-[#E7F5EF] text-[#087653] flex items-center justify-center mx-auto">
-          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div className="w-full max-w-md bg-white rounded-xl border border-[#20395F]/15 p-8 shadow-2xs space-y-6 text-center animate-fadeIn">
+        <div className="w-12 h-12 rounded-full bg-[#E7F5EF] text-[#087653] flex items-center justify-center mx-auto">
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
           </svg>
         </div>
         <div className="space-y-1">
-          <h2 className="text-2xl font-bold text-[#20395F]">
+          <h2 className="text-xl sm:text-2xl font-bold text-[#20395F]">
             পাসওয়ার্ড পরিবর্তিত হয়েছে!
           </h2>
           <p className="text-xs sm:text-sm text-[#20395F]/75 leading-relaxed">
@@ -160,7 +160,7 @@ function ResetPasswordContent() {
           <button
             type="button"
             onClick={() => router.push("/login")}
-            className="w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm text-white bg-[#087653] hover:bg-[#065e42] transition-colors shadow-sm cursor-pointer"
+            className="w-full py-2.5 px-4 rounded-lg font-bold text-xs sm:text-sm text-white bg-[#087653] hover:bg-[#065e42] transition-colors shadow-2xs cursor-pointer"
           >
             লগইন পেজে যান
           </button>
@@ -172,12 +172,12 @@ function ResetPasswordContent() {
   // Active Reset Password Form
   return (
     <div className="w-full max-w-md">
-      <div className="bg-white rounded-2xl border border-[#20395F]/15 p-7 sm:p-9 shadow-lg space-y-6">
+      <div className="bg-white rounded-xl border border-[#20395F]/15 p-7 sm:p-8 shadow-2xs space-y-6">
         <div className="text-center space-y-2">
           <div className="inline-block mb-1">
             <Logo size="md" href="/" />
           </div>
-          <h1 className="text-2xl font-bold text-[#20395F]">
+          <h1 className="text-xl sm:text-2xl font-bold text-[#20395F]">
             নতুন পাসওয়ার্ড নির্ধারণ
           </h1>
           {userEmail && (
@@ -185,14 +185,14 @@ function ResetPasswordContent() {
               {userEmail}
             </p>
           )}
-          <p className="text-xs sm:text-sm text-[#20395F]/75">
+          <p className="text-xs text-[#20395F]/75">
             নিরাপদ রাখতে কমপক্ষে ৮ অক্ষরের একটি নতুন পাসওয়ার্ড প্রদান করুন
           </p>
         </div>
 
         {/* Error Alert */}
         {errorMessage && (
-          <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2 animate-fadeIn">
+          <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2 animate-fadeIn">
             <svg className="w-4 h-4 text-red-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -214,7 +214,7 @@ function ResetPasswordContent() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="কমপক্ষে ৮ অক্ষর"
                 autoComplete="new-password"
-                className="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-[#20395F]/20 text-sm text-[#20395F] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#087653] focus:border-transparent transition-all"
+                className="w-full px-3.5 py-2.5 pr-10 rounded-lg border border-[#20395F]/20 text-sm text-[#20395F] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#087653] focus:border-transparent transition-all"
               />
               <button
                 type="button"
@@ -248,14 +248,14 @@ function ResetPasswordContent() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="পাসওয়ার্ডটি পুনরায় লিখুন"
               autoComplete="new-password"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-[#20395F]/20 text-sm text-[#20395F] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#087653] focus:border-transparent transition-all"
+              className="w-full px-3.5 py-2.5 rounded-lg border border-[#20395F]/20 text-sm text-[#20395F] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#087653] focus:border-transparent transition-all"
             />
           </div>
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm text-white bg-[#087653] hover:bg-[#065e42] shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75"
+            className="w-full py-2.5 px-4 rounded-lg font-bold text-xs sm:text-sm text-white bg-[#087653] hover:bg-[#065e42] shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75"
           >
             {isSubmitting ? (
               <BrandLoader variant="inline" text="পাসওয়ার্ড আপডেট করা হচ্ছে..." />

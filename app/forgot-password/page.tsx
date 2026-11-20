@@ -64,11 +64,11 @@ export default function ForgotPasswordPage() {
       {/* Main Content Card */}
       <main className="flex-1 flex items-center justify-center p-4 sm:p-6 my-8">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl border border-[#20395F]/15 p-7 sm:p-9 shadow-lg space-y-6">
+          <div className="bg-white rounded-xl border border-[#20395F]/15 p-7 sm:p-8 shadow-2xs space-y-6">
             {/* Header */}
             <div className="text-center space-y-2">
-              <div className="w-12 h-12 rounded-2xl bg-[#E7F5EF] text-[#087653] flex items-center justify-center mx-auto mb-2">
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-11 h-11 rounded-xl bg-[#E7F5EF] text-[#087653] flex items-center justify-center mx-auto mb-2">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -77,17 +77,17 @@ export default function ForgotPasswordPage() {
                   />
                 </svg>
               </div>
-              <h1 className="text-2xl font-bold text-[#20395F]">
+              <h1 className="text-xl sm:text-2xl font-bold text-[#20395F]">
                 পাসওয়ার্ড রিসেট
               </h1>
-              <p className="text-xs sm:text-sm text-[#20395F]/75">
+              <p className="text-xs text-[#20395F]/75">
                 আপনার নিবন্ধিত ইমেইলটি লিখুন। আমরা নিরাপদ পাসওয়ার্ড রিসেট লিংক পাঠাব।
               </p>
             </div>
 
             {/* Error Message */}
             {errorMessage && (
-              <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2 animate-fadeIn">
+              <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2 animate-fadeIn">
                 <svg className="w-4 h-4 text-red-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -116,7 +116,7 @@ export default function ForgotPasswordPage() {
                 <div className="pt-2 text-center">
                   <Link
                     href="/login"
-                    className="inline-flex items-center justify-center w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm text-white bg-[#087653] hover:bg-[#065e42] transition-colors shadow-sm"
+                    className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-lg font-bold text-xs sm:text-sm text-white bg-[#087653] hover:bg-[#065e42] transition-colors shadow-2xs"
                   >
                     লগইন পেজে যান
                   </Link>
@@ -136,14 +136,14 @@ export default function ForgotPasswordPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="student@example.com"
                     autoComplete="email"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#20395F]/20 text-sm text-[#20395F] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#087653] focus:border-transparent transition-all"
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-[#20395F]/20 text-sm text-[#20395F] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#087653] focus:border-transparent transition-all"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm text-white bg-[#087653] hover:bg-[#065e42] shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
+                  className="w-full py-2.5 px-4 rounded-lg font-bold text-xs sm:text-sm text-white bg-[#087653] hover:bg-[#065e42] shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
                 >
                   {isLoading ? (
                     <BrandLoader variant="inline" text="অনুরোধ পাঠানো হচ্ছে..." />

@@ -8,6 +8,7 @@ export default defineConfig({
     include: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts'],
     exclude: ['node_modules', '.next', 'scratch'],
     testTimeout: 15000,
+    fileParallelism: false,
   },
   resolve: {
     alias: {

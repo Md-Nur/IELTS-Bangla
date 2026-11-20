@@ -13,6 +13,8 @@ describe("Password Recovery & Reset System (Gmail SMTP & Security)", () => {
   let userId: string;
 
   beforeEach(async () => {
+    vi.clearAllMocks();
+
     // Clean up test user and tokens
     const existing = await prisma.user.findUnique({ where: { email: testEmail } });
     if (existing) {

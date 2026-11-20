@@ -18,7 +18,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-white/10">
           {/* Brand Col */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="inline-block bg-white/95 rounded-2xl p-2.5 shadow-md">
+            <div className="inline-block bg-white rounded-xl p-2.5 shadow-2xs">
               <Logo size="md" href="/" isDark={false} />
             </div>
             <p className="text-white/80 text-sm leading-relaxed max-w-sm">
