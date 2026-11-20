@@ -2,10 +2,10 @@
 
 **Document type:** Living project specification  
 **Project:** IELTS Bangla  
-**Status:** Phase 1 Reading Complete + Bengali-First Localization & Password Recovery  
+**Status:** Phase 1 Reading Complete + Visual Polish & Redesigned Exam Interface  
 **Founders:** Nur and Mozammel  
 **Technical lead:** Nur  
-**Last updated:** 2026-11-20 (Bengali localization, Gmail SMTP recovery, and branded loader)
+**Last updated:** 2026-11-20 (Visual enhancements from reference, academic illustrations, Reading examination interface redesign, and layout overflow fixes)
 
 ---
 
@@ -495,6 +495,17 @@ If the codebase and documentation disagree, investigate the actual implementatio
   - Verified 14 application tables, 6 enums, 15 foreign keys, partial unique index, and 10 immutability triggers.
   - Zero schema drift reported by `prisma migrate diff`.
   - Zero seed rows inserted (clean state confirmed).
+- **Visual Design Enhancement & Academic Illustrations:**
+  - Selectively reused vector motifs from `IELTS-Bangla.html`: Study Book, Exam Clipboard, Countdown Clock, Analytics Progress Chart, Mistake Checker Lens, Audio Headphones, and Speaking Dialogue.
+  - Excluded cartoonish or childish character art to keep an adult university/professional IELTS preparation tone.
+  - Added subtle CSS micro-animations (`animate-subtle-float`, `animate-subtle-float-slow`, `animate-subtle-pulse`) with `@media (prefers-reduced-motion: reduce)` support.
+  - Upgraded Landing Page Hero, Highlights, Modules, and How It Works sections.
+- **Reading Examination Interface Redesign & Fixes:**
+  - Redesigned the examination layout to share the IELTS Bangla design language (`#20395F`, `#087653`, `#E7F5EF`, `#F8F8F9`).
+  - Examination Header: Integrated official brand Logo, test title, passage switcher buttons with answered pills, autosave status, progress pill, countdown timer, and **always-visible Submit button**.
+  - Submit Button Fix: Added prominent submit action in both header and bottom bar, backed by a Bengali confirmation dialog (`ExamSubmissionModal.tsx`) showing answered/unanswered counts, flagged count, and confirmation safeguards.
+  - Bottom Horizontal White Bar Fix: Root-caused to `ExamPalette` overflowing ~1600px in a single flex row and `h-screen` viewport mismatch. Resolved by grouping by passage (13–14 buttons per group, ~450px width), adding `.scrollbar-none`, and switching to dynamic `h-[100dvh]` with `shrink-0` bottom bar.
+  - Restyled all 6 supported question types with brand tokens and verified zero answer key leaks.
 
 ## In Progress / Immediate Next Milestones
 

@@ -11,11 +11,11 @@ export function ExamErrorState({
   onRetry,
 }: ExamErrorStateProps) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 p-6">
-      <div className="max-w-md w-full bg-white dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 p-6 text-center shadow-sm space-y-4">
-        <div className="mx-auto w-12 h-12 rounded-full bg-red-100 dark:bg-red-950/50 flex items-center justify-center text-red-600 dark:text-red-400">
+    <div className="min-h-screen flex items-center justify-center bg-[#F8F8F9] p-6 text-[#20395F]">
+      <div className="max-w-md w-full bg-white rounded-2xl border border-[#20395F]/15 p-7 text-center shadow-lg space-y-5">
+        <div className="mx-auto w-14 h-14 rounded-2xl bg-[#FDECEE] border border-[#D93A45]/30 flex items-center justify-center text-[#D93A45]">
           <svg
-            className="w-6 h-6"
+            className="w-7 h-7"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -29,11 +29,11 @@ export function ExamErrorState({
           </svg>
         </div>
 
-        <div className="space-y-1">
-          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+        <div className="space-y-1.5">
+          <h2 className="text-xl font-bold font-heading text-[#20395F]">
             পরীক্ষা লোড করতে সমস্যা হয়েছে
           </h2>
-          <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          <p className="text-sm text-[#20395F]/75 leading-relaxed">
             {message}
           </p>
         </div>
@@ -43,14 +43,14 @@ export function ExamErrorState({
             <button
               type="button"
               onClick={onRetry}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-[#087653] hover:bg-[#065e42] text-white font-medium text-sm transition-colors cursor-pointer"
+              className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-[#087653] hover:bg-[#065e42] text-white font-bold text-sm transition-all cursor-pointer shadow-xs"
             >
               আবার চেষ্টা করুন
             </button>
           )}
           <Link
             href="/dashboard"
-            className="w-full sm:w-auto px-5 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium text-sm transition-colors text-center"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[#20395F]/20 hover:bg-[#F8F8F9] text-[#20395F] font-semibold text-sm transition-colors text-center"
           >
             ড্যাশবোর্ডে ফিরুন
           </Link>

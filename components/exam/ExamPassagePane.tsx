@@ -13,21 +13,21 @@ export function ExamPassagePane({ section, sectionIndex }: ExamPassagePaneProps)
   return (
     <article
       aria-label={`Reading Passage ${sectionIndex + 1}`}
-      className="h-full overflow-y-auto px-6 py-6 md:px-8 md:py-8 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 select-text"
+      className="h-full overflow-y-auto px-5 py-6 sm:px-8 sm:py-8 bg-white text-[#20395F] select-text"
     >
       <div className="max-w-2xl mx-auto space-y-6">
         {/* Header */}
-        <header className="border-b border-slate-200 dark:border-slate-800 pb-4">
-          <div className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        <header className="border-b border-[#20395F]/15 pb-4">
+          <div className="inline-block px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-[#E7F5EF] text-[#087653] border border-[#087653]/20 mb-2">
             Reading Passage {sectionIndex + 1}
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-950 dark:text-white mt-1 leading-tight">
+          <h2 className="text-xl sm:text-2xl font-bold font-heading text-[#20395F] leading-tight">
             {section.title}
           </h2>
         </header>
 
-        {/* Paragraphs */}
-        <div className="space-y-4 text-[15px] sm:text-base leading-relaxed sm:leading-7 text-slate-800 dark:text-slate-200 font-serif">
+        {/* Paragraphs with academic typography */}
+        <div className="space-y-5 text-[15.5px] sm:text-[16px] leading-relaxed sm:leading-[1.8] text-[#20395F]/90 font-serif">
           {paragraphs.map((para, pIdx) => {
             // Check if paragraph starts with a letter like "A ", "B " etc.
             const letterMatch = para.match(/^([A-G])\s+([\s\S]+)$/);
@@ -36,8 +36,8 @@ export function ExamPassagePane({ section, sectionIndex }: ExamPassagePaneProps)
               const letter = letterMatch[1];
               const restText = letterMatch[2];
               return (
-                <div key={pIdx} className="flex gap-3">
-                  <span className="font-sans font-bold text-slate-950 dark:text-slate-100 shrink-0 text-base">
+                <div key={pIdx} className="flex items-start gap-3.5">
+                  <span className="font-sans font-bold text-sm text-[#087653] bg-[#E7F5EF] border border-[#087653]/25 w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
                     {letter}
                   </span>
                   <p className="flex-1">{restText}</p>

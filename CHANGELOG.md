@@ -4,6 +4,51 @@ All notable changes, architectural decisions, and milestones for this project wi
 
 ## [Unreleased] - 2026-11-20
 
+### Visual Experience Enhancement & Reading Exam Interface Redesign
+- **Visual Design & Academic Illustrations (Revisited HTML Reference):**
+  - Re-inspected the original inspiration reference (`IELTS-Bangla.html`) to identify reusable illustrations, decorative graphics, and micro-animations suitable for an adult IELTS preparation audience.
+  - Reused scholarly vector motifs: Open study book (`book`), examination test clipboard (`clip`), countdown timer clock (`clock`), drafting pencil (`pencil`), acoustic headphones (`phones`), dialogue speech balloons (`bubble`), mistake checker lens (`lens`), and analytics bar chart (`chart`).
+  - Purposely excluded cartoonish figures (e.g. `kid`) and childish graphics to maintain a mature, prestigious, university/graduate-level academic aesthetic.
+  - Implemented reusable SVG vector library in `components/common/AcademicIllustrations.tsx` styled strictly with brand tokens (`#087653`, `#20395F`, `#E7F5EF`, `#D93A45`, `#FFD66B`).
+  - Added lightweight micro-animations in `app/globals.css`: `animate-subtle-float`, `animate-subtle-float-slow`, `animate-subtle-pulse` with full `@media (prefers-reduced-motion: reduce)` compliance.
+  - Elevated Landing Page sections:
+    - `HeroSection.tsx`: Integrated subtle floating academic motifs, achievement badges, and interactive question preview.
+    - `HighlightsSection.tsx`: Upgraded all 5 cards with academic vector illustrations and smooth hover translations.
+    - `ModulesSection.tsx`: Added illustration preview banners (`.mi` style from reference) for Reading, Listening, Writing, and Speaking with specs and availability pills.
+    - `HowItWorksSection.tsx`: Added stylized numbered steps with vector icons and connected flow.
+- **Reading Examination Interface Redesign:**
+  - Redesigned the examination screen (`ExamInterface.tsx`) to strictly share the IELTS Bangla design language, moving away from generic dark-slate styling into a clean, distraction-free academic workspace.
+  - **Examination Header (`ExamHeader.tsx`):**
+    - Compact, professional header featuring the official `IELTS বাংলা` dual-tone logo.
+    - Displays test title with Academic Reading badge, passage selector buttons with answered count pills (`13/13`), autosave status indicator, and answered progress pill (`উত্তর: ২৫/৪০`).
+    - Prominent countdown timer with clear contrast (`#20395F` base, amber warning < 10m, red alert < 2m).
+    - **Always-visible primary Submit Test button (`টেস্ট জমা দিন`)** directly in the header.
+    - Clean Exit button (`বাহির হন`) with confirmation modal.
+    - Responsive mobile sub-header with passage dropdown and `[প্যাসেজ | প্রশ্নোত্তর]` tab switcher.
+  - **Reading Layout (`ExamPassagePane.tsx` & `ExamQuestionsPane.tsx`):**
+    - High-legibility two-panel desktop split (Passage on left, Questions on right) with independent smooth vertical scrolling.
+    - Passage pane styled with serif academic typography, comfortable measure, and distinct paragraph letters (`A`, `B`, `C`...).
+    - Questions pane styled with clean white cards on `#F8F8F9`, active question highlighting (`ring-1 ring-[#087653]/30`), and distinct question numbers.
+    - Restyled all 6 supported question types (`MultipleChoice`, `TrueFalseNotGiven`, `YesNoNotGiven`, `TextCompletion`, `MatchingHeadings`, `SummaryCompletion`) using brand tokens.
+  - **Submit Button Visibility Problem Fixed:**
+    - Root cause: Submit was previously buried inside `ExamReviewModal.tsx`, leaving no visible submit button on the main exam screen or bottom bar.
+    - Fixed by adding a primary submit button to `ExamHeader` (`টেস্ট জমা দিন`) and a secondary action to `ExamBottomBar`.
+    - Implemented a dedicated Bengali confirmation dialog (`ExamSubmissionModal.tsx`) showing answered count, unanswered warning, flagged count, irreversible submission disclaimer, cancel option, and submit button with `BrandLoader` loading state.
+  - **Bottom Horizontal White Bar & Overflow Bug Fixed:**
+    - Root causes:
+      1. `ExamPalette.tsx` forced all 40 question buttons horizontally across 3 passages (~1600px width), causing horizontal overflow inside `ExamBottomBar` and rendering a native browser scrollbar track (a long white/gray bar).
+      2. `h-screen` (`100vh`) on the root container exceeded dynamic mobile/desktop viewports (`100dvh`), causing document window scrolling that exposed the body background below the footer.
+      3. `ExamBottomBar` had `sticky bottom-0` inside a flex container.
+    - Resolution:
+      1. Redesigned `ExamPalette.tsx` to group questions by active passage (13–14 buttons per group, ~450px width) with quick tabs (`P1`, `P2`, `P3`, `সব`), fitting comfortably on all viewports without horizontal overflow.
+      2. Applied `.scrollbar-none` utility to prevent native browser scrollbar tracks.
+      3. Changed root container to `h-[100dvh] max-h-[100dvh] w-full flex flex-col overflow-hidden` with `ExamBottomBar` set to `shrink-0`.
+- **Quality Assurance & Verification:**
+  - 135 tests passing across 15 test suites with 100% pass rate.
+  - Zero TypeScript errors (`bun run build`).
+  - Zero ESLint errors or warnings (`bun run lint`).
+  - Verified across desktop (1440px), laptop (1280px), tablet (768px), and mobile (390px, 360px).
+
 ### Bengali-First Localization, Gmail SMTP Recovery & Branded Loading Experience
 - **Bengali-First Localization:**
   - Standardized UI language to Bengali across all user-facing components: Navbar, Landing page (Hero, Trust Highlights, How It Works, Modules, Why IELTS Bangla, Final CTA), Footer, Auth forms (Login, Signup, Forgot Password, Reset Password), Student Dashboard, Practice Guide, About, Privacy, Terms, Exam interface, and Results & Detailed Answer Review.

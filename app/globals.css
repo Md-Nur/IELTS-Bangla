@@ -66,3 +66,65 @@ h1, h2, h3, h4, h5, h6 {
 .animate-fadeIn {
   animation: fadeIn 0.25s ease-out forwards;
 }
+
+/* Subtle academic animations reused from inspiration reference */
+@keyframes subtleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes subtleFloatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(0.8deg);
+  }
+}
+
+@keyframes subtlePulseGlow {
+  0%, 100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+.animate-subtle-float {
+  animation: subtleFloat 4s ease-in-out infinite;
+}
+
+.animate-subtle-float-slow {
+  animation: subtleFloatSlow 6s ease-in-out infinite;
+}
+
+.animate-subtle-pulse {
+  animation: subtlePulseGlow 3s ease-in-out infinite;
+}
+
+/* Hide scrollbar while preserving scrollability */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-subtle-float,
+  .animate-subtle-float-slow,
+  .animate-subtle-pulse,
+  .animate-indeterminate,
+  .animate-fadeIn {
+    animation: none !important;
+    transition: none !important;
+  }
+}

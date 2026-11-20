@@ -21,7 +21,7 @@ export function SummaryCompletion({
   const wordKeys = Object.keys(wordListMap);
 
   return (
-    <div className="mt-3 space-y-2">
+    <div className="mt-3.5 space-y-2.5">
       <div className="flex items-center gap-3">
         <label htmlFor={`summary-select-${questionId}`} className="sr-only">
           Select letter for Question {questionNumber}
@@ -31,7 +31,7 @@ export function SummaryCompletion({
           value={currentValue}
           disabled={disabled}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full max-w-lg px-3.5 py-2 text-sm rounded-md border border-slate-300 bg-white text-slate-800 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+          className="w-full max-w-lg px-4 py-2.5 text-sm rounded-xl border border-[#20395F]/20 bg-white text-[#20395F] focus:outline-none focus:ring-2 focus:ring-[#087653]/20 focus:border-[#087653] cursor-pointer"
         >
           <option value="">-- অপশন লেটার নির্বাচন করুন (A–H) --</option>
           {wordKeys.map((key) => (
@@ -43,17 +43,15 @@ export function SummaryCompletion({
       </div>
 
       {currentValue && wordListMap[currentValue] && (
-        <div className="text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded border border-slate-200 dark:border-slate-700/60 max-w-lg flex items-center justify-between">
+        <div className="text-xs text-[#20395F] bg-[#E7F5EF] p-3 rounded-xl border border-[#087653]/30 max-w-lg flex items-center justify-between">
           <span>
-            <span className="font-semibold text-slate-800 dark:text-slate-100">
-              নির্বাচিত:
-            </span>{" "}
-            লেটার <strong className="text-emerald-700 dark:text-emerald-400">{currentValue}</strong> ({wordListMap[currentValue]})
+            <span className="font-semibold text-[#20395F]">নির্বাচিত:</span>{" "}
+            লেটার <strong className="text-[#087653]">{currentValue}</strong> ({wordListMap[currentValue]})
           </span>
           <button
             type="button"
             onClick={() => onChange("")}
-            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs underline cursor-pointer"
+            className="text-[#20395F]/60 hover:text-[#D93A45] text-xs underline cursor-pointer transition-colors"
           >
             মুছে ফেলুন
           </button>

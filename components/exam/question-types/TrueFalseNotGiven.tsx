@@ -24,10 +24,14 @@ export function TrueFalseNotGiven({
       id={`tf-group-${questionId}`}
       role="radiogroup"
       aria-label={`Options for Question ${questionNumber}`}
-      className="flex flex-wrap gap-2.5 mt-3"
+      className="flex flex-wrap gap-2.5 mt-3.5"
     >
       {OPTIONS.map((opt) => {
-        const isSelected = normalizedValue === opt || (normalizedValue === "T" && opt === "TRUE") || (normalizedValue === "F" && opt === "FALSE") || (normalizedValue === "NG" && opt === "NOT GIVEN");
+        const isSelected =
+          normalizedValue === opt ||
+          (normalizedValue === "T" && opt === "TRUE") ||
+          (normalizedValue === "F" && opt === "FALSE") ||
+          (normalizedValue === "NG" && opt === "NOT GIVEN");
 
         return (
           <button
@@ -37,10 +41,10 @@ export function TrueFalseNotGiven({
             aria-checked={isSelected}
             disabled={disabled}
             onClick={() => onChange(opt)}
-            className={`px-4 py-2 text-sm font-medium rounded-md border transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 cursor-pointer select-none ${
+            className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-xl border transition-all focus:outline-none focus:ring-2 focus:ring-[#087653]/30 cursor-pointer select-none ${
               isSelected
-                ? "bg-slate-900 border-slate-900 text-white dark:bg-blue-600 dark:border-blue-600 dark:text-white ring-2 ring-slate-800/30"
-                : "bg-white border-slate-300 text-slate-800 hover:bg-slate-50 hover:border-slate-400 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-750"
+                ? "bg-[#087653] border-[#087653] text-white shadow-xs scale-102"
+                : "bg-white border-[#20395F]/20 text-[#20395F] hover:bg-[#F8F8F9] hover:border-[#087653]/40"
             }`}
           >
             {opt}

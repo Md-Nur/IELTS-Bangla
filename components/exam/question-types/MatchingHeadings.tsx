@@ -21,7 +21,7 @@ export function MatchingHeadings({
   const headingKeys = Object.keys(headingsMap);
 
   return (
-    <div className="mt-3 space-y-2">
+    <div className="mt-3.5 space-y-2.5">
       <div className="flex items-center gap-3">
         <label htmlFor={`heading-select-${questionId}`} className="sr-only">
           Select heading for Question {questionNumber}
@@ -31,7 +31,7 @@ export function MatchingHeadings({
           value={currentValue}
           disabled={disabled}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full max-w-lg px-3.5 py-2 text-sm rounded-md border border-slate-300 bg-white text-slate-800 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+          className="w-full max-w-lg px-4 py-2.5 text-sm rounded-xl border border-[#20395F]/20 bg-white text-[#20395F] focus:outline-none focus:ring-2 focus:ring-[#087653]/20 focus:border-[#087653] cursor-pointer"
         >
           <option value="">-- সঠিক হেডিং নির্বাচন করুন --</option>
           {headingKeys.map((key) => (
@@ -43,8 +43,8 @@ export function MatchingHeadings({
       </div>
 
       {currentValue && headingsMap[currentValue] && (
-        <div className="text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded border border-slate-200 dark:border-slate-700/60 max-w-lg">
-          <span className="font-semibold text-slate-800 dark:text-slate-100 uppercase">
+        <div className="text-xs text-[#20395F] bg-[#E7F5EF] p-3 rounded-xl border border-[#087653]/30 max-w-lg">
+          <span className="font-bold text-[#087653] uppercase">
             নির্বাচিত হেডিং {currentValue}:
           </span>{" "}
           {headingsMap[currentValue]}

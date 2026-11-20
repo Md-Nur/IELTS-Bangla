@@ -1,96 +1,126 @@
 import React from "react";
+import Link from "next/link";
+import {
+  StudyBookIllustration,
+  ExamClipboardIllustration,
+  TimedExamIllustration,
+  ScoreAnalyticsIllustration,
+  MistakeCheckerIllustration,
+} from "@/components/common/AcademicIllustrations";
 
 export function HighlightsSection() {
-  const highlights = [
+  const secondaryFeatures = [
     {
-      title: "IELTS Academic স্ট্যান্ডার্ড অনুশীলন",
-      banglaTag: "অফিসিয়াল ফরম্যাট",
-      description: "বিজ্ঞান, ইতিহাস ও সমাজবিজ্ঞান সম্পর্কিত পূর্ণাঙ্গ Reading প্যাসেজ যা অফিসিয়াল IELTS একাডেমিক পরীক্ষার মানের সাথে শতভাগ সামঞ্জস্যপূর্ণ।",
-      icon: (
-        <svg className="w-6 h-6 text-[#087653]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-        </svg>
-      ),
+      title: "অফিসিয়াল প্রশ্ন কাঠামো ও ভ্যারাইটি",
+      description: "True/False/Not Given, Matching Headings, Summary ও Sentence Completion সহ বাস্তব পরীক্ষার সকল প্রধান প্রশ্ন টাইপ।",
+      illustration: <StudyBookIllustration className="w-8 h-8 text-[#087653]" />,
     },
     {
-      title: "বাস্তবসম্মত Computer-Delivered Mock Test",
-      banglaTag: "আসল পরীক্ষার ইন্টারফেস",
-      description: "স্প্লিট-স্ক্রিন প্যাসেজ রিডার, প্রশ্ন প্যালেট, ফ্ল্যাগিং টুল এবং স্ট্যান্ডার্ড রিভিউ মডালসহ হুবহু অফিসিয়াল পরীক্ষার পরিবেশ।",
-      icon: (
-        <svg className="w-6 h-6 text-[#087653]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
+      title: "রিয়েল-টাইম অটোসেভ ও রেসিলিয়েন্ট স্টেট",
+      description: "প্রতিটি উত্তরের তাৎক্ষণিক ব্যাকআপ; ব্রাউজার রিফ্রেশ হলেও প্রগ্রেস কিংবা অবশিষ্ট সময় নষ্ট হয় না।",
+      illustration: <TimedExamIllustration className="w-8 h-8 text-[#087653]" />,
     },
     {
-      title: "টাইমড এক্সাম ও স্বয়ংক্রিয় সেভ (Autosave)",
-      banglaTag: "টাইম ম্যানেজমেন্ট",
-      description: "সার্ভার-নিয়ন্ত্রিত ৬০ মিনিটের নিখুঁত টাইমার, প্রতিটি উত্তরের স্বয়ংক্রিয় ব্যাকআপ এবং নির্ধারিত সময় শেষে স্বয়ংক্রিয় ফাইনাল সাবমিশন।",
-      icon: (
-        <svg className="w-6 h-6 text-[#087653]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      ),
+      title: "Cambridge স্কেলে তাৎক্ষণিক ব্যান্ড গণনা",
+      description: "৪০টি প্রশ্নের র' স্কোরের ভিত্তিতে অফিশিয়াল একাডেমিক কনভার্সন টেবিল অনুযায়ী ১.০ থেকে ৯.০ ব্যান্ডের নির্ভুল হিসাব।",
+      illustration: <ScoreAnalyticsIllustration className="w-8 h-8 text-[#087653]" />,
     },
     {
-      title: "অগ্রগতি ও Band Score ট্র্যাকিং",
-      banglaTag: "পারফরম্যান্স অ্যানালিটিক্স",
-      description: "প্রতিটি টেস্টের ফলাফল, র' স্কোর অগ্রগতি এবং আপনার কাঙ্ক্ষিত ব্যান্ড স্কোর (১.০ থেকে ৯.০) অর্জনের ধারাবাহিক ট্র্যাক রেকর্ড।",
-      icon: (
-        <svg className="w-6 h-6 text-[#087653]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-        </svg>
-      ),
-    },
-    {
-      title: "বিস্তারিত উত্তর বিশ্লেষণ ও ব্যাখ্যা",
-      banglaTag: "সঠিক উত্তর পর্যালোচনা",
-      description: "প্রতিটি প্রশ্নের সঠিক উত্তরের ব্যাখ্যা, অনুমোদিত বিকল্প উত্তর এবং কেন কোনো উত্তর ভুল হয়েছে তার সুস্পষ্ট দিকনির্দেশনা।",
-      icon: (
-        <svg className="w-6 h-6 text-[#087653]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-        </svg>
-      ),
+      title: "বিশদ উত্তর ব্যাখ্যা ও ডিস্ট্রাক্টর অ্যানালাইসিস",
+      description: "পরীক্ষা শেষে প্রতিটি প্রশ্নের সঠিক উত্তরের লজিক এবং বিভ্রান্তিকর অপশনগুলো কেন ভুল তা সুস্পষ্টভাবে জেনে নিন।",
+      illustration: <MistakeCheckerIllustration className="w-8 h-8 text-[#087653]" />,
     },
   ];
 
   return (
-    <section className="py-16 bg-white border-y border-[#20395F]/10">
+    <section className="py-20 bg-white border-y border-[#20395F]/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-          <div className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#E7F5EF] text-[#087653]">
-            প্ল্যাটফর্মের মূল বৈশিষ্ট্যসমূহ
+        {/* Section Header */}
+        <div className="max-w-3xl mb-14 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#E7F5EF] text-[#087653]">
+            <span>প্ল্যাটফর্মের সক্ষমতা</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#20395F] tracking-tight">
-            বাস্তবসম্মত IELTS প্রস্তুতির নির্ভরযোগ্য পরিবেশ
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#20395F] tracking-tight">
+            আসল পরীক্ষার মানসিক চাপ কাটিয়ে ওঠার নির্ভরযোগ্য মাধ্যম
           </h2>
           <p className="text-sm sm:text-base text-[#20395F]/75 leading-relaxed">
-            প্রতিটি সুবিধা আসল পরীক্ষার পরিবেশ এবং কার্যকর মূল্যায়নের কথা মাথায় রেখে নিখুঁতভাবে তৈরি করা হয়েছে।
+            IELTS কম্পিউটার-ডেলিভার্ড পরীক্ষায় সাফল্য কেবল ইংরেজি জানার ওপর নয়, ইন্টারফেসের গতি ও সময় ব্যবস্থাপনার ওপর সমানভাবে নির্ভর করে।
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {highlights.map((item, idx) => (
-            <div
-              key={idx}
-              className={`p-6 rounded-2xl border border-[#20395F]/10 bg-[#F8F8F9] hover:bg-white hover:border-[#087653]/40 transition-all shadow-2xs hover:shadow-md ${
-                idx === 4 ? "md:col-span-2 lg:col-span-1" : ""
-              }`}
-            >
-              <div className="w-12 h-12 rounded-xl bg-[#E7F5EF] flex items-center justify-center mb-4">
-                {item.icon}
+        {/* Asymmetric Showcase Grid: Core Engine Feature on Left, 4 Grounded Capabilities on Right */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          {/* Main Focus Card: The CBT Exam Simulation (Takes 5 columns) */}
+          <div className="lg:col-span-5 bg-[#F8F8F9] rounded-xl border border-[#20395F]/15 p-7 flex flex-col justify-between shadow-2xs">
+            <div className="space-y-5">
+              <div className="w-12 h-12 rounded-lg bg-white border border-[#20395F]/10 flex items-center justify-center shadow-2xs">
+                <ExamClipboardIllustration className="w-8 h-8" />
               </div>
-              <div className="text-xs font-semibold text-[#087653] mb-1">
-                {item.banglaTag}
+
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#087653]">
+                  কোর সিমুলেশন ইঞ্জিন
+                </span>
+                <h3 className="text-xl sm:text-2xl font-bold text-[#20395F] mt-1">
+                  Computer-Delivered পরীক্ষার অবিকল অভিজ্ঞতা
+                </h3>
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-[#20395F] mb-2">
-                {item.title}
-              </h3>
-              <p className="text-xs sm:text-sm text-[#20395F]/75 leading-relaxed">
-                {item.description}
+
+              <p className="text-xs sm:text-sm text-[#20395F]/80 leading-relaxed">
+                প্যাসেজ ও প্রশ্ন পাশাপাশি রেখে পড়ার স্প্লিট-স্ক্রিন লেআউট, প্রশ্ন প্যালেট নেভিগেশন, রিভিউ ফ্ল্যাগিং এবং ৬০ মিনিটের নিখুঁত টাইমার—সবকিছুই আসল ব্রিটিশ কাউন্সিল ও আইডিপি কম্পিউটার পরীক্ষার আদলে তৈরি।
               </p>
+
+              {/* Technical Specifications Checklist */}
+              <div className="pt-4 border-t border-[#20395F]/10 space-y-2.5 text-xs text-[#20395F]/85">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-4 h-4 rounded-full bg-[#E7F5EF] text-[#087653] flex items-center justify-center text-[10px] font-bold">✓</span>
+                  <span>স্বতন্ত্র ডুয়াল স্ক্রলবার ও ফন্ট সাইজ অ্যাডজাস্টমেন্ট</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <span className="w-4 h-4 rounded-full bg-[#E7F5EF] text-[#087653] flex items-center justify-center text-[10px] font-bold">✓</span>
+                  <span>১ থেকে ৪০ পর্যন্ত প্রতিটি প্রশ্নের ডিরেক্ট জাম্প প্যালেট</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <span className="w-4 h-4 rounded-full bg-[#E7F5EF] text-[#087653] flex items-center justify-center text-[10px] font-bold">✓</span>
+                  <span>সার্ভার-অথরিটেটিভ কাউন্টডাউন ও অটো-সাবমিট সুরক্ষা</span>
+                </div>
+              </div>
             </div>
-          ))}
+
+            <div className="pt-6 mt-6 border-t border-[#20395F]/10">
+              <Link
+                href="/signup"
+                className="inline-flex items-center gap-2 text-xs font-bold text-[#087653] hover:text-[#065e42] transition-colors"
+              >
+                <span>সিমুলেশন দিয়ে প্রস্তুতি শুরু করুন</span>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+
+          {/* Right 4 Features (Takes 7 columns in 2x2 grid) */}
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {secondaryFeatures.map((f, i) => (
+              <div
+                key={i}
+                className="p-6 rounded-xl bg-white border border-[#20395F]/10 hover:border-[#087653]/35 hover:shadow-sm transition-all duration-150 flex flex-col justify-between"
+              >
+                <div className="space-y-3">
+                  <div className="w-10 h-10 rounded-lg bg-[#F8F8F9] border border-[#20395F]/10 flex items-center justify-center">
+                    {f.illustration}
+                  </div>
+                  <h4 className="text-base font-bold text-[#20395F] leading-snug">
+                    {f.title}
+                  </h4>
+                  <p className="text-xs sm:text-sm text-[#20395F]/75 leading-relaxed">
+                    {f.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

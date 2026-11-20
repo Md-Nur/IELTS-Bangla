@@ -23,7 +23,7 @@ export function TextCompletion({
   const isOverLimit = Boolean(wordLimit && currentWordCount > wordLimit);
 
   return (
-    <div id={`text-completion-${questionId}`} className="mt-3 space-y-1.5">
+    <div id={`text-completion-${questionId}`} className="mt-3.5 space-y-2">
       <div className="relative">
         <input
           id={`input-q-${questionNumber}`}
@@ -32,10 +32,10 @@ export function TextCompletion({
           disabled={disabled}
           placeholder="এখানে উত্তর লিখুন..."
           onChange={(e) => onChange(e.target.value)}
-          className={`w-full max-w-lg px-3.5 py-2 text-sm rounded-md border transition-colors focus:outline-none focus:ring-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 ${
+          className={`w-full max-w-lg px-4 py-2.5 text-sm rounded-xl border transition-all focus:outline-none focus:ring-2 bg-white text-[#20395F] ${
             isOverLimit
-              ? "border-amber-500 focus:border-amber-600 focus:ring-amber-500/20"
-              : "border-slate-300 focus:border-emerald-600 focus:ring-emerald-500/20 dark:border-slate-700 dark:focus:border-emerald-500"
+              ? "border-[#D93A45] focus:border-[#D93A45] focus:ring-[#D93A45]/20"
+              : "border-[#20395F]/20 focus:border-[#087653] focus:ring-[#087653]/20"
           }`}
         />
       </div>
@@ -43,17 +43,17 @@ export function TextCompletion({
       {wordLimit && (
         <div className="flex items-center gap-2 text-xs">
           <span
-            className={`font-mono ${
+            className={`font-semibold ${
               isOverLimit
-                ? "text-amber-600 dark:text-amber-400 font-semibold"
-                : "text-slate-500 dark:text-slate-400"
+                ? "text-[#D93A45]"
+                : "text-[#20395F]/70"
             }`}
           >
-            {currentWordCount} / {wordLimit} {wordLimit === 1 ? "word" : "words"}
+            শব্দ গণনা: {currentWordCount} / {wordLimit} {wordLimit === 1 ? "word" : "words"}
           </span>
           {isOverLimit && (
-            <span className="text-amber-600 dark:text-amber-400 font-medium">
-              (শব্দসীমা অতিক্রম করেছে)
+            <span className="text-[#D93A45] font-bold">
+              (অনুমোদিত শব্দসীমা অতিক্রম করেছে)
             </span>
           )}
         </div>

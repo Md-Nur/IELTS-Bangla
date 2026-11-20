@@ -1,5 +1,11 @@
 import React from "react";
 import Link from "next/link";
+import {
+  StudyBookIllustration,
+  ListeningAudioIllustration,
+  WritingPencilIllustration,
+  SpeakingPartnerIllustration,
+} from "@/components/common/AcademicIllustrations";
 
 interface ModulesSectionProps {
   user?: {
@@ -9,153 +15,149 @@ interface ModulesSectionProps {
 }
 
 export function ModulesSection({ user }: ModulesSectionProps) {
-  const modules = [
-    {
-      id: "reading",
-      title: "Academic Reading",
-      banglaTitle: "রিডিং মডিউল",
-      status: "available",
-      badge: "এখনই উপলব্ধ",
-      badgeStyle: "bg-[#E7F5EF] text-[#087653] border-[#087653]/30",
-      description: "৩টি পূর্ণাঙ্গ প্যাসেজ এবং ৪০টি প্রমাণিক প্রশ্ন। True/False/Not Given, Matching Headings, Summary ও Sentence Completion সহ সম্পূর্ণ প্র্যাকটিস।",
-      specs: ["৩টি প্যাসেজ", "৪০টি প্রশ্ন", "৬০ মিনিট", "অটোমেটেড স্কোরিং"],
-      ctaText: user ? "মক টেস্ট শুরু করুন" : "ফ্রি প্র্যাকটিস করুন",
-      ctaHref: user ? "/dashboard" : "/signup",
-      icon: (
-        <svg className="w-7 h-7 text-[#087653]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-        </svg>
-      ),
-    },
+  const upcomingModules = [
     {
       id: "listening",
       title: "Listening Module",
       banglaTitle: "লিসেনিং মডিউল",
-      status: "coming_soon",
-      badge: "শীঘ্রই আসছে",
-      badgeStyle: "bg-slate-100 text-slate-600 border-slate-200",
-      description: "৪টি অডিও সেকশন, ৪০টি প্রশ্ন এবং বাস্তবসম্মত অডিও প্লেব্যাক কন্ট্রোল। বিভিন্ন আন্তর্জাতিক অ্যাকসেন্টে শোনার দক্ষতা বৃদ্ধি করুন।",
-      specs: ["৪টি অডিও সেকশন", "৪০টি প্রশ্ন", "৩০+১০ মিনিট", "উন্নয়ন চলমান"],
-      ctaText: "শীঘ্রই আসছে",
-      ctaHref: "#",
-      icon: (
-        <svg className="w-7 h-7 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-        </svg>
-      ),
+      statusBadge: "Phase 2 · উন্নয়ন চলমান",
+      description: "আন্তর্জাতিক অ্যাকসেন্ট (British, Australian, American), ৪টি অডিও সেকশন এবং অবিকল কম্পিউটার পরীক্ষার অডিও প্লেব্যাক কন্ট্রোল।",
+      specs: ["৪টি অডিও সেকশন", "৪০টি প্রশ্ন", "৩০ মিনিট + ১০ মিনিট রিভিউ"],
+      illustration: <ListeningAudioIllustration className="w-10 h-10" />,
     },
     {
       id: "writing",
       title: "Writing Module",
       banglaTitle: "রাইটিং মডিউল",
-      status: "coming_soon",
-      badge: "শীঘ্রই আসছে",
-      badgeStyle: "bg-slate-100 text-slate-600 border-slate-200",
-      description: "Task 1 (রিপোর্ট/গ্রাফ) এবং Task 2 (একাডেমিক রচনা)। বাস্তব পরীক্ষার টাইমার ও ওয়ার্ড কাউন্টারসহ অফিসিয়াল ক্রাইটেরিয়া ভিত্তিক মূল্যায়ন।",
-      specs: ["Task 1 ও Task 2", "ওয়ার্ড কাউন্টার", "৬০ মিনিট", "উন্নয়ন চলমান"],
-      ctaText: "শীঘ্রই আসছে",
-      ctaHref: "#",
-      icon: (
-        <svg className="w-7 h-7 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-        </svg>
-      ),
+      statusBadge: "Phase 3 · পরিকল্পিত",
+      description: "Task 1 (গ্রাফ/চার্ট বিশ্লেষণ) ও Task 2 (একাডেমিক প্রবন্ধ)। অটোমেটিক ওয়ার্ড কাউন্ট এবং অফিসিয়াল ৪-ক্রাইটেরিয়া ব্যান্ড স্কোরিং গাইড।",
+      specs: ["Task 1 ও 2", "লাইভ ওয়ার্ড কাউন্টার", "৬০ মিনিট"],
+      illustration: <WritingPencilIllustration className="w-10 h-10" />,
     },
     {
       id: "speaking",
       title: "Speaking Module",
       banglaTitle: "স্পিকিং মডিউল",
-      status: "coming_soon",
-      badge: "শীঘ্রই আসছে",
-      badgeStyle: "bg-slate-100 text-slate-600 border-slate-200",
-      description: "Part 1, Part 2 কিউ-কার্ড এবং Part 3 ফলো-আপ ইন্টারভিউ। ব্রাউজার অডিও রেকর্ডিং ও ফ্লুয়েন্সি অনুশীলনের পরিবেশ।",
-      specs: ["Part 1, 2 ও 3", "অডিও রেকর্ডিং", "১১–১৪ মিনিট", "উন্নয়ন চলমান"],
-      ctaText: "শীঘ্রই আসছে",
-      ctaHref: "#",
-      icon: (
-        <svg className="w-7 h-7 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-        </svg>
-      ),
+      statusBadge: "Phase 4 · পরিকল্পিত",
+      description: "Part 1 পরিচিতি, Part 2 কিউ-কার্ড ১ মিনিট প্রস্তুতি এবং Part 3 ডিসকাশন। ব্রাউজারে অডিও রেকর্ডিং ও ফ্লুয়েন্সি সেলফ-অ্যাসেসমেন্ট।",
+      specs: ["Part 1, 2 ও 3", "অডিও রেকর্ডার", "১১–১৪ মিনিট"],
+      illustration: <SpeakingPartnerIllustration className="w-10 h-10" />,
     },
   ];
 
   return (
     <section id="modules" className="py-20 bg-[#F8F8F9] scroll-mt-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-          <div className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#E7F5EF] text-[#087653]">
-            IELTS Preparation Modules
+        {/* Section Header */}
+        <div className="max-w-3xl mb-12 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#E7F5EF] text-[#087653]">
+            <span>প্রস্তুতি মডিউল ও রোডম্যাপ</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#20395F] tracking-tight">
-            IELTS-এর চারটি প্রধান স্কিল
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#20395F] tracking-tight">
+            IELTS-এর চারটি স্কিল: বর্তমান ও ভবিষ্যৎ
           </h2>
           <p className="text-sm sm:text-base text-[#20395F]/75 leading-relaxed">
-            প্রাথমিকভাবে আমাদের প্ল্যাটফর্মে একাডেমিক রিডিং মডিউল সম্পূর্ণ কার্যকরী। বাকি মডিউলগুলো পর্যায়ক্রমে যুক্ত হচ্ছে।
+            আমরা প্রতিটি মডিউল হুবহু আন্তর্জাতিক মানদণ্ডে তৈরি করছি। বর্তমানে একাডেমিক রিডিং মডিউল সম্পূর্ণ কার্যকরী ও সবার জন্য উন্মুক্ত।
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {modules.map((m) => {
-            const isAvail = m.status === "available";
-            return (
+        {/* Primary Showcase Card: Academic Reading (Live Module) */}
+        <div className="bg-white rounded-xl border-2 border-[#087653] p-7 sm:p-9 shadow-sm mb-10">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+            <div className="space-y-4 max-w-2xl">
+              <div className="flex items-center gap-3">
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#E7F5EF] text-[#087653] border border-[#087653]/30">
+                  ● এখন সম্পূর্ণ সক্রিয় (Live Module)
+                </span>
+                <span className="text-xs font-semibold text-[#20395F]/60">
+                  Academic Reading Test 1
+                </span>
+              </div>
+
+              <div>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-[#20395F]">
+                  IELTS Academic Reading Module
+                </h3>
+                <p className="text-sm text-[#087653] font-semibold mt-1">
+                  ৩টি পূর্ণাঙ্গ প্যাসেজ · ৪০টি প্রমাণিক প্রশ্ন · ৬০ মিনিটের অফিশিয়াল টাইম ফ্রেম
+                </p>
+              </div>
+
+              <p className="text-xs sm:text-sm text-[#20395F]/80 leading-relaxed">
+                প্যাসেজ ১ (The Bicycle), প্যাসেজ ২ (Green Roofs) এবং প্যাসেজ ৩ (The Myth of Multitasking)। সাথে রয়েছে True/False/Not Given, Matching Headings, Summary ও Sentence Completion সহ বাস্তব পরীক্ষার সকল প্রধান প্রশ্ন টাইপ।
+              </p>
+
+              <div className="flex flex-wrap gap-2 pt-1">
+                {["৩টি প্যাসেজ", "৪০টি প্রশ্ন", "৬০ মিনিট টাইমার", "ইনস্ট্যান্ট ব্যান্ড স্কোর", "অফিসিয়াল অ্যান্সার কী"].map((spec, i) => (
+                  <span
+                    key={i}
+                    className="text-xs px-2.5 py-1 rounded-md bg-[#F8F8F9] text-[#20395F] border border-[#20395F]/10 font-medium"
+                  >
+                    {spec}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row lg:flex-col items-center gap-4 w-full lg:w-auto shrink-0">
+              <div className="w-24 h-24 rounded-xl bg-[#E7F5EF] border border-[#087653]/20 flex items-center justify-center p-2 shadow-2xs">
+                <StudyBookIllustration className="w-16 h-16" />
+              </div>
+              <Link
+                href={user ? "/dashboard" : "/signup"}
+                className="w-full sm:w-auto lg:w-48 py-3 px-6 rounded-lg font-bold text-xs text-white bg-[#087653] hover:bg-[#065e42] shadow-sm hover:shadow transition-all text-center cursor-pointer"
+              >
+                {user ? "মক টেস্ট শুরু করুন" : "বিনামূল্যে টেস্ট দিন"}
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Secondary Modules: 3-column Roadmap */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-sm font-bold uppercase tracking-wider text-[#20395F]/70">
+              পরবর্তী মডিউলসমূহ (Development Pipeline)
+            </h4>
+            <span className="text-xs text-[#20395F]/50">পর্যায়ক্রমে যুক্ত হচ্ছে</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {upcomingModules.map((m) => (
               <div
                 key={m.id}
-                className={`flex flex-col justify-between p-6 rounded-2xl bg-white border transition-all ${
-                  isAvail
-                    ? "border-[#087653] shadow-md ring-1 ring-[#087653]/15"
-                    : "border-[#20395F]/10 opacity-80"
-                }`}
+                className="p-5 rounded-xl bg-white border border-[#20395F]/10 flex flex-col justify-between space-y-4"
               >
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isAvail ? "bg-[#E7F5EF]" : "bg-slate-100"}`}>
-                      {m.icon}
-                    </div>
-                    <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold border ${m.badgeStyle}`}>
-                      {m.badge}
+                    <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                      {m.statusBadge}
                     </span>
+                    <div className="w-8 h-8 rounded-lg bg-[#F8F8F9] flex items-center justify-center">
+                      {m.illustration}
+                    </div>
                   </div>
 
                   <div>
-                    <span className="text-xs font-semibold text-[#087653]">{m.banglaTitle}</span>
-                    <h3 className="text-lg font-bold text-[#20395F] mt-0.5">{m.title}</h3>
+                    <span className="text-xs text-[#087653] font-semibold">{m.banglaTitle}</span>
+                    <h5 className="text-base font-bold text-[#20395F]">{m.title}</h5>
                   </div>
 
-                  <p className="text-xs sm:text-sm text-[#20395F]/75 leading-relaxed">
+                  <p className="text-xs text-[#20395F]/70 leading-relaxed">
                     {m.description}
                   </p>
-
-                  <div className="pt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
-                    {m.specs.map((s, i) => (
-                      <span key={i} className="text-[11px] px-2 py-0.5 rounded bg-slate-50 text-slate-600 border border-slate-200">
-                        {s}
-                      </span>
-                    ))}
-                  </div>
                 </div>
 
-                <div className="pt-6">
-                  {isAvail ? (
-                    <Link
-                      href={m.ctaHref}
-                      className="w-full py-2.5 px-4 rounded-xl text-center text-xs font-bold text-white bg-[#087653] hover:bg-[#065e42] shadow-sm hover:shadow transition-all block"
-                    >
-                      {m.ctaText}
-                    </Link>
-                  ) : (
-                    <button
-                      type="button"
-                      disabled
-                      className="w-full py-2.5 px-4 rounded-xl text-center text-xs font-medium text-slate-400 bg-slate-100 cursor-not-allowed block"
-                    >
-                      {m.ctaText}
-                    </button>
-                  )}
+                <div className="pt-3 border-t border-slate-100 flex flex-wrap gap-1.5">
+                  {m.specs.map((s, idx) => (
+                    <span key={idx} className="text-[10px] px-2 py-0.5 rounded bg-slate-50 text-slate-500 border border-slate-200">
+                      {s}
+                    </span>
+                  ))}
                 </div>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </div>
     </section>

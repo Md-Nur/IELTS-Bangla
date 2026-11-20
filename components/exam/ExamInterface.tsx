@@ -11,6 +11,7 @@ import { ExamPassagePane } from "./ExamPassagePane";
 import { ExamQuestionsPane } from "./ExamQuestionsPane";
 import { ExamBottomBar } from "./ExamBottomBar";
 import { ExamReviewModal } from "./ExamReviewModal";
+import { ExamSubmissionModal } from "./ExamSubmissionModal";
 import { ExamExitModal } from "./ExamExitModal";
 import { ExamExpiredState } from "./states/ExamExpiredState";
 
@@ -21,6 +22,7 @@ export interface ExamInterfaceProps {
 export function ExamInterface({ examData }: ExamInterfaceProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmissionModalOpen, setIsSubmissionModalOpen] = useState(false);
 
   // 1. Authoritative Countdown Timer
   const timer = useCountdownTimer({
@@ -125,8 +127,13 @@ export function ExamInterface({ examData }: ExamInterfaceProps) {
     }
   };
 
+  const handleOpenSubmissionConfirmation = () => {
+    exam.setIsReviewModalOpen(false);
+    setIsSubmissionModalOpen(true);
+  };
+
   return (
-    <div className="h-screen flex flex-col bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 overflow-hidden font-sans">
+    <div className="h-[100dvh] max-h-[100dvh] w-full flex flex-col bg-[#F8F8F9] text-[#20395F] overflow-hidden font-sans">
       {/* Top Header */}
       <ExamHeader
         testTitle={examData.attempt.testTitle}
@@ -135,8 +142,11 @@ export function ExamInterface({ examData }: ExamInterfaceProps) {
         timer={timer}
         saveStatus={autosave.saveStatus}
         mobileActiveTab={exam.mobileActiveTab}
+        answeredCount={exam.stats.answeredCount}
+        totalQuestions={exam.stats.totalQuestions}
         onSelectSection={exam.goToSection}
         onSelectMobileTab={exam.setMobileActiveTab}
+        onSubmitClick={handleOpenSubmissionConfirmation}
         onExitClick={() => exam.setIsExitModalOpen(true)}
       />
 
@@ -144,7 +154,7 @@ export function ExamInterface({ examData }: ExamInterfaceProps) {
       <main className="flex-1 flex overflow-hidden min-h-0">
         {/* Left Pane: Passage Text */}
         <div
-          className={`w-full lg:w-1/2 h-full border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800 transition-all ${
+          className={`w-full lg:w-1/2 h-full border-b lg:border-b-0 lg:border-r border-[#20395F]/12 transition-all ${
             exam.mobileActiveTab === "passage" ? "block" : "hidden lg:block"
           }`}
         >
@@ -184,18 +194,29 @@ export function ExamInterface({ examData }: ExamInterfaceProps) {
         onNext={exam.nextQuestion}
         onSelectQuestion={exam.goToQuestion}
         onOpenReviewModal={() => exam.setIsReviewModalOpen(true)}
+        onSubmitExam={handleOpenSubmissionConfirmation}
       />
 
-      {/* Modals */}
+      {/* Full Examination Review Modal */}
       <ExamReviewModal
         isOpen={exam.isReviewModalOpen}
         onClose={() => exam.setIsReviewModalOpen(false)}
         questionStatusList={exam.questionStatusList}
         onSelectQuestion={exam.goToQuestion}
-        onSubmit={handleSubmitExam}
+        onSubmit={handleOpenSubmissionConfirmation}
         isSubmitting={isSubmitting}
       />
 
+      {/* Confirmation Modal before Final Submission */}
+      <ExamSubmissionModal
+        isOpen={isSubmissionModalOpen}
+        onClose={() => setIsSubmissionModalOpen(false)}
+        onConfirm={handleSubmitExam}
+        questionStatusList={exam.questionStatusList}
+        isSubmitting={isSubmitting}
+      />
+
+      {/* Exit Exam Modal */}
       <ExamExitModal
         isOpen={exam.isExitModalOpen}
         onClose={() => exam.setIsExitModalOpen(false)}

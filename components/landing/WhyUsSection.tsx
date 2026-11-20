@@ -1,68 +1,82 @@
 import React from "react";
 
 export function WhyUsSection() {
-  const values = [
+  const pillars = [
     {
-      title: "সবার জন্য সহজলভ্য প্রস্তুতি",
-      description: "ব্যয়বহুল কোচিং সেন্টারের নির্ভরতা কমিয়ে বাংলাদেশের প্রতিটি প্রার্থীর কাছে উচ্চমানের কম্পিউটার টেস্ট পৌঁছে দেওয়া।",
+      num: "01",
+      title: "কোচিং নির্ভরতা কমিয়ে স্বয়ংসম্পূর্ণ প্রস্তুতি",
+      description: "ব্যয়বহুল অফলাইন কোচিং কিংবা ফটোকপি বইয়ের বাইরে গিয়ে আসল পরীক্ষার স্ক্রিন ফরম্যাটের সাথে প্রার্থীর স্বাভাবিক বোঝাপড়া গড়ে তোলা।",
     },
     {
-      title: "গঠনমূলক ও স্ট্যান্ডার্ড কনটেন্ট",
-      description: "Cambridge এবং British Council-এর অফিশিয়াল একাডেমিক নির্দেশিকা মেনে নিখুঁতভাবে প্রণীত টেস্ট সামগ্রী।",
+      num: "02",
+      title: "অফিশিয়াল Cambridge মানের প্রশ্ন ও প্যাসেজ",
+      description: "আন্তর্জাতিক জার্নাল ও গবেষণা প্রবন্ধ থেকে নির্বাচিত বিষয়বস্তু, যা রিডিং পরীক্ষার গভীরতা ও ভাষাগত কাঠামোর হুবহু প্রতিফলন।",
     },
     {
-      title: "সহজ ও পরিচ্ছন্ন ইন্টারফেস",
-      description: "কম্পিউটার-ডেলিভার্ড স্প্লিট-স্ক্রিন রিডার যা আধুনিক স্ক্রিনে পরীক্ষা দেওয়াকে করে তোলে অত্যন্ত আরামদায়ক ও নির্বিঘ্ন।",
+      num: "03",
+      title: "ডিস্ট্রাকশন-মুক্ত পেশাদার ইন্টারফেস",
+      description: "অপ্রয়োজনীয় অ্যানিমেশন কিংবা বিজ্ঞাপনের ভিড় ছাড়াই নিখুঁত টু-প্যানেল স্ক্রিন, যেখানে শুধু প্যাসেজ আর প্রশ্নই মুখ্য।",
     },
     {
-      title: "ক্রমাগত দক্ষতা বৃদ্ধির নিশ্চয়তা",
-      description: "সার্ভার-অথরিটেটিভ মূল্যায়নের মাধ্যমে অনুমানের অবকাশ দূর করে প্রতিটি প্রশ্ন টাইপের দুর্বলতা স্পষ্টভাবে চিহ্নিতকরণ।",
+      num: "04",
+      title: "কঠোর অ্যালগরিদমিক মূল্যায়ন",
+      description: "স্পেলিং ও ক্যাপিটালাইজেশন বিবেচনা করে প্রতিটি উত্তরের নির্ভুল গ্রেডিং, যাতে অনুমানের ওপর ভিত্তি না করে বাস্তব ব্যান্ড বোঝা যায়।",
     },
   ];
 
   return (
     <section className="py-20 bg-white border-t border-[#20395F]/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left Column: Heading & Mission */}
-          <div className="lg:col-span-5 space-y-6">
-            <div className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#E7F5EF] text-[#087653]">
-              কেন IELTS বাংলা
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          {/* Left Column: Heading, Mission, and Commitment */}
+          <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#E7F5EF] text-[#087653]">
+              <span>আমাদের দর্শন</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#20395F] tracking-tight leading-tight">
-              কেন IELTS বাংলা আপনার প্রস্তুতির সেরা সঙ্গী?
+
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#20395F] tracking-tight leading-tight">
+              কেন IELTS বাংলা সাধারণ প্র্যাকটিস সাইট থেকে আলাদা?
             </h2>
+
             <p className="text-sm sm:text-base text-[#20395F]/80 leading-relaxed">
-              আইইএলটিএস পরীক্ষার প্রস্তুতিতে কেবল বই পড়া যথেষ্ট নয়; প্রয়োজন বাস্তব পরীক্ষার টাইমিং এবং কম্পিউটার-ডেলিভার্ড ফরম্যাটের নিয়মিত অভ্যাস। আমাদের প্ল্যাটফর্ম সেই চাহিদাকে কেন্দ্র করেই গড়ে তোলা হয়েছে।
+              অধিকাংশ শিক্ষার্থী পরীক্ষার হলে গিয়ে কম্পিউটারে ৬০ মিনিটে ৩টি বড় প্যাসেজ পড়ার চাপে ভুল করেন। আমাদের উদ্দেশ্য শিক্ষার্থীদের সেই ইন্টারফেস ও সময় চাপের সাথে আগেভাগেই অভ্যস্ত করে তোলা।
             </p>
-            <div className="pt-2 border-l-4 border-[#087653] pl-4">
-              <p className="text-sm font-semibold text-[#20395F]">
-                &ldquo;আমাদের লক্ষ্য প্রতিটি বাংলাদেশী শিক্ষার্থী যেন নির্ভরযোগ্য মানের আইইএলটিএস টেস্ট দিয়ে নিজের বাস্তব অবস্থান যাচাই করতে পারে।&rdquo;
+
+            <div className="p-5 rounded-lg bg-[#F8F8F9] border-l-4 border-[#087653] space-y-2">
+              <p className="text-xs sm:text-sm font-medium text-[#20395F] italic leading-relaxed">
+                &ldquo;আমাদের লক্ষ্য বাণিজ্যিক প্রতিশ্রুতি দেওয়া নয়; বরং আন্তর্জাতিক মানের একটি নির্ভরযোগ্য প্র্যাকটিস প্ল্যাটফর্ম তৈরি করা, যার মাধ্যমে প্রার্থীরা নিজেদের সত্যিকারের ব্যান্ড মূল্যায়ন করতে পারেন।&rdquo;
               </p>
-              <span className="text-xs text-[#087653] font-medium block mt-1">
-                — প্রতিষ্ঠাতা দল, IELTS বাংলা
+              <span className="text-xs text-[#087653] font-bold block">
+                — একাডেমিক ডেভেলপমেন্ট টিম, IELTS বাংলা
               </span>
             </div>
           </div>
 
-          {/* Right Column: 4 Pillars */}
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {values.map((v, i) => (
-              <div
-                key={i}
-                className="p-6 rounded-2xl bg-[#F8F8F9] border border-[#20395F]/10 space-y-2.5 hover:border-[#087653]/30 transition-colors shadow-2xs"
-              >
-                <div className="w-8 h-8 rounded-lg bg-[#E7F5EF] text-[#087653] font-bold text-xs flex items-center justify-center">
-                  ০{i + 1}
+          {/* Right Column: Editorial Structured Pillars with Clean Dividers */}
+          <div className="lg:col-span-7 bg-[#F8F8F9] rounded-xl border border-[#20395F]/10 p-6 sm:p-8">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#087653] mb-6">
+              প্ল্যাটফর্মের ৪টি মূল ভিত্তি
+            </h3>
+
+            <div className="divide-y divide-[#20395F]/10 space-y-6">
+              {pillars.map((p, i) => (
+                <div key={i} className={i > 0 ? "pt-6" : ""}>
+                  <div className="flex items-start gap-4">
+                    <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-white border border-[#20395F]/10 text-[#087653] shrink-0 mt-0.5">
+                      {p.num}
+                    </span>
+                    <div className="space-y-1.5">
+                      <h4 className="text-base font-bold text-[#20395F]">
+                        {p.title}
+                      </h4>
+                      <p className="text-xs sm:text-sm text-[#20395F]/75 leading-relaxed">
+                        {p.description}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-base font-bold text-[#20395F]">
-                  {v.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-[#20395F]/75 leading-relaxed">
-                  {v.description}
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
