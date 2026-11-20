@@ -2,7 +2,45 @@
 
 All notable changes, architectural decisions, and milestones for this project will be documented in this file.
 
-## [Unreleased] - 2026-11-08
+## [Unreleased] - 2026-11-20
+
+### Redesign: Professional IELTS Preparation Platform & Runtime Architecture
+- **Demo Student Account Decoupling:**
+  - Completely eliminated the runtime dependency on the demo student account (`student@ieltsbangla.com`).
+  - Removed automatic demo student registration and authentication retry loops from application startup.
+  - Resolved `Unable to initialize demo student account` error permanently.
+  - Isolated demo seeding into a developer-only script `scripts/seedDemoUser.ts` (`bun run seed:demo`), strictly decoupled from production runtime.
+- **Professional Public Landing Page (`/`):**
+  - Transformed `/` from a test launcher into a modern, trustworthy IELTS preparation landing page inspired by `IELTS-Bangla.html`.
+  - Built responsive Navbar with SVG brand crest and Bengali typography ("Anek Bangla" & "Hind Siliguri").
+  - Built Hero section featuring value propositions, test card previews, and "Start Practising" primary CTA.
+  - Built Trust Highlights section communicating 5 core platform capabilities (IELTS Academic Practice, Realistic Mock Tests, Timed Environment, Performance Tracking, Structured Answer Review) without fabricated statistics.
+  - Built IELTS Modules section showcasing Academic Reading as available and clearly marking Listening, Writing, and Speaking as "Coming Soon".
+  - Built How It Works (4-step workflow), Why IELTS Bangla (value pillars), and Final Call to Action sections.
+  - Built comprehensive Footer with platform information, links, modules, contact details, and legal pages.
+- **Authentication Pages (`/login` and `/signup`):**
+  - Created `/login` with email, password, show/hide visibility toggle, remember-me support, forgot-password handling, and integration with `POST /api/auth/login`.
+  - Created `/signup` with full name, email, password, confirm password, client-side validation, password visibility toggle, and integration with `POST /api/auth/register`.
+  - Protected against duplicate registration with 409 Conflict handling.
+  - Immediate transition into student dashboard upon successful registration/login with secure session cookies.
+- **Student Dashboard (`/dashboard`):**
+  - Replaced immediate test launching with a dedicated student portal.
+  - Displays personalized greeting, in-progress attempt warning with resume action, real performance metrics (completed tests, best band, average band), available mock tests catalog, and historical attempts table.
+  - Real database records only; clean empty states for new students with zero test history.
+- **Route Protection & Next.js 16 Proxy Architecture:**
+  - Implemented `proxy.ts` (Next.js 16 edge proxy convention) to guard student routes (`/dashboard`, `/exam/*`, `/results/*`, `/admin/*`).
+  - Unauthenticated users are redirected to `/login?redirect=...`.
+  - Authenticated users visiting `/login` or `/signup` are automatically redirected to `/dashboard`.
+  - Students attempting to access `/admin` are redirected to `/dashboard`.
+- **Supporting Public Pages:**
+  - Created `/practice` with full breakdown of Academic Reading structure, question types, and band score table.
+  - Created `/about` detailing the mission, founders (Nur & Mozammel), and educational principles.
+  - Created `/privacy` and `/terms` for compliance and student data privacy.
+- **Quality Assurance & Test Suite:**
+  - Authored `lib/auth/__tests__/routeProtection.test.ts` (8 tests) verifying all proxy access control rules.
+  - Authored `app/__tests__/endToEndFlow.test.ts` (8 tests) verifying the entire candidate journey from public landing to test finalization and result review.
+  - Total test suite now runs 124 tests across 13 files with 100% pass rate.
+  - Build verified cleanly with Next.js 16 Turbopack and zero ESLint warnings.
 
 ### Added
 - **Testing Infrastructure:**

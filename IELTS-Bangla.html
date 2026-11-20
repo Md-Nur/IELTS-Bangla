@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="bn"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IELTS বাংলা</title>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@500;700&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--bg:#F8F8F9;--ink:#21304C;--red:#D93A45;--mut:rgba(33,48,76,.7);--line:rgba(33,48,76,.14);--soft:rgba(33,48,76,.06);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.7 "Hind Siliguri",system-ui,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+h1,h2,h3,.brand{font-family:"Anek Bangla","Hind Siliguri",sans-serif;line-height:1.3;margin:0}
+h1{font-size:clamp(28px,5vw,48px);font-weight:700}h2{font-size:clamp(22px,3.4vw,30px);margin-bottom:14px}h3{font-size:18px;font-weight:700}
+p{margin:0}.mut{color:var(--mut)}.wrap{max-width:1080px;margin:auto;padding:0 20px}a{color:inherit}:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;gap:16px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;font-size:20px}.brand img{height:34px}
+nav.top{display:flex;gap:4px;margin-left:auto}nav.top a{padding:6px 12px;text-decoration:none;color:var(--mut);border-bottom:2px solid transparent;font-weight:500}
+nav a.on{color:var(--ink);border-color:var(--red)}
+.bar{display:none}
+.btn{display:inline-block;border:1px solid var(--red);background:var(--red);color:var(--bg);font:600 15px "Hind Siliguri",sans-serif;padding:10px 20px;border-radius:12px;text-decoration:none;cursor:pointer}
+.btn.ghost{background:var(--bg);color:var(--ink);border-color:var(--line)}.btn.sm{padding:6px 14px;font-size:14px}
+main{padding:24px 0 64px}.page{animation:in .25s}@keyframes in{from{opacity:0}}
+.cv,.sec{position:relative;overflow:hidden;border-radius:24px;margin-bottom:24px}
+.cv>svg,.sec>svg,.mi>svg{position:absolute;inset:0;width:100%;height:100%}
+.cv>.tx,.sec>*:not(svg){position:relative;z-index:1}
+.cv{min-height:300px;display:flex;align-items:center}.cv.home{min-height:440px}
+.tx{padding:40px 44px;max-width:600px}.tx .lead{font-size:18px;margin:12px 0 18px}
+.usp{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}.usp span{background:var(--bg);border-radius:999px;padding:3px 14px;font-size:14px;font-weight:500}
+.pps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}.pp{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:6px 14px;text-decoration:none;font-size:14px}.pp b{display:block;font:700 20px "Anek Bangla",sans-serif}.pp.best{border:2px solid var(--red)}
+.sec{padding:28px}.sec h2{margin-bottom:14px}
+.o{transform:translate(calc(var(--mx,0)*var(--d)*-12px),calc(var(--my,0)*var(--d)*-8px));transition:transform .3s}
+.pk{transform-box:fill-box;transform-origin:center;cursor:pointer}.pk.pop{animation:pop .5s}@keyframes pop{40%{transform:scale(1.3) rotate(10deg)}}
+.card{background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:22px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+ul.k{list-style:none;margin:12px 0 0;padding:0}ul.k li{padding:5px 0 5px 26px;position:relative}
+ul.k li::before{content:"";position:absolute;left:4px;top:14px;width:10px;height:10px;border-radius:50%;background:var(--red)}ul.k.lock li::before{background:none;border:2px solid var(--ink)}
+a.mod{display:block;text-decoration:none;padding:14px}a.mod:hover{border-color:var(--red)}a.mod h3{padding:0 6px}a.mod p{color:var(--mut);font-size:15px;padding:0 6px 6px}a.mod h3 .bd{margin-left:8px;font:500 13px "Hind Siliguri",sans-serif;vertical-align:2px}
+.mi{position:relative;height:110px;border-radius:12px;overflow:hidden;margin-bottom:12px}
+.q blockquote{margin:0 0 12px;padding-left:14px;border-left:3px solid var(--red);font-family:Georgia,serif;font-size:15px;line-height:1.6}
+.chips,.opts{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.opt{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:6px 16px;font:500 14px "Hind Siliguri",sans-serif;cursor:pointer}
+.opt[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.fb{background:var(--soft);border-radius:12px;padding:12px 14px;font-size:15px}
+.row{display:flex;align-items:center;gap:12px;padding:14px 4px;border-bottom:1px solid var(--line)}.row:last-child{border:0}.row .t{flex:1;min-width:0}.row small{display:block;color:var(--mut)}
+.bd{border:1px solid;border-radius:999px;padding:1px 10px;font-size:13px;white-space:nowrap}.bd.f{color:var(--red)}.bd.p{color:var(--mut)}
+label{display:block;font-size:14px;color:var(--mut);margin-top:10px}select,textarea,input:not([type=checkbox]){width:100%;margin-top:4px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit}
+.pl{display:grid;grid-template-columns:290px 1fr;gap:16px}.pl .ed{grid-column:1/-1}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.cal .hd{text-align:center;color:var(--mut);font-size:12px}
+.cd{min-height:58px;border:1px solid var(--line);border-radius:10px;background:var(--bg);padding:3px;font:inherit;font-size:12px;color:var(--ink);cursor:pointer;display:flex;flex-direction:column;gap:2px;align-items:flex-start;overflow:hidden;text-align:left}
+.cd.sel{outline:2px solid var(--ink)}.cd.td b{color:var(--red)}.cd.ex{background:var(--red);color:var(--bg)}
+.ch{font-size:10px;line-height:1.3;border-radius:6px;padding:1px 4px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}.cd.ex .ch{color:var(--bg)}
+.mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-weight:600}
+.pr{height:8px;border-radius:99px;background:var(--soft);overflow:hidden;margin-top:4px}.pr i{display:block;height:100%;background:var(--red)}
+.bub{max-width:85%;padding:10px 14px;border-radius:14px;margin:8px 0;font-size:15px}.bub.u{margin-left:auto;background:var(--ink);color:var(--bg)}.bub.a{background:var(--soft)}
+mark{background:none;color:var(--red);text-decoration:underline wavy;text-underline-offset:4px}
+.amt{font:700 34px "Anek Bangla",sans-serif;margin:8px 0}.amt small{font-size:15px;font-weight:400;color:var(--mut)}.card.best{border:2px solid var(--red)}
+
+#toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:12px;opacity:0;pointer-events:none;transition:.2s;z-index:40;font-size:15px}#toast.on{opacity:1;transform:translate(-50%,0)}
+@media(max-width:820px){
+nav.top,header .btn{display:none}main{padding-bottom:40px}
+.bar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--bg);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
+.bar a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;color:var(--mut);text-decoration:none;border:0}.bar a.on{color:var(--red)}
+.bar svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cv,.cv.home{display:block;min-height:0}.cv>svg{position:relative;display:block;height:150px}.tx{padding:20px}
+.two,.three,.pl{grid-template-columns:1fr}.sec{padding:16px}.cd{min-height:46px}.ch{font-size:9px}}
+.sec.plain{padding:0;overflow:visible}#ai2{scroll-margin-top:84px}.t2{color:var(--red)}em.t2{font-style:normal}
+@media(max-width:820px){.bar a.dash{flex:0 0 76px;align-self:flex-start;margin-top:-26px;font-size:11px;color:var(--ink)}.bar a.dash.on{color:var(--red)}.bar a.dash i{width:52px;height:52px;border-radius:50%;background:var(--red);color:var(--bg);display:flex;align-items:center;justify-content:center;border:4px solid var(--bg);box-shadow:0 4px 12px rgba(33,48,76,.25)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style><style id="theme">
+:root{--bg:#fff;--ink:#20395F;--red:#087653;--g:#087653;--r:#C62F3B;--mut:rgba(32,57,95,.74);--line:rgba(32,57,95,.15);--soft:#E7F5EF}
+body{background:#EEF8F4}header{background:#fff}:focus-visible{outline-color:var(--ink)}
+.brand svg.lg{height:38px;width:auto;flex:none}
+.btn{color:#fff}.btn.ghost{color:var(--ink)}.btn.paid{color:var(--r);border-color:#EBA9AF}
+.cv{justify-content:space-between;gap:12px}
+.cv>svg{position:relative;z-index:1;flex:0 0 38%;width:38%;max-width:400px;height:auto;min-height:260px;align-self:stretch}
+.tx{flex:1 1 0;min-width:0;padding:36px 40px}
+.cv h1{font-size:clamp(28px,4.4vw,52px);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}.cv .tx{max-width:none}.cv .t2{color:#044A34}.tx .lead{color:var(--ink)}
+.usp span b{font-weight:600}
+.pp{min-height:44px}.pp b{color:var(--ink)}.pp.free{color:var(--g)}.pp.paid{color:var(--r)}.pp.best{border-color:var(--g)}
+.free{color:var(--g)}.paid{color:var(--r)}
+.bd.f{color:var(--g);background:#E7F5EF;border-color:#9ED3BF}.bd.p{color:var(--r);background:#FDECEE;border-color:#EBA9AF}.bd.n{color:var(--mut)}
+a.mod h3{display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px}a.mod h3 .bd{margin:0}
+.pkgl{display:block;text-decoration:none;color:inherit}.pkgl:hover{border-color:var(--g)}.pkgl .btn{margin-top:16px}
+.row .t{flex:1 1 140px}.row{flex-wrap:wrap}
+ul.k li{padding-left:28px}
+ul.k li::before{left:5px;top:9px;width:6px;height:12px;border:solid var(--g);border-width:0 2.5px 2.5px 0;border-radius:0;background:none;transform:rotate(45deg)}
+ul.k.lock li::before{left:3px;top:11px;width:15px;height:15px;border:0;transform:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C62F3B' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='11' width='14' height='9' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E") center/contain no-repeat}
+.card.best{border-color:var(--g)}.cd.ex{background:var(--ink)}
+@media(max-width:820px){
+.cv,.cv.home{display:flex;flex-direction:column;align-items:stretch;gap:0;min-height:0}
+.cv>svg{order:-1;flex:none;width:100%;max-width:none;height:140px;min-height:0}
+.tx{max-width:none;padding:8px 20px 24px}
+.ch{font-size:10px}.cd{min-height:52px}
+.bar{height:calc(58px + env(safe-area-inset-bottom,0px));padding:0 4px env(safe-area-inset-bottom,0px);background:#fff;overflow:visible}
+.bar a{position:relative;display:block;flex:1;min-width:0;height:58px;font-size:11.5px;color:var(--mut)}
+.bar a i{position:absolute;left:50%;top:7px;width:28px;height:28px;margin-left:-14px;display:grid;place-items:center;border-radius:50%;transition:all .22s}
+.bar a span{position:absolute;left:0;right:0;bottom:5px;text-align:center;white-space:nowrap;line-height:1.2}
+.bar a.on{color:var(--g);font-weight:600}
+.bar a.on i{top:-20px;width:52px;height:52px;margin-left:-26px;background:var(--g);color:#fff;border:4px solid #fff;box-shadow:0 4px 12px rgba(32,57,95,.25)}}
+</style><style id="v4">
+.cv,.sec[data-sc],.mi{isolation:isolate}
+.cv::before,.sec[data-sc]::before,.mi::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Cpath d='M0 .5H28M.5 0V28' stroke='%23fff' stroke-opacity='.14' fill='none'/%3E%3Cpath d='M0 1.5H28M1.5 0V28' stroke='%2320395F' stroke-opacity='.06' fill='none'/%3E%3C/svg%3E") 0 0/28px 28px}
+.mi::before{background-size:18px 18px}
+.xf{padding:8px 22px}.xf ul.k{display:flex;flex-wrap:wrap;gap:0 40px;margin:0}
+.pays{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.pay{border:1px solid var(--line);border-radius:12px;padding:6px 20px;font:700 18px "Anek Bangla",sans-serif;color:var(--ink);background:var(--bg)}
+footer{position:relative;isolation:isolate;overflow:hidden;color:#fff;padding:48px 0 0;font-size:15px;background:radial-gradient(ellipse at 50% 50%,#0B4535 0%,#06291F 55%,#031A13 100%)}
+footer::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Cpath d='M0 .5H28M.5 0V28' stroke='%23fff' stroke-opacity='.07' fill='none'/%3E%3C/svg%3E") 0 0/28px 28px}
+footer .wrap{position:relative;z-index:1}
+.fg{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:32px}
+.lgb{display:inline-block;background:#fff;border-radius:16px;padding:10px 16px}.lgb svg{display:block;height:84px;width:auto}
+.fb2 p{margin:14px 0 0;color:rgba(255,255,255,.8);max-width:300px}.fb2 p.pm{margin-top:8px;font-size:14px}
+footer h4{font:700 16px "Anek Bangla",sans-serif;margin:0 0 10px;color:#8FD8C4}
+.flk{display:flex;align-items:center;gap:10px;background:none;border:0;padding:6px 0;color:rgba(255,255,255,.88);font:inherit;text-decoration:none;cursor:pointer;text-align:left}.flk:hover,.fq a:hover{color:#8FD8C4}
+.flk i{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.1);display:grid;place-items:center;flex:none}
+.flk svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fq a{display:block;padding:5px 0;color:rgba(255,255,255,.88);text-decoration:none}
+.fbt{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 20px;margin-top:36px;padding:16px 0;border-top:1px solid rgba(255,255,255,.14);font-size:14px;color:rgba(255,255,255,.72)}
+.fbt .pl2{display:flex;gap:18px;flex-wrap:wrap}.fbt .flk{display:inline;padding:0;font-size:14px}
+footer :focus-visible{outline-color:#8FD8C4}
+@media(max-width:820px){footer{padding-top:36px}.fg{grid-template-columns:1fr 1fr;gap:24px}.fb2{grid-column:1/-1}.fbt{margin-top:24px;padding-bottom:calc(58px + env(safe-area-inset-bottom,0px) + 20px)}}
+</style></head><body><svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><g id="lg"><path fill="#082453" fill-rule="evenodd" d="M 433,837 L 433,869 L 468,869 L 470,871 L 470,987 L 514,987 L 514,871 L 516,869 L 554,869 L 554,838 Z M 339,837 L 339,987 L 447,987 L 447,951 L 385,951 L 383,949 L 384,838 Z M 209,837 L 209,987 L 320,987 L 320,951 L 255,951 L 253,949 L 253,925 L 255,923 L 309,923 L 309,893 L 255,893 L 253,891 L 253,871 L 255,869 L 317,869 L 318,838 Z M 138,837 L 138,987 L 184,987 L 184,837 Z M 611,833 L 589,839 L 580,844 L 570,853 L 562,867 L 560,875 L 560,890 L 565,904 L 575,915 L 590,923 L 628,936 L 633,942 L 633,949 L 626,956 L 612,958 L 596,954 L 575,940 L 554,969 L 570,981 L 590,989 L 606,992 L 629,992 L 654,984 L 670,970 L 677,957 L 679,949 L 679,932 L 673,918 L 666,911 L 656,905 L 610,887 L 605,881 L 605,874 L 611,868 L 627,866 L 641,870 L 657,879 L 676,853 L 662,843 L 645,836 L 629,833 Z M 939,518 L 887,518 L 853,523 L 832,528 L 786,544 L 757,559 L 742,569 L 710,597 L 698,611 L 683,633 L 667,665 L 659,686 L 647,733 L 673,695 L 701,666 L 722,649 L 757,627 L 802,607 L 847,594 L 885,588 L 921,587 Z M 315,517 L 332,587 L 367,588 L 406,594 L 454,608 L 492,625 L 523,644 L 551,666 L 580,696 L 605,732 L 593,685 L 583,659 L 568,630 L 543,597 L 511,569 L 469,545 L 420,528 L 373,519 Z"/><path fill="#08704A" fill-rule="evenodd" d="M 898,911 L 882,926 L 881,930 L 938,987 L 943,987 L 957,972 L 957,969 L 901,912 Z M 1136,848 L 1134,846 L 1116,846 L 1114,844 L 1113,835 L 1110,832 L 1092,832 L 1090,834 L 1090,844 L 1088,846 L 951,846 L 949,848 L 949,867 L 951,869 L 1044,869 L 1046,871 L 1046,877 L 1043,882 L 1036,879 L 1026,879 L 1019,882 L 1013,888 L 1001,880 L 992,878 L 981,879 L 969,884 L 957,898 L 953,910 L 952,925 L 955,939 L 959,947 L 966,956 L 978,963 L 985,965 L 996,964 L 1004,952 L 1005,944 L 1001,940 L 991,940 L 982,933 L 979,926 L 979,915 L 982,907 L 988,902 L 996,902 L 1003,908 L 1004,922 L 1006,924 L 1024,925 L 1027,922 L 1027,910 L 1029,906 L 1034,903 L 1038,904 L 1042,908 L 1045,915 L 1045,984 L 1047,987 L 1071,986 L 1072,873 L 1075,869 L 1086,869 L 1090,874 L 1090,985 L 1092,987 L 1114,987 L 1117,984 L 1116,871 L 1118,869 L 1136,868 Z M 942,860 L 930,850 L 924,848 L 911,848 L 900,853 L 889,866 L 887,864 L 887,849 L 884,846 L 874,846 L 872,844 L 871,835 L 867,832 L 847,832 L 845,834 L 845,842 L 842,846 L 722,846 L 720,851 L 720,865 L 723,869 L 790,869 L 792,871 L 764,883 L 737,898 L 724,909 L 724,913 L 731,934 L 757,945 L 777,959 L 788,972 L 795,987 L 820,987 L 823,983 L 822,875 L 826,869 L 841,869 L 844,872 L 844,985 L 846,987 L 871,987 L 872,871 L 874,869 L 887,868 L 889,870 L 888,885 L 893,896 L 898,901 L 907,906 L 925,907 L 936,902 L 943,895 L 946,889 L 947,871 Z M 758,917 L 778,905 L 793,900 L 795,902 L 795,938 L 793,940 Z M 917,866 L 924,868 L 929,874 L 928,884 L 924,888 L 918,890 L 913,889 L 906,882 L 906,875 L 908,871 Z M 994,628 L 970,623 L 936,619 L 882,619 L 839,625 L 813,632 L 783,643 L 742,664 L 702,693 L 670,726 L 655,747 L 643,769 L 679,746 L 710,731 L 747,718 L 788,709 L 829,705 L 869,706 L 906,711 L 947,721 Z M 260,628 L 306,721 L 353,710 L 384,706 L 422,705 L 463,709 L 497,716 L 537,729 L 577,748 L 609,769 L 604,758 L 590,736 L 572,714 L 542,686 L 512,665 L 464,641 L 419,627 L 365,619 L 305,620 Z M 421,323 L 458,349 L 498,386 L 531,426 L 563,477 L 586,528 L 603,580 L 618,652 L 627,732 L 628,709 L 634,659 L 651,578 L 666,531 L 693,471 L 721,427 L 753,388 L 790,353 L 832,323 L 798,329 L 764,341 L 726,360 L 664,399 L 649,406 L 633,410 L 620,410 L 601,405 L 585,397 L 519,356 L 488,341 L 450,328 Z M 623,260 L 605,264 L 592,271 L 581,281 L 569,303 L 566,325 L 571,346 L 580,361 L 588,369 L 607,380 L 630,383 L 642,381 L 655,376 L 674,360 L 682,347 L 686,335 L 687,314 L 683,299 L 678,289 L 664,273 L 642,262 Z"/></g></defs></svg>
+<header><div class="wrap"><a class="brand" href="#home"><svg class="lg" viewBox="248 248 758 533" aria-hidden="true"><use href="#lg"/></svg><span>IELTS <em class="t2">বাংলা</em></span></a>
+<nav class="top"><a href="#home">হোম</a><a href="#mocks">মক টেস্ট</a><a href="#ai">AI টুলস</a><a href="#learn">লাইব্রেরি</a><a href="#pricing">প্যাকেজ</a></nav>
+<a class="btn sm" href="#dashboard" style="margin-left:8px">ড্যাশবোর্ড</a></div></header>
+<nav class="bar" aria-label="প্রধান মেনু"><a href="#home"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9H4z"/></svg></i><span>হোম</span></a><a href="#mocks"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 10h6M9 14h6"/></svg></i><span>মক</span></a><a href="#ai"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></svg></i><span>AI</span></a><a href="#dashboard"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="9" rx="2"/><rect x="13" y="4" width="7" height="5" rx="2"/><rect x="13" y="11" width="7" height="9" rx="2"/><rect x="4" y="15" width="7" height="5" rx="2"/></svg></i><span>ড্যাশবোর্ড</span></a><a href="#learn"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></i><span>লাইব্রেরি</span></a><a href="#pricing"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12l9-9h8v8l-9 9z"/><circle cx="15" cy="9" r="1"/></svg></i><span>প্যাকেজ</span></a></nav>
+<main><div class="wrap">
+
+<section class="page" id="p-home">
+<div class="cv home" data-sc="home"><div class="tx"><h1>IELTS প্রস্তুতি এখন,<br><span class="t2">বাংলায়, ফ্রিতে</span></h1>
+<p class="lead">কোচিংয়ে না গিয়েই নাও IELTS-এর প্রস্তুতি, আজই ফ্রিতে শুরু করো।</p>
+<div class="usp"><span>বাংলায় নির্দেশনা ও সংশোধন</span><span>Reading ও Writing <b class="free">ফ্রি</b>, আনলিমিটেড</span><span>২টি ফুল মক <b class="free">ফ্রি</b></span></div>
+<div class="pps"><a class="pp free" href="#pricing">ফ্রি<b>৳০</b></a><a class="pp paid" href="#pricing">১ মাস<b>৳১৫০</b></a><a class="pp paid best" href="#pricing">৩ মাস<b>৳৪০০</b></a></div>
+<a class="btn" href="#mocks">ফ্রিতে শুরু করো</a></div></div>
+
+<div class="sec plain"><div class="two">
+<a class="card pkgl" href="#pricing"><h3 class="free">ফ্রি, সবসময়</h3><ul class="k"><li>Reading মক: আনলিমিটেড</li><li>Writing মক: আনলিমিটেড</li><li>২টি ফুল-লেংথ মক</li></ul></a>
+<a class="card pkgl" href="#pricing"><h3 class="paid">প্যাকেজে আনলক</h3><ul class="k lock"><li>৫০+ ফুল-লেংথ মক</li><li>রিয়েল-টাইম বাংলা সংশোধন</li><li>AI Speaking Partner</li></ul></a></div></div>
+
+<div class="sec plain"><div class="card xf"><ul class="k"><li>bKash ও Nagad-এ পেমেন্ট</li><li>২৪/৭ AI সাপোর্ট</li></ul></div></div>
+
+<div class="sec plain"><h2>মক টেস্ট</h2><div class="three">
+<a class="card mod" href="#mocks" data-mk="Reading"><div class="mi" data-sc="m-read"></div><h3>Reading<span class="bd f">ফ্রি</span></h3><p>আনলিমিটেড প্র্যাকটিস টেস্ট।</p></a>
+<a class="card mod" href="#mocks" data-mk="Writing"><div class="mi" data-sc="m-write"></div><h3>Writing<span class="bd f">ফ্রি</span></h3><p>Task 1 ও Task 2, আনলিমিটেড।</p></a>
+<a class="card mod" href="#mocks" data-mk="Listening"><div class="mi" data-sc="m-listen"></div><h3>Listening<span class="bd p">পেইড</span></h3><p>৪টি পার্ট, আসল পরীক্ষার টাইমারসহ।</p></a>
+<a class="card mod" href="#mocks" data-mk="Speaking"><div class="mi" data-sc="m-speakmk"></div><h3>Speaking<span class="bd p">পেইড</span></h3><p>AI পার্টনারের সাথে Part 1 থেকে 3।</p></a>
+<a class="card mod" href="#mocks" data-mk="ফুল-লেংথ"><div class="mi" data-sc="m-mocks"></div><h3>ফুল-লেংথ মক<span class="bd f">ফ্রি</span></h3><p>প্রথম ২টি সম্পূর্ণ ফ্রি।</p></a>
+<a class="card mod" href="#mocks" data-mk="ফুল-লেংথ"><div class="mi" data-sc="m-full50"></div><h3>৫০+ ফুল মক<span class="bd p">পেইড</span></h3><p>প্যাকেজে সব আনলক।</p></a>
+</div></div>
+<div class="sec" data-sc="sec-ai"><div class="two" style="align-items:center">
+
+<a class="card mod" href="#ai" data-tab="plan"><div class="mi" data-sc="m-plan"></div><h3>AI স্টাডি প্ল্যানার</h3><p>ক্যালেন্ডারে সাজানো রুটিন, নিজের মতো বদলান।</p></a>
+<div class="card"><h3 style="margin-bottom:10px">এক সপ্তাহের নমুনা</h3><div id="wk7"></div></div></div></div>
+<div class="sec plain"><h2>অন্যান্য AI টুল ও লাইব্রেরি</h2><div class="three">
+<a class="card mod" href="#ai" data-tab="chk"><div class="mi" data-sc="m-chk"></div><h3>মিসটেক চেকার</h3><p>ভুল কোথায় ও কেন, বাংলায়।</p></a>
+<a class="card mod" href="#ai" data-tab="spk"><div class="mi" data-sc="m-spk"></div><h3>AI Speaking Partner</h3><p>যেকোনো সময় কথা বলে অনুশীলন।</p></a>
+<a class="card mod" href="#ai" data-tab="coach"><div class="mi" data-sc="m-coach"></div><h3>AI কোচ</h3><p>আটকে গেলে প্রশ্ন করুন।</p></a>
+<a class="card mod" href="#mocks" data-toast="ড্রিল পেজ পরে যুক্ত হবে"><div class="mi" data-sc="m-drill"></div><h3>ড্রিল</h3><p>প্রশ্নের ধরন ধরে ছোট অনুশীলন।</p></a>
+<a class="card mod" tabindex="0" data-toast="মডেল আনসার পেজ পরে যুক্ত হবে"><div class="mi" data-sc="m-model"></div><h3>মডেল আনসার</h3><p>ব্যান্ড অনুযায়ী নমুনা উত্তর, বাংলায় ব্যাখ্যাসহ।</p></a>
+<a class="card mod" href="#learn"><div class="mi" data-sc="m-learn"></div><h3>বাছাই করা প্লেলিস্ট</h3><p>প্রতিটি স্কিলের সেরা ভিডিও।</p></a></div></div>
+
+<div class="sec" data-sc="sec-quiz"><div class="card q" style="max-width:560px;margin:auto"><h3 style="margin-bottom:10px">একটা প্রশ্ন চেষ্টা করুন</h3>
+<blockquote>Although the line was completed in 1863, public services began only in 1864.</blockquote>
+<p><b>True / False / Not Given:</b> Public services started in the year the line was completed.</p>
+<div class="opts" id="opts" style="margin-top:12px"><button class="opt" aria-pressed="false">True</button><button class="opt" aria-pressed="false">False</button><button class="opt" aria-pressed="false">Not Given</button></div>
+<div class="fb" id="fb">একটি উত্তর বেছে নিন, ব্যাখ্যা বাংলায় দেখাব।</div></div></div>
+
+<div class="sec plain"><h2>প্যাকেজ</h2><div class="three" id="hp"></div></div>
+</section>
+
+<section class="page" id="p-mocks" hidden>
+<div class="cv" data-sc="mocks"><div class="tx"><h1>মক টেস্ট</h1><p class="lead">প্রশ্ন ইংরেজিতে, নির্দেশনা বাংলায়।</p></div></div>
+<div class="sec plain"><div class="chips" id="mt"></div><div class="card" id="ml" style="padding:8px 18px"></div></div>
+</section>
+
+<section class="page" id="p-ai" hidden>
+<div class="cv" id="cv-ai"><div class="tx"><h1 id="at1"></h1><p class="lead" id="at2"></p></div></div>
+<div class="sec plain" id="ai2"><div class="chips" id="at"></div>
+<div class="pn" id="a-plan"><div class="pl">
+<div class="card"><h3>আপনার লক্ষ্য</h3>
+<label>বর্তমান ব্যান্ড<select id="cb"><option>4.5</option><option>5.0</option><option selected>5.5</option><option>6.0</option><option>6.5</option></select></label>
+<label>টার্গেট ব্যান্ড<select id="tb"><option>6.0</option><option selected>6.5</option><option>7.0</option><option>7.5</option><option>8.0</option></select></label>
+<label>পরীক্ষার তারিখ<input type="date" id="ex"></label>
+<label>প্রতিদিন সময়<select id="hr"><option value="60">১ ঘণ্টা</option><option value="90" selected>১.৫ ঘণ্টা</option><option value="120">২ ঘণ্টা</option></select></label>
+<label>দুর্বল স্কিল<select id="wk"><option value="2">Writing</option><option value="3">Speaking</option><option value="0">Reading</option><option value="1">Listening</option></select></label>
+<label>পড়ার দিন</label><div class="opts" id="dy" style="margin-top:6px"></div>
+<button class="btn" id="gn" style="width:100%">প্ল্যান বানান</button></div>
+<div class="card"><div class="mh"><button class="opt" id="pv" aria-label="আগের মাস">‹</button><span id="mn"></span><button class="opt" id="nx" aria-label="পরের মাস">›</button></div>
+<div class="cal" id="cg"></div><div id="pg" style="margin-top:12px;font-size:14px"></div><p class="mut" id="pn" style="font-size:14px;margin-top:8px"></p></div>
+<div class="card ed" id="ed"></div></div></div>
+<div class="pn card" id="a-chk" hidden><label style="margin:0">আপনার Writing থেকে একটি বাক্য<textarea id="tx" rows="2">Many peoples is agree that technology make life easier.</textarea></label>
+<button class="btn" style="margin:12px 0" id="ck">ভুল ধরুন</button><div id="co"></div><p class="mut" style="margin-top:10px;font-size:14px">রিয়েল-টাইম সংশোধন প্যাকেজে পাওয়া যায়।</p></div>
+<div class="pn card" id="a-spk" hidden><span class="bd p">পেইড</span>
+<div class="bub a">Describe a place you enjoy visiting.</div><div class="bub u">I like Cox’s Bazar because it is very much interesting.</div>
+<div class="bub a">Fluency ভালো। “very much interesting” নয়, বলুন “very interesting”। এরপর কারণ বলুন।</div>
+<button class="btn" style="margin-top:12px" data-toast="মাইক্রোফোন ডেমো: এখানে রেকর্ডিং যুক্ত হবে">কথা বলা শুরু করুন</button></div>
+<div class="pn card" id="a-coach" hidden><div class="chips" id="cc"></div><div id="cr" class="fb">একটি প্রশ্ন বেছে নিন।</div></div>
+</div></section>
+
+<section class="page" id="p-learn" hidden>
+<div class="cv" data-sc="learn"><div class="tx"><h1>লাইব্রেরি</h1><p class="lead">প্রতিটি স্কিলের জন্য বাছাই করা প্লেলিস্ট।</p></div></div>
+<div class="sec plain"><div class="chips" id="lt"></div><div class="card" id="ll" style="padding:8px 18px"></div></div>
+</section>
+
+<section class="page" id="p-dashboard" hidden>
+<div class="cv" data-sc="dash"><div class="tx"><h1>ড্যাশবোর্ড</h1><p class="lead">আপনার অগ্রগতি এক নজরে। সংখ্যাগুলো নমুনা।</p></div></div>
+<div class="sec plain" id="db"></div>
+</section>
+<section class="page" id="p-pricing" hidden>
+<div class="cv" data-sc="pricing"><div class="tx"><h1>প্যাকেজ</h1><p class="lead">কম দামে, বাংলায় সম্পূর্ণ প্রস্তুতি।</p></div></div>
+<div class="sec plain"><div class="three">
+<div class="card"><h3 class="free">ফ্রি</h3><div class="amt">৳০</div><ul class="k"><li>Reading ও Writing আনলিমিটেড</li><li>২টি ফুল-লেংথ মক</li><li>বাংলা নির্দেশনা</li></ul><a class="btn ghost" style="margin-top:16px" href="#mocks">ফ্রি শুরু করুন</a></div>
+<div class="card"><h3 class="paid">১ মাস</h3><div class="amt">৳১৫০<small> / মাস</small></div><ul class="k"><li>৫০+ ফুল-লেংথ মক</li><li>রিয়েল-টাইম বাংলা সংশোধন</li><li>AI Speaking Partner</li></ul><button class="btn" style="margin-top:16px" data-toast="পেমেন্ট ফ্লো পরে যুক্ত হবে">১ মাস নিন</button></div>
+<div class="card best"><h3 class="paid">৩ মাস</h3><div class="amt">৳৪০০<small> / ৩ মাস</small></div><ul class="k"><li>১ মাসের সবকিছু</li><li>৫০ টাকা সাশ্রয়</li><li>পুরো প্রস্তুতির জন্য যথেষ্ট সময়</li></ul><button class="btn" style="margin-top:16px" data-toast="পেমেন্ট ফ্লো পরে যুক্ত হবে">৩ মাস নিন</button></div></div></div>
+<div class="sec plain"><h2>পেমেন্ট</h2><div class="card"><p>bKash বা Nagad দিয়ে সহজে পেমেন্ট করুন।</p><div class="pays"><span class="pay">bKash</span><span class="pay">Nagad</span></div></div></div>
+</section>
+</div></main>
+<footer><div class="wrap"><div class="fg">
+<div class="fb2"><div class="lgb"><svg viewBox="128 250 1018 752" role="img" aria-label="IELTS বাংলা"><use href="#lg"/></svg></div><p>বাংলায় IELTS প্রস্তুতি, সবার নাগালে।</p><p class="pm">পেমেন্ট: bKash, Nagad</p></div>
+<div class="fq"><h4>লিংক</h4><a href="#home">হোম</a><a href="#mocks">মক টেস্ট</a><a href="#ai">AI টুলস</a><a href="#learn">লাইব্রেরি</a><a href="#pricing">প্যাকেজ</a></div>
+<div><h4>যোগাযোগ</h4><button type="button" class="flk" data-toast="ইমেইল ঠিকানা এখানে যুক্ত হবে"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M22 6l-10 7L2 6"/></svg></i>ইমেইল</button><button type="button" class="flk" data-toast="WhatsApp নম্বর এখানে যুক্ত হবে"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"/><path d="M9.5 8.8c.3 1.8 1.9 3.4 3.7 3.7l.9-1-1.4-1-.6.5c-.5-.3-1-.8-1.3-1.3l.5-.6-1-1.4z"/></svg></i>WhatsApp</button></div>
+<div><h4>ফলো করুন</h4><button type="button" class="flk" data-toast="Facebook পেজের লিংক এখানে যুক্ত হবে"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></i>Facebook</button><button type="button" class="flk" data-toast="YouTube চ্যানেলের লিংক এখানে যুক্ত হবে"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22.5 6.4a2.8 2.8 0 0 0-1.9-2C18.9 4 12 4 12 4s-6.9 0-8.6.5a2.8 2.8 0 0 0-1.9 2A29 29 0 0 0 1 11.8a29 29 0 0 0 .5 5.3 2.8 2.8 0 0 0 1.9 2c1.7.5 8.6.5 8.6.5s6.9 0 8.6-.5a2.8 2.8 0 0 0 1.9-2 29 29 0 0 0 .5-5.3 29 29 0 0 0-.5-5.4z"/><path d="M9.8 15l5.7-3.3L9.8 8.5z"/></svg></i>YouTube</button></div>
+</div><div class="fbt"><span>© <span id="yr"></span> IELTS বাংলা। সর্বস্বত্ব সংরক্ষিত।</span><span class="pl2"><button type="button" class="flk" data-toast="পেজ পরে যুক্ত হবে">প্রাইভেসি পলিসি</button><button type="button" class="flk" data-toast="পেজ পরে যুক্ত হবে">শর্তাবলি</button><button type="button" class="flk" data-toast="পেজ পরে যুক্ত হবে">রিফান্ড পলিসি</button></span></div></div></footer>
+<div id="toast" role="status"></div>
+<script>
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const K={n:'#21304C',r:'#D93A45',w:'#F8F8F9',y:'#FFD66B',m:'#8FD8C4',s:'#9CC9F5',l:'#C9B8F2',p:'#FFC9CF',o:'#FFC8A0',k:'#F2C4A0'};
+const st='stroke-linecap="round" fill="none"';
+const O={
+blob:a=>`<circle r="120" fill="${a}"/>`,circ:a=>`<circle r="50" fill="${a}"/>`,ring:a=>`<circle r="40" fill="none" stroke="${a}" stroke-width="12"/>`,
+cloud:a=>`<path d="M-50 20a22 22 0 0 1 8-42 28 28 0 0 1 52-6 24 24 0 0 1 22 48Z" fill="${a}"/>`,
+star:a=>`<path d="M0-26C3-8 8-3 26 0 8 3 3 8 0 26-3 8-8 3-26 0-8-3-3-8 0-26Z" fill="${a}"/>`,
+dots:a=>`<path d="M0 0h80M0 20h80M0 40h80" stroke="${a}" stroke-width="6" ${st} stroke-dasharray="0 20"/>`,
+wave:a=>`<path d="M-60 0q15-24 30 0t30 0 30 0 30 0" stroke="${a}" stroke-width="6" ${st}/>`,
+book:(a,b)=>`<path d="M-62-28L0-16 62-28V32L0 44-62 32Z" fill="${a}"/><path d="M-52-22L0-11 52-22V26L0 36-52 26Z" fill="${K.w}"/><path d="M0-11V36M-38-8l30 6M-38 6l30 6M8-2l30-6M8 12l30-6" stroke="${b}" stroke-width="3" ${st}/>`,
+bubble:(a,b)=>`<rect x="-50" y="-32" width="100" height="58" rx="18" fill="${a}"/><path d="M-20 24L-30 44 0 24Z" fill="${a}"/><g fill="${b}"><circle cx="-22" cy="-3" r="6"/><circle cy="-3" r="6"/><circle cx="22" cy="-3" r="6"/></g>`,
+cal:(a,b)=>`<rect x="-48" y="-44" width="96" height="88" rx="14" fill="${K.w}"/><path d="M-48-30a14 14 0 0 1 14-14H34a14 14 0 0 1 14 14V-18H-48Z" fill="${a}"/><path d="M-28 4h56M-28 24h56" stroke="${b}" stroke-width="10" ${st} stroke-dasharray="0 18"/>`,
+clip:(a,b)=>`<rect x="-40" y="-52" width="80" height="104" rx="12" fill="${a}"/><rect x="-30" y="-38" width="60" height="84" rx="6" fill="${K.w}"/><path d="M-20-14l6 6 10-12M-20 14l6 6 10-12M2-10h18M2 18h18" stroke="${b}" stroke-width="4" ${st}/><rect x="-16" y="-58" width="32" height="14" rx="6" fill="${b}"/>`,
+clock:(a,b)=>`<circle r="42" fill="${a}"/><circle r="33" fill="${b}"/><path d="M0-18V0l14 10" stroke="${a}" stroke-width="5" ${st}/>`,
+pencil:(a,b)=>`<g transform="rotate(-35)"><rect x="-12" y="-60" width="24" height="90" rx="4" fill="${a}"/><path d="M-12 30h24L0 54Z" fill="${K.k}"/><path d="M-12-44h24" stroke="${b}" stroke-width="6"/></g>`,
+bot:(a,b)=>`<rect x="-40" y="-30" width="80" height="62" rx="22" fill="${a}"/><circle cx="-16" r="8" fill="${K.w}"/><circle cx="16" r="8" fill="${K.w}"/><circle cx="-16" cy="1" r="3" fill="${b}"/><circle cx="16" cy="1" r="3" fill="${b}"/><path d="M0-30V-46" stroke="${a}" stroke-width="5"/><circle cy="-50" r="7" fill="${b}"/><path d="M-12 18q12 8 24 0" stroke="${K.w}" stroke-width="4" ${st}/><rect x="-22" y="34" width="44" height="22" rx="10" fill="${a}"/>`,
+mic:(a,b)=>`<rect x="-18" y="-50" width="36" height="64" rx="18" fill="${a}"/><path d="M-32-4a32 32 0 0 0 64 0M0 28V50M-16 50h32" stroke="${b}" stroke-width="6" ${st}/>`,
+play:(a,b)=>`<rect x="-56" y="-38" width="112" height="76" rx="18" fill="${a}"/><path d="M-12-18L24 0-12 18Z" fill="${b}"/>`,
+lens:(a,b)=>`<circle r="30" fill="${K.w}" stroke="${a}" stroke-width="10"/><path d="M22 22L50 50" stroke="${a}" stroke-width="12" ${st}/><path d="M-14 0l9 9 16-18" stroke="${b}" stroke-width="6" ${st}/>`,
+coin:(a,b)=>`<circle r="34" fill="${a}"/><circle r="24" fill="none" stroke="${b}" stroke-width="3"/><text y="11" text-anchor="middle" font-size="30" font-weight="700" fill="${b}" font-family="Anek Bangla,sans-serif">৳</text>`,
+phones:(a,b)=>`<path d="M-36 10v-14a36 36 0 0 1 72 0v14" stroke="${a}" stroke-width="10" ${st}/><rect x="-46" y="2" width="22" height="38" rx="9" fill="${b}"/><rect x="24" y="2" width="22" height="38" rx="9" fill="${b}"/>`,
+target:(a,b)=>`<circle r="40" fill="${K.w}" stroke="${a}" stroke-width="8"/><circle r="22" fill="none" stroke="${b}" stroke-width="8"/><circle r="6" fill="${a}"/><path d="M0 0L38-38M28-38h10v10" stroke="${a}" stroke-width="5" ${st}/>`,
+chart:(a,b)=>`<rect x="-44" y="-4" width="22" height="44" rx="6" fill="${a}"/><rect x="-11" y="-34" width="22" height="74" rx="6" fill="${b}"/><rect x="22" y="-18" width="22" height="58" rx="6" fill="${a}"/><path d="M-54 52h108" stroke="${a}" stroke-width="5" ${st}/>`,
+kid:a=>`<circle cy="-40" r="20" fill="${K.k}"/><path d="M-20-44a20 20 0 0 1 40 0c-10-10-30-10-40 0Z" fill="${K.n}"/><path d="M-34 50c0-40 8-62 34-62s34 22 34 62Z" fill="${a}"/>`};
+const S={
+home:['s',['blob',1010,190,1.5,'w'],['book',960,240,2,'r','n'],['kid',1100,215,1.3,'y'],['bubble',880,100,1,'y','n'],['star',1130,70,1.3,'r'],['cloud',870,310,1,'w'],['star',1000,60,.8,'y']],
+mocks:['y',['blob',1010,190,1.5,'w'],['clip',950,190,1.8,'n','r'],['clock',1100,120,1.3,'r','w'],['pencil',1110,270,1.3,'m','n'],['star',880,90,1,'r'],['dots',860,280,1,'n']],
+plan:['l',['blob',1010,190,1.5,'w'],['cal',960,190,2,'r','n'],['bot',1110,240,1.2,'n','y'],['star',880,100,1.2,'y'],['star',1140,80,.9,'r'],['cloud',880,300,1,'w']],
+chk:['p',['blob',1010,190,1.5,'w'],['lens',970,190,2.2,'n','r'],['bubble',1110,110,1,'w','r'],['pencil',880,250,1.3,'y','n'],['star',900,70,1,'r']],
+spk:['y',['blob',1010,190,1.5,'w'],['mic',980,180,2,'n','r'],['bubble',1120,100,1,'m','n'],['bubble',890,270,.9,'w','n'],['wave',1110,290,1.2,'n'],['star',880,80,1,'r']],
+coach:['s',['blob',1010,190,1.5,'w'],['bot',990,200,2,'n','r'],['bubble',1120,90,1,'w','n'],['book',890,285,1.2,'y','n'],['star',890,80,1,'y']],
+learn:['m',['blob',1010,190,1.5,'w'],['play',960,190,2,'r','w'],['book',1110,260,1.2,'n','y'],['cloud',890,90,1.2,'w'],['star',1110,80,1,'y'],['ring',890,290,.8,'n']],
+pricing:['p',['blob',1010,190,1.5,'w'],['coin',950,200,1.8,'y','n'],['coin',1090,140,1.3,'r','w'],['star',1130,270,1.2,'n'],['bubble',880,90,.9,'w','r'],['star',870,280,1,'y']],
+'sec-free':['s',['circ',80,80,2,'w'],['book',1090,430,1.6,'n','r'],['star',1100,90,1.2,'y'],['cloud',150,450,1.4,'w'],['dots',560,30,1,'n']],
+'sec-mod':['s',['pencil',90,100,1.3,'y','n'],['star',1100,80,1.3,'r'],['cloud',1090,450,1.5,'w'],['bot',100,440,1,'n','y']],
+'sec-quiz':['s',['bubble',100,430,1.3,'w','r'],['clip',1110,130,1.5,'n','r'],['star',1020,450,1,'r'],['ring',130,90,1,'n']],
+'sec-band':['s',['blob',1080,260,1.5,'w'],['kid',1060,300,1.4,'r'],['star',900,100,1,'y'],['cal',140,280,1.4,'w','r']],
+'sec-mocks':['s',['clock',90,100,1.2,'r','w'],['pencil',1110,430,1.4,'m','n'],['star',1100,90,1,'r'],['dots',60,420,1,'n']],
+'sec-ai':['s',['cal',90,100,1.1,'w','r'],['bot',1100,430,1,'n','y'],['star',1100,90,1.2,'y'],['cloud',150,450,1.2,'w']],
+'sec-learn':['s',['play',100,100,1.1,'n','w'],['book',1090,430,1.4,'r','n'],['star',1100,90,1,'y'],['wave',130,450,1,'n']],
+'sec-price':['s',['coin',100,100,1.2,'y','n'],['coin',1100,430,1.2,'r','w'],['star',1090,100,1,'w'],['cloud',140,440,1.3,'w']],
+'m-mocks':['y',['clip',80,58,.8,'n','r'],['clock',210,52,.6,'r','w'],['star',265,92,.5,'r']],
+'m-plan':['l',['cal',85,58,.7,'r','n'],['bot',215,62,.65,'n','y'],['star',265,24,.5,'w']],
+'m-chk':['p',['lens',90,52,.9,'n','r'],['bubble',215,50,.7,'w','r'],['star',160,94,.5,'y']],
+'m-spk':['s',['mic',95,55,.8,'n','r'],['wave',205,55,.9,'n'],['star',265,24,.5,'w']],
+'m-coach':['p',['bot',100,62,.75,'n','r'],['bubble',220,45,.7,'w','n'],['star',265,94,.5,'y']],
+'m-learn':['o',['play',90,55,.8,'r','w'],['book',215,62,.8,'n','y'],['star',270,22,.5,'r']],
+'sec-mk':['s',['book',100,110,1.3,'r','n'],['star',1100,90,1.2,'y'],['clip',1100,430,1,'n','r'],['cloud',150,450,1.3,'w']],
+'m-read':['o',['book',90,58,.85,'r','n'],['cloud',220,40,.6,'w'],['star',255,92,.5,'y']],
+'m-write':['s',['pencil',85,55,.8,'r','n'],['clip',210,58,.7,'n','r'],['star',265,22,.5,'w']],
+'m-listen':['l',['phones',90,55,.8,'n','r'],['wave',215,55,.9,'n'],['star',265,92,.5,'y']],
+'m-speakmk':['y',['bubble',90,50,.8,'w','r'],['bubble',215,60,.7,'n','w'],['star',160,96,.5,'r']],
+'m-full50':['p',['clip',60,58,.65,'n','r'],['clip',115,58,.65,'r','n'],['clip',170,58,.65,'n','y'],['coin',245,52,.55,'y','n']],
+'m-drill':['y',['target',90,55,.85,'r','n'],['dots',180,18,.8,'n'],['star',255,90,.5,'r']],
+'dash':['o',['blob',1010,190,1.5,'w'],['chart',960,200,2.2,'n','r'],['kid',1110,225,1.3,'l'],['star',880,90,1.2,'r'],['cal',1130,80,.8,'w','r'],['cloud',880,300,1,'w']],
+'m-model':['l',['clip',85,58,.8,'n','r'],['bubble',210,48,.7,'w','n'],['star',265,94,.5,'y']]};
+const gr=h=>{const[r,g,b]=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255),M=Math.max(r,g,b),n=Math.min(r,g,b),l=(M+n)/2,d=M-n,s=d?d/(1-Math.abs(2*l-1)):0;let H=d?(M===r?((g-b)/d+6)%6:M===g?(b-r)/d+2:(r-g)/d+4):0;H*=60;const c=(L,S)=>`hsl(${H.toFixed(0)} ${(Math.min(S,1)*100).toFixed(0)}% ${(Math.min(L,.97)*100).toFixed(0)}%)`;return `radial-gradient(ellipse at 50% 50%,${c(l+.07,s)} 0%,${c(l,s)} 45%,${c(l-.1,s+.05)} 100%)`};
+function put(el,n){const d=S[n],c=el.classList.contains('cv'),m=el.classList.contains('mi'),vb=c?'805 0 400 380':m?'0 0 300 110':'0 0 1200 520';
+$('svg',el)?.remove();el.style.background=gr(m?K[d[0]]:K.m);const kk=x=>!m&&x==='m'?'y':x;
+el.insertAdjacentHTML(c?'beforeend':'afterbegin',`<svg viewBox="${vb}" preserveAspectRatio="xMidYMid ${c?'meet':'slice'}" aria-hidden="true">`+d.slice(1).map((o,i)=>`<g transform="translate(${o[1]} ${o[2]}) scale(${o[3]})"><g class="o" style="--d:${i%3+1}"><g class="pk">${O[o[0]](K[kk(o[4])],K[kk(o[5])])}</g></g></g>`).join('')+'</svg>')}
+$$('[data-sc]').forEach(e=>put(e,e.dataset.sc));
+document.addEventListener('pointermove',e=>{const c=e.target.closest('.cv,.sec,.mi');if(!c)return;const r=c.getBoundingClientRect();c.style.setProperty('--mx',((e.clientX-r.left)/r.width-.5)*2);c.style.setProperty('--my',((e.clientY-r.top)/r.height-.5)*2)});
+document.addEventListener('click',e=>{const p=e.target.closest('.pk');if(p){p.classList.remove('pop');void p.getBoundingClientRect();p.classList.add('pop')}
+const b=e.target.closest('[data-toast]');if(b)toast(b.dataset.toast);const g=e.target.closest('[data-go]');if(g)location.hash=g.dataset.go;
+const t=e.target.closest('[data-tab]');if(t)AT=t.dataset.tab;else if(e.target.closest('a[href="#ai"]'))AT='plan';const mk=e.target.closest('[data-mk]');if(mk)MK=mk.dataset.mk;if(location.hash==='#ai'&&e.target.closest('a[href="#ai"]')){tab(AT);scrollTo(0,0)}});
+let AT='plan',MK='';const R=['home','mocks','ai','learn','pricing','dashboard'];
+const TT={plan:['AI স্টাডি প্ল্যানার','পরীক্ষার তারিখ অনুযায়ী ক্যালেন্ডার রুটিন, যেকোনো দিন বদলান।'],chk:['মিসটেক চেকার','ভুল কোথায়, কেন হলো, কীভাবে ঠিক করবেন।'],spk:['AI Speaking Partner','যেকোনো সময় কথা বলুন, সাথে সাথে ফিডব্যাক।'],coach:['AI কোচ','আটকে গেলে প্রশ্ন করুন, বাংলায় উত্তর পান।']};
+function tab(k){$$('#at .opt').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===TT[k][0]));$$('#p-ai .pn').forEach(c=>c.hidden=c.id!=='a-'+k);$('#at1').textContent=TT[k][0];$('#at2').textContent=TT[k][1];put($('#cv-ai'),k)}
+function go(){let h=(location.hash||'#home').slice(1);if(!R.includes(h))h='home';
+$$('.page').forEach(p=>p.hidden=p.id!=='p-'+h);$$('nav a').forEach(a=>a.classList.toggle('on',a.hash==='#'+h));if(h==='ai')tab(AT);if(h==='mocks'&&MK){$$('#mt .opt').find(b=>b.dataset.k===MK)?.click();MK=''}if(h==='dashboard')dash();scrollTo(0,0)}
+let tm;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tm);tm=setTimeout(()=>t.classList.remove('on'),2200)}
+function chips(el,keys,fn){const box=$(el);box.innerHTML=keys.map((k,i)=>`<button class="opt" aria-pressed="${!i}" data-k="${k}">${k}</button>`).join('');
+box.onclick=e=>{const b=e.target.closest('[data-k]');if(!b)return;$$('.opt',box).forEach(x=>x.setAttribute('aria-pressed',x===b));fn(b.dataset.k)};fn(keys[0])}
+const row=(t,m,free,act)=>`<div class="row"><div class="t"><b>${t}</b><small>${m}</small></div><span class="bd ${free?'f':'p'}">${free?'ফ্রি':'পেইড'}</span><button class="btn sm ${free?'':'ghost paid'}" ${free?`data-toast="ডেমো: ${t} শুরু হচ্ছে"`:'data-go="#pricing"'}>${free?act:'আনলক'}</button></div>`;
+const sec={Listening:[0,'৪টি পার্ট, ৪০ মিনিট'],Reading:[1,'৩টি প্যাসেজ, ৬০ মিনিট'],Writing:[1,'Task 1 ও Task 2, ৬০ মিনিট'],Speaking:[0,'AI Partner-এর সাথে, ১১–১৪ মিনিট']};
+chips('#mt',['Reading','Writing','Listening','Speaking','ফুল-লেংথ'],k=>{
+$('#ml').innerHTML=k==='ফুল-লেংথ'?[...Array(8)].map((_,i)=>row(`ফুল মক ${i+1}`,'চার সেকশন, প্রায় ২ ঘণ্টা ৪৫ মিনিট',i<2,'শুরু করুন')).join('')+row('আরও ৪০+ ফুল মক','প্যাকেজে আনলক',false):
+[...Array(5)].map((_,i)=>row(`${k} Test ${i+1}`,sec[k][1],!!sec[k][0],'শুরু করুন')).join('')});
+chips('#at',Object.values(TT).map(v=>v[0]),k=>tab(Object.keys(TT).find(x=>TT[x][0]===k)));
+/* planner */
+const T=[['Reading','রিডিং','s'],['Listening','লিসেনিং','m'],['Writing','রাইটিং','y'],['Speaking','স্পিকিং','p'],['Vocabulary','ভোকাব ও গ্রামার','l','ভোকাব'],['Full Mock','ফুল মক','o'],['Review','ভুল রিভিউ','w','রিভিউ']];
+let PL={},EX='',SK='',V=new Date();
+const iso=d=>d.toLocaleDateString('sv'),fmt=k=>new Date(k+'T12:00').toLocaleDateString('bn-BD',{weekday:'long',day:'numeric',month:'long'});
+$('#dy').innerHTML=['রবি','সোম','মঙ্গল','বুধ','বৃহ','শুক্র','শনি'].map((x,i)=>`<button class="opt" aria-pressed="${i!==5}">${x}</button>`).join('');
+$('#dy').onclick=e=>{const b=e.target.closest('.opt');if(b)b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true')};
+$('#ex').value=iso(new Date(Date.now()+56*864e5));
+function gen(){PL={};const w=+$('#wk').value,m=+$('#hr').value,on=$$('#dy .opt').map(b=>b.getAttribute('aria-pressed')==='true'),seq=[0,1,2,3,4,w,5,6];
+let d=new Date();d.setHours(12,0,0,0);const e=new Date(($('#ex').value||iso(d))+'T12:00');EX=iso(e);let n=0;
+for(let i=0;i<150&&d<e;i++,d=new Date(+d+864e5)){if(!on[d.getDay()])continue;const t=seq[n++%8];PL[iso(d)]={t,m:t===5?165:m,n:'',d:0}}
+const g=($('#tb').value-$('#cb').value).toFixed(1);V=new Date();SK=Object.keys(PL)[0]||EX;
+$('#pn').textContent=`${g} ব্যান্ড বাড়ানোর জন্য ${n} দিনের রুটিন। দুর্বল স্কিলে বাড়তি দিন রাখা হয়েছে। যেকোনো দিনে ক্লিক করে বদলান।`;cal();ed()}
+function cal(){const y=V.getFullYear(),m=V.getMonth(),pad=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate(),td=iso(new Date());
+$('#mn').textContent=V.toLocaleDateString('bn-BD',{month:'long',year:'numeric'});
+let h=['রবি','সোম','মঙ্গ','বুধ','বৃহ','শুক্র','শনি'].map(x=>`<small class="hd">${x}</small>`).join('')+'<i></i>'.repeat(pad);
+for(let i=1;i<=n;i++){const k=iso(new Date(y,m,i,12)),p=PL[k],t=p&&T[p.t];
+h+=`<button class="cd${k===SK?' sel':''}${k===td?' td':''}${k===EX?' ex':''}" data-k="${k}"><b>${i.toLocaleString('bn-BD')}</b>${k===EX?'<span class="ch">পরীক্ষা</span>':p?`<span class="ch" style="background:${K[t[2]]}">${p.d?'✓ ':''}${t[3]||t[1]}</span>`:''}</button>`}
+$('#cg').innerHTML=h;const v=Object.values(PL),dn=v.filter(p=>p.d).length;$('#pg').innerHTML=`সম্পন্ন: ${dn.toLocaleString('bn-BD')}/${v.length.toLocaleString('bn-BD')}<div class="pr"><i style="width:${v.length?dn/v.length*100:0}%"></i></div>`}
+function ed(){const p=PL[SK]||{t:-1,m:60,n:'',d:0};
+$('#ed').innerHTML=`<h3>${fmt(SK)}${SK===EX?' <span class="bd f">পরীক্ষার দিন</span>':''}</h3><div class="two"><div>
+<label>টাস্ক<select id="et">${T.map((t,i)=>`<option value="${i}" ${p.t===i?'selected':''}>${t[1]}</option>`).join('')}<option value="-1" ${p.t<0?'selected':''}>ছুটি / কিছু নয়</option></select></label>
+<label>সময় (মিনিট)<select id="em">${[30,45,60,90,120,165].map(x=>`<option ${p.m==x?'selected':''}>${x}</option>`).join('')}</select></label></div><div>
+<label>নোট<input id="en" value="${p.n}" placeholder="যেমন: Passage 2 আবার করব"></label>
+<label>অন্য দিনে সরান<input type="date" id="mv"></label>
+<label><input type="checkbox" id="edn" ${p.d?'checked':''}> সম্পন্ন হয়েছে</label></div></div>`}
+$('#ed').onchange=$('#ed').oninput=e=>{if(e.target.id==='mv'){const v=e.target.value,p=PL[SK];if(v&&p){delete PL[SK];PL[v]=p;SK=v;V=new Date(v+'T12:00');cal();ed()}return}
+const t=+$('#et').value;if(t<0)delete PL[SK];else PL[SK]={t,m:+$('#em').value,n:$('#en').value,d:$('#edn').checked?1:0};cal()};
+$('#cg').onclick=e=>{const b=e.target.closest('.cd');if(b){SK=b.dataset.k;cal();ed()}};
+$('#pv').onclick=()=>{V=new Date(V.getFullYear(),V.getMonth()-1,1);cal()};$('#nx').onclick=()=>{V=new Date(V.getFullYear(),V.getMonth()+1,1);cal()};$('#gn').onclick=gen;gen();
+$('#ck').onclick=()=>{$('#co').innerHTML=`<div class="fb"><p><mark>peoples</mark> → people: People নিজেই বহুবচন, তাই s লাগে না।</p><p><mark>is agree</mark> → agree: Agree একটি ক্রিয়া, এর আগে is বসে না।</p><p><mark>make</mark> → makes: Technology একবচন, তাই ক্রিয়ায় s।</p><p style="margin-top:8px"><b>ঠিক বাক্য:</b> Many people agree that technology makes life easier.</p></div>`};
+const qa={'Band 6 থেকে 7 কীভাবে?':'Writing-এ যুক্তি আর উদাহরণ গুছিয়ে লিখুন এবং Reading-এ সময় ভাগ করে অনুশীলন করুন।','Listening-এ ভুল কেন হয়?':'বেশিরভাগ ভুল spelling ও plural-এ। উত্তর লেখার আগে শব্দটি আবার দেখুন।','Speaking-এ থেমে যাই':'থামলে “Well, let me think” বলুন, তারপর এক বাক্যে উত্তর শুরু করুন।'};
+chips('#cc',Object.keys(qa),k=>$('#cr').textContent=qa[k]);
+$('#opts').onclick=e=>{const b=e.target.closest('.opt');if(!b)return;$$('.opt',$('#opts')).forEach(x=>x.setAttribute('aria-pressed',x===b));
+$('#fb').innerHTML=b.textContent==='False'?'<b>সঠিক।</b> লাইন শেষ হয়েছে ১৮৬৩-তে, কিন্তু সেবা শুরু ১৮৬৪-তে। “only in” দেখে বোঝা যায় সেবা পরে শুরু হয়েছে।':'<b>আবার ভাবুন।</b> “completed in 1863” আর “began only in 1864”-এর বছর মিলিয়ে দেখুন।'};
+const pl=[['IELTS Reading: True/False/Not Given','Reading','১২টি ভিডিও'],['Task 2 Essay: গঠন ও উদাহরণ','Writing','১৫টি ভিডিও'],['Listening: Spelling ও Map','Listening','১০টি ভিডিও'],['Speaking Part 1 থেকে 3','Speaking','১৪টি ভিডিও'],['IELTS Grammar বেসিক','Grammar','২০টি ভিডিও'],['Academic Vocabulary','Vocabulary','১৮টি ভিডিও']];
+chips('#lt',['সব',...new Set(pl.map(p=>p[1]))],k=>$('#ll').innerHTML=pl.filter(p=>k==='সব'||p[1]===k).map(p=>`<div class="row"><div class="t"><b>${p[0]}</b><small>${p[2]}</small></div><span class="bd n">${p[1]}</span><button class="btn sm ghost" data-toast="প্লেলিস্ট লিংক এখানে যুক্ত হবে">দেখুন</button></div>`).join(''));
+$('#hp').innerHTML=$$('#p-pricing .three .card').map(c=>`<a class="${c.className} pkgl" href="#pricing">${c.innerHTML.replace(/<(?:button|a)\b[^>]*?class="([^"]*)"[^>]*>/g,'<span class="$1">').replace(/<\/(?:button|a)>/g,'</span>')}</a>`).join('');
+$('#wk7').innerHTML='<div class="cal">'+['রবি','সোম','মঙ্গ','বুধ','বৃহ','শুক্র','শনি'].map(x=>`<small class="hd">${x}</small>`).join('')+[0,1,2,3,4,-1,5].map(i=>`<div class="cd" style="min-height:44px;cursor:default">${i<0?'<span class="ch">ছুটি</span>':`<span class="ch" style="background:${K[T[i][2]]}">${T[i][1]}</span>`}</div>`).join('')+'</div>';
+function dash(){const k=iso(new Date()),p=PL[k],v=Object.values(PL),dn=v.filter(x=>x.d).length,bn=n=>n.toLocaleString('bn-BD'),sk=[['Reading',6.5],['Listening',5.5],['Writing',5.5],['Speaking',5]],er=[['Plural ও Singular',8],['Article',5],['Subject-verb',4]],ms=[['Reading Test 3','6.5','২ দিন আগে'],['Writing Test 2','5.5','৪ দিন আগে'],['ফুল মক ১','6.0','এক সপ্তাহ আগে']],
+bar=(l,w,t)=>`<div style='margin:10px 0'><div style='display:flex;justify-content:space-between;font-size:14px'><span>${l}</span><b>${t}</b></div><div class='pr'><i style='width:${w}%'></i></div></div>`;
+$('#db').innerHTML=`<div class='three' style='margin-bottom:16px'><div class='card'><small class='mut'>বর্তমান ব্যান্ড (আনুমানিক)</small><div class='amt'>6.0<small> / টার্গেট ${$('#tb').value}</small></div><div class='pr'><i style='width:${6/$('#tb').value*100}%'></i></div></div>
+<div class='card'><small class='mut'>আজকের টাস্ক</small>${p?`<div class='amt' style='font-size:24px'>${T[p.t][1]}</div><p class='mut' style='font-size:14px;margin-bottom:10px'>${bn(p.m)} মিনিট</p><button class='btn sm ${p.d?'ghost':''}' id='td'>${p.d?'সম্পন্ন ✓':'সম্পন্ন করুন'}</button>`:`<div class='amt' style='font-size:24px'>আজ ছুটি</div><a class='btn sm ghost' href='#ai' data-tab='plan'>প্ল্যান দেখুন</a>`}${bar('প্ল্যান',v.length?dn/v.length*100:0,bn(dn)+'/'+bn(v.length))}</div>
+<div class='card'><small class='mut'>আপনার প্যাকেজ</small><div class='amt' style='font-size:24px'>ফ্রি</div>${bar('ফুল মক',50,'১/২')}<a class='btn sm' href='#pricing'>আপগ্রেড করুন</a></div></div>
+<div class='two'><div class='card'><h3>স্কিল অনুযায়ী ব্যান্ড</h3>${sk.map(s=>bar(s[0],s[1]/9*100,s[1].toFixed(1))).join('')}</div><div class='card'><h3>সাধারণ ভুল</h3>${er.map(s=>bar(s[0],s[1]*10,bn(s[1])+' বার')).join('')}</div></div>
+<div class='card' style='margin-top:16px;padding:8px 18px'>${ms.map(m=>`<div class='row'><div class='t'><b>${m[0]}</b><small>${m[2]}</small></div><span class='bd n'>Band ${m[1]}</span><button class='btn sm ghost' data-toast='ভুলের তালিকা এখানে দেখাবে'>ভুল দেখুন</button></div>`).join('')}</div>`}
+$('#db').onclick=e=>{if(e.target.id==='td'&&PL[iso(new Date())]){PL[iso(new Date())].d^=1;cal();dash()}};
+$('#yr').textContent=new Date().getFullYear().toLocaleString('bn-BD',{useGrouping:false});
+addEventListener('hashchange',go);go();
+</script></body></html>

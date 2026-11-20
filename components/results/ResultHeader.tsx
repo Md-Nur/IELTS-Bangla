@@ -40,7 +40,7 @@ export function ResultHeader() {
           </button>
 
           <Link
-            href="/"
+            href="/dashboard"
             className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white dark:bg-blue-600 dark:hover:bg-blue-500 text-xs font-semibold transition-colors shadow-2xs cursor-pointer"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

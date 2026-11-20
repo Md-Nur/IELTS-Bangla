@@ -46,7 +46,7 @@ export function ExamExitModal({ isOpen, onClose }: ExamExitModalProps) {
             type="button"
             onClick={() => {
               onClose();
-              router.push("/");
+              router.push("/dashboard");
             }}
             className="w-full sm:w-auto px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium text-sm transition-colors cursor-pointer"
           >
