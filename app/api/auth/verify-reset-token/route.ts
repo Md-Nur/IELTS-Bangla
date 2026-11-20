@@ -1,12 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { prisma } from "@/lib/prisma";
 
 export const instant = false;
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest | Request) {
   try {
-    const { searchParams } = new URL(request.url);
+    const searchParams = "nextUrl" in request ? request.nextUrl.searchParams : new URL(request.url).searchParams;
     const token = searchParams.get("token");
 
     if (!token || typeof token !== "string" || token.length < 32) {
@@ -67,7 +67,15 @@ export async function GET(request: Request) {
       },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
+    if (
+      error &&
+      typeof error === "object" &&
+      "digest" in error &&
+      (error as { digest?: string }).digest === "NEXT_PRERENDER_INTERRUPTED"
+    ) {
+      throw error;
+    }
     console.error("[verify-reset-token] Internal error:", error);
     return NextResponse.json(
       { valid: false, error: "টোকেন যাচাই করার সময় ত্রুটি ঘটেছে।" },

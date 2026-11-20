@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
+import { NextRequest } from "next/server";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
@@ -96,7 +97,7 @@ describe("Password Recovery & Reset System (Gmail SMTP & Security)", () => {
     });
 
     // Valid token check
-    const validReq = new Request(`http://localhost:3000/api/auth/verify-reset-token?token=${rawToken}`);
+    const validReq = new NextRequest(`http://localhost:3000/api/auth/verify-reset-token?token=${rawToken}`);
     const validRes = await verifyTokenHandler(validReq);
     const validData = await validRes.json();
     expect(validRes.status).toBe(200);
@@ -104,7 +105,7 @@ describe("Password Recovery & Reset System (Gmail SMTP & Security)", () => {
     expect(validData.email).toBe(testEmail);
 
     // Non-existent token check
-    const invalidReq = new Request(`http://localhost:3000/api/auth/verify-reset-token?token=${crypto.randomBytes(32).toString("hex")}`);
+    const invalidReq = new NextRequest(`http://localhost:3000/api/auth/verify-reset-token?token=${crypto.randomBytes(32).toString("hex")}`);
     const invalidRes = await verifyTokenHandler(invalidReq);
     expect(invalidRes.status).toBe(404);
 
@@ -119,7 +120,7 @@ describe("Password Recovery & Reset System (Gmail SMTP & Security)", () => {
       },
     });
 
-    const expiredReq = new Request(`http://localhost:3000/api/auth/verify-reset-token?token=${expiredRaw}`);
+    const expiredReq = new NextRequest(`http://localhost:3000/api/auth/verify-reset-token?token=${expiredRaw}`);
     const expiredRes = await verifyTokenHandler(expiredReq);
     expect(expiredRes.status).toBe(410);
   });

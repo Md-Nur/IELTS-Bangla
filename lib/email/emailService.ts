@@ -44,7 +44,6 @@ export function getTransporter(): Transporter {
 
   const config = getEmailConfig();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cachedTransporter = nodemailer.createTransport({
     host: config.host,
     port: config.port,
@@ -58,7 +57,7 @@ export function getTransporter(): Transporter {
     pool: true,
     maxConnections: 3,
     maxMessages: 100,
-  } as any);
+  } as unknown as Parameters<typeof nodemailer.createTransport>[0]);
 
   return cachedTransporter;
 }

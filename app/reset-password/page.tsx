@@ -10,9 +10,14 @@ function ResetPasswordContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+  const isTokenPresent = Boolean(token);
 
-  const [isVerifying, setIsVerifying] = useState(true);
-  const [tokenError, setTokenError] = useState<string | null>(null);
+  const [isVerifying, setIsVerifying] = useState(isTokenPresent);
+  const [tokenError, setTokenError] = useState<string | null>(
+    !isTokenPresent
+      ? "পাসওয়ার্ড রিসেট টোকেন অনুপস্থিত। অনুগ্রহ করে ইমেইলের সম্পূর্ণ লিংকটি ব্যবহার করুন।"
+      : null
+  );
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
   const [password, setPassword] = useState("");
@@ -24,17 +29,15 @@ function ResetPasswordContent() {
 
   // Verify token on mount
   useEffect(() => {
-    if (!token) {
-      setTokenError("পাসওয়ার্ড রিসেট টোকেন অনুপস্থিত। অনুগ্রহ করে ইমেইলের সম্পূর্ণ লিংকটি ব্যবহার করুন।");
-      setIsVerifying(false);
-      return;
-    }
+    if (!token) return;
 
+    let isMounted = true;
     async function checkToken() {
       try {
         const res = await fetch(`/api/auth/verify-reset-token?token=${encodeURIComponent(token!)}`);
         const data = await res.json().catch(() => null);
 
+        if (!isMounted) return;
         if (!res.ok || !data?.valid) {
           setTokenError(
             data?.error ||
@@ -44,13 +47,20 @@ function ResetPasswordContent() {
           setUserEmail(data.email);
         }
       } catch {
-        setTokenError("টোকেন যাচাই করতে নেটওয়ার্ক সমস্যা হয়েছে। অনুগ্রহ করে ইন্টারনেট সংযোগ পরীক্ষা করুন।");
+        if (isMounted) {
+          setTokenError("টোকেন যাচাই করতে নেটওয়ার্ক সমস্যা হয়েছে। অনুগ্রহ করে ইন্টারনেট সংযোগ পরীক্ষা করুন।");
+        }
       } finally {
-        setIsVerifying(false);
+        if (isMounted) {
+          setIsVerifying(false);
+        }
       }
     }
 
     checkToken();
+    return () => {
+      isMounted = false;
+    };
   }, [token]);
 
   const handleSubmit = async (e: React.FormEvent) => {
