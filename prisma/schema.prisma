@@ -69,6 +69,7 @@ model User {
   examDate      DateTime?
   isActive      Boolean       @default(true) // Authoritative account status
   attempts      TestAttempt[]
+  passwordResetTokens PasswordResetToken[]
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 }
@@ -314,4 +315,22 @@ model EvaluationResult {
   sectionBreakdown  Json        // Passage-level breakdown: { "passage1": { "correct": 11, "total": 13 }, ... }
   questionBreakdown Json        // Question-by-question scored detail for permanent historical audit
   evaluatedAt       DateTime    @default(now())
+}
+
+// -------------------------------------------------------------
+// PASSWORD RECOVERY & RESET TOKENS
+// -------------------------------------------------------------
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([tokenHash])
+  @@index([expiresAt])
 }

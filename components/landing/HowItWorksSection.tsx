@@ -12,9 +12,8 @@ export function HowItWorksSection({ user }: HowItWorksSectionProps) {
   const steps = [
     {
       step: "০১",
-      title: "Create Your Account",
-      banglaTitle: "অ্যাকাউন্ট তৈরি করুন",
-      description: "Sign up in seconds with your name and email. No complicated process or credit card required.",
+      title: "অ্যাকাউন্ট তৈরি করুন",
+      description: "আপনার নাম ও ইমেইল দিয়ে মাত্র কয়েক সেকেন্ডে বিনামূল্যে নিবন্ধন করুন। কোনো জটিলতা নেই।",
       icon: (
         <svg className="w-5 h-5 text-[#087653]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
@@ -23,9 +22,8 @@ export function HowItWorksSection({ user }: HowItWorksSectionProps) {
     },
     {
       step: "০২",
-      title: "Choose a Mock Test",
-      banglaTitle: "মক টেস্ট নির্বাচন করুন",
-      description: "Select an available Academic Reading test from your dashboard with full question type diversity.",
+      title: "Mock Test নির্বাচন করুন",
+      description: "ড্যাশবোর্ড থেকে উপলব্ধ পূর্ণাঙ্গ Academic Reading টেস্ট নির্বাচন করে নিজের প্রস্তুতি শুরু করুন।",
       icon: (
         <svg className="w-5 h-5 text-[#087653]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -34,9 +32,8 @@ export function HowItWorksSection({ user }: HowItWorksSectionProps) {
     },
     {
       step: "০৩",
-      title: "Complete Under Timed Conditions",
-      banglaTitle: "নির্দিষ্ট সময়ে পরীক্ষা সম্পন্ন করুন",
-      description: "Experience the real 60-minute examination with autosaved answers and a computer-delivered interface.",
+      title: "নির্দিষ্ট সময়ে পরীক্ষা দিন",
+      description: "অটোসেভ সুবিধাসহ ৬০ মিনিটের আসল কম্পিউটার পরীক্ষার পরিবেশে সম্পূর্ণ প্রস্তুতি যাচাই করুন।",
       icon: (
         <svg className="w-5 h-5 text-[#087653]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -45,9 +42,8 @@ export function HowItWorksSection({ user }: HowItWorksSectionProps) {
     },
     {
       step: "০৪",
-      title: "Review Results & Improve",
-      banglaTitle: "ফলাফল বিশ্লেষণ ও প্রস্তুতি বৃদ্ধি",
-      description: "Get server-authoritative scoring, estimated IELTS band score, and comprehensive passage-by-passage review.",
+      title: "ফলাফল বিশ্লেষণ ও প্রস্তুতি বৃদ্ধি",
+      description: "তাৎক্ষণিক প্রাপ্ত র' স্কোর, আনুমানিক Band Score এবং প্যাসেজ অনুযায়ী বিস্তারিত উত্তর বিশ্লেষণ দেখে নিজের দক্ষতা বাড়ান।",
       icon: (
         <svg className="w-5 h-5 text-[#087653]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -61,7 +57,7 @@ export function HowItWorksSection({ user }: HowItWorksSectionProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
           <div className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#E7F5EF] text-[#087653]">
-            Simple 4-Step Process
+            ৪টি সহজ ধাপ
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-[#20395F] tracking-tight">
             কীভাবে শুরু করবেন?
@@ -87,9 +83,6 @@ export function HowItWorksSection({ user }: HowItWorksSectionProps) {
               </div>
 
               <div>
-                <span className="text-xs font-semibold text-[#087653] block mb-0.5">
-                  {st.banglaTitle}
-                </span>
                 <h3 className="text-base font-bold text-[#20395F]">
                   {st.title}
                 </h3>

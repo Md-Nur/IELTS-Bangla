@@ -146,7 +146,7 @@ export function ExamQuestionsPane({
                             {q.questionNumber}
                           </span>
                           <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">
-                            Question {q.questionNumber}
+                            প্রশ্ন {q.questionNumber}
                           </span>
                         </div>
 
@@ -181,7 +181,7 @@ export function ExamQuestionsPane({
                               d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"
                             />
                           </svg>
-                          <span>{isFlagged ? "Flagged" : "Review"}</span>
+                          <span>{isFlagged ? "চিহ্নিত" : "রিভিউ"}</span>
                         </button>
                       </div>
 

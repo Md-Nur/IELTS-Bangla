@@ -22,16 +22,16 @@ export function ExamExitModal({ isOpen, onClose }: ExamExitModalProps) {
           </div>
           <div>
             <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
-              Leave Examination?
+              পরীক্ষা থেকে সাময়িক প্রস্থান?
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              You are currently in an active timed IELTS session.
+              আপনি বর্তমানে একটি নির্ধারিত সময়ের IELTS পরীক্ষায় অংশ নিচ্ছেন।
             </p>
           </div>
         </div>
 
         <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-          Your examination timer continues running on the server while you are away. You can resume this attempt anytime before the 60-minute duration concludes.
+          আপনি ড্যাশবোর্ডে ফিরে গেলেও সার্ভারে ৬০ মিনিটের টাইমার সচল থাকবে। নির্ধারিত ৬০ মিনিট পার হওয়ার পূর্বেই যেকোনো সময় ড্যাশবোর্ড থেকে পরীক্ষায় পুনরায় যুক্ত হতে পারবেন।
         </p>
 
         <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 pt-2">
@@ -40,7 +40,7 @@ export function ExamExitModal({ isOpen, onClose }: ExamExitModalProps) {
             onClick={onClose}
             className="w-full sm:w-auto px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm transition-colors cursor-pointer dark:bg-blue-600 dark:hover:bg-blue-500"
           >
-            Resume Examination
+            পরীক্ষা চালিয়ে যান
           </button>
           <button
             type="button"
@@ -50,7 +50,7 @@ export function ExamExitModal({ isOpen, onClose }: ExamExitModalProps) {
             }}
             className="w-full sm:w-auto px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium text-sm transition-colors cursor-pointer"
           >
-            Leave Exam
+            ড্যাশবোর্ডে ফিরুন
           </button>
         </div>
       </div>

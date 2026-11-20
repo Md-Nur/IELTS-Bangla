@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { BrandLoader } from "@/components/common/BrandLoader";
 
 interface StartExamButtonProps {
   testSlug: string;
@@ -74,13 +75,7 @@ export function StartExamButton({
         } ${isLoading ? "opacity-75 cursor-wait" : "active:scale-[0.98]"} ${className}`}
       >
         {isLoading ? (
-          <>
-            <svg className="animate-spin h-3.5 w-3.5 text-white" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-            </svg>
-            <span>পরীক্ষা লোড হচ্ছে...</span>
-          </>
+          <BrandLoader variant="inline" text="পরীক্ষা লোড হচ্ছে..." />
         ) : hasActiveAttempt ? (
           <>
             <span>চালিয়ে যান (Resume Test)</span>

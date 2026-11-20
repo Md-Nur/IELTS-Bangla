@@ -13,6 +13,16 @@ export async function ensureUserSchema(): Promise<boolean> {
     await prisma.$executeRawUnsafe(
       `ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "isActive" BOOLEAN NOT NULL DEFAULT true;`
     );
+    await prisma.$executeRawUnsafe(
+      `CREATE TABLE IF NOT EXISTS "PasswordResetToken" (
+        "id" TEXT NOT NULL PRIMARY KEY,
+        "userId" TEXT NOT NULL REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+        "tokenHash" TEXT NOT NULL UNIQUE,
+        "expiresAt" TIMESTAMP(3) NOT NULL,
+        "usedAt" TIMESTAMP(3),
+        "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );`
+    );
     isEnsured = true;
     return true;
   } catch (error) {

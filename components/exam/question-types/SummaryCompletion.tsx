@@ -33,7 +33,7 @@ export function SummaryCompletion({
           onChange={(e) => onChange(e.target.value)}
           className="w-full max-w-lg px-3.5 py-2 text-sm rounded-md border border-slate-300 bg-white text-slate-800 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
         >
-          <option value="">-- Select option letter (A–H) --</option>
+          <option value="">-- অপশন লেটার নির্বাচন করুন (A–H) --</option>
           {wordKeys.map((key) => (
             <option key={key} value={key}>
               {key}: {wordListMap[key]}
@@ -46,16 +46,16 @@ export function SummaryCompletion({
         <div className="text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded border border-slate-200 dark:border-slate-700/60 max-w-lg flex items-center justify-between">
           <span>
             <span className="font-semibold text-slate-800 dark:text-slate-100">
-              Selected:
+              নির্বাচিত:
             </span>{" "}
-            Letter <strong className="text-blue-600 dark:text-blue-400">{currentValue}</strong> ({wordListMap[currentValue]})
+            লেটার <strong className="text-emerald-700 dark:text-emerald-400">{currentValue}</strong> ({wordListMap[currentValue]})
           </span>
           <button
             type="button"
             onClick={() => onChange("")}
             className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs underline cursor-pointer"
           >
-            Clear
+            মুছে ফেলুন
           </button>
         </div>
       )}

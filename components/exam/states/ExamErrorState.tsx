@@ -7,7 +7,7 @@ export interface ExamErrorStateProps {
 }
 
 export function ExamErrorState({
-  message = "Failed to load examination content. Please check your connection and try again.",
+  message = "পরীক্ষার প্রশ্ন ও বিষয়বস্তু লোড করা সম্ভব হয়নি। অনুগ্রহ করে ইন্টারনেট সংযোগ চেক করে পুনরায় চেষ্টা করুন।",
   onRetry,
 }: ExamErrorStateProps) {
   return (
@@ -31,7 +31,7 @@ export function ExamErrorState({
 
         <div className="space-y-1">
           <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-            Examination Load Error
+            পরীক্ষা লোড করতে সমস্যা হয়েছে
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
             {message}
@@ -43,16 +43,16 @@ export function ExamErrorState({
             <button
               type="button"
               onClick={onRetry}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm transition-colors cursor-pointer dark:bg-blue-600 dark:hover:bg-blue-500"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-[#087653] hover:bg-[#065e42] text-white font-medium text-sm transition-colors cursor-pointer"
             >
-              Try Again
+              আবার চেষ্টা করুন
             </button>
           )}
           <Link
-            href="/"
+            href="/dashboard"
             className="w-full sm:w-auto px-5 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium text-sm transition-colors text-center"
           >
-            Return to Home
+            ড্যাশবোর্ডে ফিরুন
           </Link>
         </div>
       </div>

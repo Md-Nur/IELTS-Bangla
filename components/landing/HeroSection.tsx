@@ -26,21 +26,21 @@ export function HeroSection({ user }: HeroSectionProps) {
 
             {/* Headline */}
             <h1 className="text-3xl sm:text-5xl lg:text-5xl font-extrabold text-[#20395F] tracking-tight leading-[1.2]">
-              Prepare Smarter. Practice Better.{" "}
+              সঠিক প্রস্তুতি। কার্যকর অনুশীলন।{" "}
               <span className="text-[#087653] block sm:inline">
-                Achieve Your IELTS Goals.
+                অর্জন করুন কাঙ্ক্ষিত IELTS লক্ষ্য।
               </span>
             </h1>
 
             {/* Supporting Text */}
             <p className="text-base sm:text-lg text-[#20395F]/80 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
-              Practice IELTS with structured mock tests, realistic exam experiences, and detailed performance insights. Build your confidence before the real examination.
+              বাস্তব পরীক্ষার অভিজ্ঞতা, কাঠামোগত Mock Test এবং নির্ভুল স্কোর বিশ্লেষণের মাধ্যমে প্রস্তুতি নিন। মূল পরীক্ষার আগেই তৈরি করে নিন নিজের আত্মবিশ্বাস।
             </p>
 
             {/* Key Value Badges */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 pt-1">
               <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-semibold bg-white border border-[#20395F]/10 text-[#20395F] shadow-2xs">
-                ✓ ৩টি একাডেমিক প্যাসেজ
+                ✓ ৩টি Academic প্যাসেজ
               </span>
               <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-semibold bg-white border border-[#20395F]/10 text-[#20395F] shadow-2xs">
                 ✓ ৬০ মিনিটের অফিসিয়াল টাইমার
@@ -56,7 +56,7 @@ export function HeroSection({ user }: HeroSectionProps) {
                 href={user ? "/dashboard" : "/signup"}
                 className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-bold text-sm text-white bg-[#087653] hover:bg-[#065e42] shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 group"
               >
-                <span>{user ? "ড্যাশবোর্ডে যান" : "Start Practising"}</span>
+                <span>{user ? "ড্যাশবোর্ডে যান" : "অনুশীলন শুরু করুন"}</span>
                 <svg
                   className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
                   fill="none"
@@ -70,7 +70,7 @@ export function HeroSection({ user }: HeroSectionProps) {
                 href="#modules"
                 className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-bold text-sm text-[#20395F] bg-white hover:bg-slate-50 border border-[#20395F]/20 shadow-2xs transition-colors flex items-center justify-center gap-2"
               >
-                <span>Explore Mock Tests</span>
+                <span>Mock Test সমূহ দেখুন</span>
                 <svg className="w-4 h-4 text-[#20395F]/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
@@ -93,7 +93,7 @@ export function HeroSection({ user }: HeroSectionProps) {
                       Academic Reading · Mock 01
                     </span>
                     <h3 className="text-lg font-bold text-[#20395F]">
-                      Computer-Delivered IELTS Simulation
+                      কম্পিউটার-ডেলিভার্ড IELTS সিমুলেশন
                     </h3>
                   </div>
                   <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs font-bold text-[#D93A45]">
@@ -107,7 +107,7 @@ export function HeroSection({ user }: HeroSectionProps) {
                 {/* Sample Question Preview */}
                 <div className="space-y-3 bg-[#F8F8F9] rounded-xl p-4 border border-[#20395F]/10">
                   <div className="text-xs font-semibold text-[#087653] uppercase tracking-wide">
-                    Passage 1 · Questions 1–13
+                    Passage 1 · প্রশ্ন ১–১৩
                   </div>
                   <blockquote className="text-xs italic text-[#20395F]/80 pl-3 border-l-2 border-[#087653] leading-relaxed">
                     &ldquo;Although the wooden velocipede was introduced earlier, the modern bicycle transformed daily transport only after pneumatic tyres were developed.&rdquo;
@@ -136,16 +136,16 @@ export function HeroSection({ user }: HeroSectionProps) {
                 {/* Card Features Meta */}
                 <div className="grid grid-cols-3 gap-2 text-center text-xs">
                   <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="block text-slate-400 font-medium">Questions</span>
-                    <span className="font-extrabold text-[#20395F]">40 Items</span>
+                    <span className="block text-slate-400 font-medium">প্রশ্নসংখ্যা</span>
+                    <span className="font-extrabold text-[#20395F]">৪০টি প্রশ্ন</span>
                   </div>
                   <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="block text-slate-400 font-medium">Duration</span>
-                    <span className="font-extrabold text-[#20395F]">60 Mins</span>
+                    <span className="block text-slate-400 font-medium">সময়সীমা</span>
+                    <span className="font-extrabold text-[#20395F]">৬০ মিনিট</span>
                   </div>
                   <div className="p-2.5 rounded-xl bg-[#E7F5EF] border border-[#087653]/20">
-                    <span className="block text-[#087653]/70 font-medium">Evaluation</span>
-                    <span className="font-extrabold text-[#087653]">Band 1.0–9.0</span>
+                    <span className="block text-[#087653]/70 font-medium">মূল্যায়ন</span>
+                    <span className="font-extrabold text-[#087653]">Band ১.০–৯.০</span>
                   </div>
                 </div>
 
@@ -154,7 +154,7 @@ export function HeroSection({ user }: HeroSectionProps) {
                   href={user ? "/dashboard" : "/signup"}
                   className="w-full py-2.5 px-4 rounded-xl text-center text-xs font-bold text-[#087653] bg-[#E7F5EF] hover:bg-[#d8efe5] transition-colors block"
                 >
-                  {user ? "Continue to Exam in Dashboard →" : "Sign Up to Take This Test Free →"}
+                  {user ? "ড্যাশবোর্ডে পরীক্ষা দিন →" : "বিনামূল্যে পরীক্ষা দিতে সাইন আপ করুন →"}
                 </Link>
               </div>
             </div>

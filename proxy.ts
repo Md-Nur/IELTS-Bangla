@@ -6,7 +6,7 @@ import { verifySessionToken, SESSION_COOKIE_NAME } from "@/lib/auth/session";
 const PROTECTED_PREFIXES = ["/dashboard", "/exam", "/results", "/admin"];
 
 // Auth routes that should redirect to /dashboard if already logged in
-const AUTH_ROUTES = ["/login", "/signup"];
+const AUTH_ROUTES = ["/login", "/signup", "/forgot-password", "/reset-password"];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -45,5 +45,7 @@ export const config = {
     "/admin/:path*",
     "/login",
     "/signup",
+    "/forgot-password",
+    "/reset-password",
   ],
 };

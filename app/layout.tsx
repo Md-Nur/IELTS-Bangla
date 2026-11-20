@@ -19,10 +19,11 @@ const anekBangla = Anek_Bangla({
 export const instant = false;
 
 export const metadata: Metadata = {
-  title: "IELTS Bangla | Professional IELTS Preparation & Mock Testing Platform",
-  description: "Prepare smarter and practice better with authentic computer-delivered IELTS mock tests, realistic exam experiences, and detailed performance insights for Bangladeshi students.",
+  title: "IELTS বাংলা | কম্পিউটার-ডেলিভার্ড মক টেস্ট ও বিশ্বস্ত প্রস্তুতি প্ল্যাটফর্ম",
+  description: "বাংলাদেশের শিক্ষার্থীদের জন্য বাস্তবসম্মত কম্পিউটার-ডেলিভার্ড IELTS Mock Test, অটোমেটেড স্কোরিং ও ব্যান্ড স্কোর পর্যালোচনার নির্ভরযোগ্য প্ল্যাটফর্ম।",
   keywords: [
     "IELTS Bangla",
+    "আইইএলটিএস বাংলা",
     "IELTS Mock Test Bangladesh",
     "IELTS Academic Reading",
     "Computer Delivered IELTS Practice",
@@ -37,7 +38,7 @@ export default function RootLayout({
 }) {
   return (
     <html
-      lang="en"
+      lang="bn"
       suppressHydrationWarning
       className={`${hindSiliguri.variable} ${anekBangla.variable} h-full scroll-smooth antialiased`}
     >

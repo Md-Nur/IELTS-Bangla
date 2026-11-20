@@ -1009,6 +1009,9 @@ export async function finalizeAndScoreAttempt(
       questionBreakdown: summary.questionBreakdown,
       redirectUrl: `/results/${attempt.id}`,
     };
+  }, {
+    maxWait: 5000,
+    timeout: 20000,
   });
 }
 

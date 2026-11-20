@@ -11,10 +11,10 @@ export function ScoreSummaryCard({ result }: ScoreSummaryCardProps) {
   // Format time taken
   const minutes = Math.floor(result.timeSpentSeconds / 60);
   const seconds = result.timeSpentSeconds % 60;
-  const formattedTime = `${minutes}m ${seconds.toString().padStart(2, "0")}s`;
+  const formattedTime = `${minutes} মিনিট ${seconds.toString().padStart(2, "0")} সেকেন্ড`;
 
   // Format completion date
-  const completedDate = new Date(result.completionDate).toLocaleDateString("en-US", {
+  const completedDate = new Date(result.completionDate).toLocaleDateString("bn-BD", {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -25,35 +25,35 @@ export function ScoreSummaryCard({ result }: ScoreSummaryCardProps) {
   return (
     <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden mb-8">
       {/* Top Banner with Band Score & Status */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-850 to-blue-950 text-white p-6 sm:p-8">
+      <div className="bg-gradient-to-br from-[#087653] via-[#044A34] to-[#20395F] text-white p-6 sm:p-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-semibold tracking-wider uppercase border border-blue-400/30">
-              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-              {result.status === "TIMED_OUT" ? "Completed (Timed Out)" : "Completed & Finalized"}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-[#8FD8C4] text-xs font-semibold tracking-wider uppercase border border-white/20">
+              <span className="w-2 h-2 rounded-full bg-[#8FD8C4] animate-pulse" />
+              {result.status === "TIMED_OUT" ? "সম্পন্ন (সময় সমাপ্ত)" : "সম্পন্ন ও মূল্যায়িত"}
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
               {result.testTitle}
             </h1>
-            <p className="text-slate-300 text-xs sm:text-sm flex flex-wrap items-center gap-x-4 gap-y-1">
-              <span>Completed on: {completedDate}</span>
+            <p className="text-white/80 text-xs sm:text-sm flex flex-wrap items-center gap-x-4 gap-y-1">
+              <span>সমাপ্তির সময়: {completedDate}</span>
               <span>•</span>
-              <span>Duration: {formattedTime} / 60m</span>
+              <span>সময় ব্যয়: {formattedTime} (সর্বোচ্চ ৬০ মিনিট)</span>
               <span>•</span>
-              <span className="font-mono text-slate-400 text-xs">ID: {result.attemptId.slice(0, 10)}...</span>
+              <span className="font-mono text-white/60 text-xs">ID: {result.attemptId.slice(0, 10)}...</span>
             </p>
           </div>
 
           {/* Primary Band Score Badge */}
           <div className="shrink-0 flex items-center bg-white/10 dark:bg-white/5 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-white/15 shadow-inner">
             <div className="text-center px-4">
-              <div className="text-xs font-semibold uppercase tracking-wider text-blue-200 mb-1">
-                Estimated Band
+              <div className="text-xs font-semibold uppercase tracking-wider text-[#8FD8C4] mb-1">
+                আনুমানিক Band Score
               </div>
               <div className="text-4xl sm:text-5xl font-black tracking-tight text-white font-mono">
                 {result.estimatedBand.toFixed(1)}
               </div>
-              <div className="text-[11px] text-blue-200/90 font-medium mt-1">
+              <div className="text-[11px] text-[#8FD8C4] font-medium mt-1">
                 IELTS Academic Reading
               </div>
             </div>
@@ -61,8 +61,8 @@ export function ScoreSummaryCard({ result }: ScoreSummaryCardProps) {
         </div>
 
         {/* Band Disclaimer Banner */}
-        <div className="mt-6 pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-blue-200/80">
-          <svg className="w-4 h-4 shrink-0 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="mt-6 pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-white/80">
+          <svg className="w-4 h-4 shrink-0 text-[#8FD8C4]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <span>{result.bandDisclaimer}</span>
@@ -76,7 +76,7 @@ export function ScoreSummaryCard({ result }: ScoreSummaryCardProps) {
             {result.rawScore} <span className="text-base font-normal text-slate-500">/ {result.totalQuestions}</span>
           </div>
           <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 uppercase tracking-wider">
-            Raw Score
+            র&apos; স্কোর (Raw Score)
           </div>
         </div>
 
@@ -85,7 +85,7 @@ export function ScoreSummaryCard({ result }: ScoreSummaryCardProps) {
             {result.totalCorrect}
           </div>
           <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 uppercase tracking-wider">
-            Correct Answers
+            সঠিক উত্তর
           </div>
         </div>
 
@@ -94,16 +94,16 @@ export function ScoreSummaryCard({ result }: ScoreSummaryCardProps) {
             {result.totalIncorrect}
           </div>
           <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 uppercase tracking-wider">
-            Incorrect / Unanswered
+            ভুল / অনুত্তরিত
           </div>
         </div>
 
         <div className="p-4 sm:p-6 text-center">
-          <div className="text-2xl sm:text-3xl font-extrabold text-blue-600 dark:text-blue-400 font-mono">
+          <div className="text-2xl sm:text-3xl font-extrabold text-[#087653] dark:text-emerald-400 font-mono">
             {accuracy}%
           </div>
           <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 uppercase tracking-wider">
-            Overall Accuracy
+            সার্বিক নির্ভুলতা
           </div>
         </div>
       </div>
@@ -111,7 +111,7 @@ export function ScoreSummaryCard({ result }: ScoreSummaryCardProps) {
       {/* Passage-by-Passage Performance Breakdown */}
       <div className="p-6 sm:p-8">
         <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-4">
-          Passage-by-Passage Performance
+          প্যাসেজ অনুযায়ী দক্ষতা বিশ্লেষণ
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {result.sections.map((sec) => {
@@ -123,7 +123,7 @@ export function ScoreSummaryCard({ result }: ScoreSummaryCardProps) {
               >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-900 dark:text-slate-200">
-                    Passage {sec.sectionIndex}
+                    প্যাসেজ {sec.sectionIndex}
                   </span>
                   <span
                     className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
@@ -144,8 +144,8 @@ export function ScoreSummaryCard({ result }: ScoreSummaryCardProps) {
 
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
-                    <span>Score: {sec.correct} / {sec.totalQuestions}</span>
-                    <span>Attempted: {sec.attempted}</span>
+                    <span>স্কোর: {sec.correct} / {sec.totalQuestions}</span>
+                    <span>উত্তর প্রদান: {sec.attempted}</span>
                   </div>
                   <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
                     <div

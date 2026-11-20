@@ -25,7 +25,7 @@ export function Footer() {
               বাংলাদেশের শিক্ষার্থীদের জন্য নিবেদিত IELTS প্রস্তুতি ও কম্পিউটার-ডেলিভার্ড মক টেস্ট প্ল্যাটফর্ম। বাস্তব পরীক্ষার অভিজ্ঞতা এবং সঠিক মূল্যায়নের মাধ্যমে নিজের কাঙ্ক্ষিত ব্যান্ড স্কোর অর্জন করুন।
             </p>
             <div className="pt-2 text-xs text-white/60">
-              Technical Lead: Nur · Founders: Nur & Mozammel
+              টেকনিক্যাল লিড: নূর · প্রতিষ্ঠাতা: নূর ও মোজাম্মেল
             </div>
           </div>
 
@@ -74,25 +74,25 @@ export function Footer() {
                   Academic Reading
                 </Link>
                 <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#087653] text-white">
-                  Available
+                  উপলব্ধ
                 </span>
               </li>
               <li className="flex items-center gap-2 text-white/50">
                 <span>Listening</span>
                 <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-white/60">
-                  Coming Soon
+                  শীঘ্রই আসছে
                 </span>
               </li>
               <li className="flex items-center gap-2 text-white/50">
                 <span>Writing</span>
                 <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-white/60">
-                  Coming Soon
+                  শীঘ্রই আসছে
                 </span>
               </li>
               <li className="flex items-center gap-2 text-white/50">
                 <span>Speaking</span>
                 <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-white/60">
-                  Coming Soon
+                  শীঘ্রই আসছে
                 </span>
               </li>
             </ul>
@@ -119,7 +119,7 @@ export function Footer() {
               </p>
               <div className="pt-2">
                 <span className="inline-block px-2.5 py-1 rounded-md text-xs bg-white/10 text-[#8FD8C4] font-medium">
-                  Official CD-IELTS Format
+                  অফিসিয়াল CD-IELTS ফরম্যাট
                 </span>
               </div>
             </div>

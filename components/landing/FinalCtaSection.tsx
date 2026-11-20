@@ -17,7 +17,7 @@ export function FinalCtaSection({ user }: FinalCtaProps) {
 
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <span className="inline-block px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-white/15 text-[#8FD8C4] border border-white/20">
-          Get Started Today
+          আজই যুক্ত হোন
         </span>
 
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">

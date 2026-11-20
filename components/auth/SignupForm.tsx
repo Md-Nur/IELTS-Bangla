@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Logo } from "@/components/common/Logo";
+import { BrandLoader } from "@/components/common/BrandLoader";
 
 export function SignupForm() {
   const router = useRouter();
@@ -223,13 +224,7 @@ export function SignupForm() {
             }`}
           >
             {isLoading ? (
-              <>
-                <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                </svg>
-                <span>অ্যাকাউন্ট তৈরি হচ্ছে...</span>
-              </>
+              <BrandLoader variant="inline" text="অ্যাকাউন্ট তৈরি হচ্ছে..." />
             ) : (
               <span>অ্যাকাউন্ট তৈরি করুন</span>
             )}

@@ -3,24 +3,20 @@ import React from "react";
 export function WhyUsSection() {
   const values = [
     {
-      title: "Accessible IELTS Preparation",
-      banglaTitle: "সবার জন্য সহজলভ্য প্রস্তুতি",
-      description: "Bringing high-quality, computer-delivered mock tests to candidates across Bangladesh without costly coaching center barriers.",
+      title: "সবার জন্য সহজলভ্য প্রস্তুতি",
+      description: "ব্যয়বহুল কোচিং সেন্টারের নির্ভরতা কমিয়ে বাংলাদেশের প্রতিটি প্রার্থীর কাছে উচ্চমানের কম্পিউটার টেস্ট পৌঁছে দেওয়া।",
     },
     {
-      title: "Structured Practice Resources",
-      banglaTitle: "গঠনমূলক ও স্ট্যান্ডার্ড কনটেন্ট",
-      description: "Authentic, carefully authored test materials adhering to Cambridge and British Council Academic IELTS specifications.",
+      title: "গঠনমূলক ও স্ট্যান্ডার্ড কনটেন্ট",
+      description: "Cambridge এবং British Council-এর অফিশিয়াল একাডেমিক নির্দেশিকা মেনে নিখুঁতভাবে প্রণীত টেস্ট সামগ্রী।",
     },
     {
-      title: "User-Friendly Examination Interface",
-      banglaTitle: "সহজ ও পরিচ্ছন্ন ইন্টারফেস",
-      description: "A distraction-free, responsive split-screen reader interface engineered specifically for comfortable test-taking on modern screens.",
+      title: "সহজ ও পরিচ্ছন্ন ইন্টারফেস",
+      description: "কম্পিউটার-ডেলিভার্ড স্প্লিট-স্ক্রিন রিডার যা আধুনিক স্ক্রিনে পরীক্ষা দেওয়াকে করে তোলে অত্যন্ত আরামদায়ক ও নির্বিঘ্ন।",
     },
     {
-      title: "Focus on Consistent Improvement",
-      banglaTitle: "ক্রমাগত দক্ষতা বৃদ্ধির নিশ্চয়তা",
-      description: "Server-authoritative evaluations eliminate guesswork, highlighting areas of weakness across different question types.",
+      title: "ক্রমাগত দক্ষতা বৃদ্ধির নিশ্চয়তা",
+      description: "সার্ভার-অথরিটেটিভ মূল্যায়নের মাধ্যমে অনুমানের অবকাশ দূর করে প্রতিটি প্রশ্ন টাইপের দুর্বলতা স্পষ্টভাবে চিহ্নিতকরণ।",
     },
   ];
 
@@ -31,7 +27,7 @@ export function WhyUsSection() {
           {/* Left Column: Heading & Mission */}
           <div className="lg:col-span-5 space-y-6">
             <div className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#E7F5EF] text-[#087653]">
-              Why IELTS Bangla
+              কেন IELTS বাংলা
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-[#20395F] tracking-tight leading-tight">
               কেন IELTS বাংলা আপনার প্রস্তুতির সেরা সঙ্গী?
@@ -57,10 +53,7 @@ export function WhyUsSection() {
                 className="p-6 rounded-2xl bg-[#F8F8F9] border border-[#20395F]/10 space-y-2.5 hover:border-[#087653]/30 transition-colors shadow-2xs"
               >
                 <div className="w-8 h-8 rounded-lg bg-[#E7F5EF] text-[#087653] font-bold text-xs flex items-center justify-center">
-                  0{i + 1}
-                </div>
-                <div className="text-xs font-semibold text-[#087653]">
-                  {v.banglaTitle}
+                  ০{i + 1}
                 </div>
                 <h3 className="text-base font-bold text-[#20395F]">
                   {v.title}

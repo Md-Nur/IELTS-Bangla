@@ -61,7 +61,7 @@ export function ExamBottomBar({
                   d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"
                 />
               </svg>
-              <span className="hidden sm:inline">Review</span>
+              <span className="hidden sm:inline">রিভিউ</span>
             </button>
           )}
 
@@ -70,7 +70,7 @@ export function ExamBottomBar({
             onClick={onOpenReviewModal}
             className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer border border-slate-200 dark:border-slate-750"
           >
-            Review ({currentQuestionNumber}/40)
+            রিভিউ ({currentQuestionNumber}/৪০)
           </button>
         </div>
 
@@ -98,7 +98,7 @@ export function ExamBottomBar({
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
             </svg>
-            <span className="hidden sm:inline">Back</span>
+            <span className="hidden sm:inline">পূর্ববর্তী</span>
           </button>
 
           <button
@@ -111,7 +111,7 @@ export function ExamBottomBar({
                 : "bg-slate-900 text-white border-slate-900 hover:bg-slate-800 dark:bg-blue-600 dark:border-blue-600 dark:hover:bg-blue-500 cursor-pointer shadow-2xs"
             }`}
           >
-            <span className="hidden sm:inline">Next</span>
+            <span className="hidden sm:inline">পরবর্তী</span>
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
             </svg>

@@ -21,41 +21,39 @@ export default async function DashboardPage() {
     redirect("/login?redirect=/dashboard");
   }
 
-  // 1. Fetch available active tests
-  const availableTests = await prisma.test.findMany({
-    where: { status: "ACTIVE" },
-    orderBy: { createdAt: "asc" },
-  });
-
-  // 2. Fetch active in-progress attempt for this student
-  const inProgressAttempt = await prisma.testAttempt.findFirst({
-    where: {
-      userId: user.id,
-      status: AttemptStatus.IN_PROGRESS,
-      expiresAt: { gt: new Date() },
-    },
-    include: {
-      test: true,
-    },
-    orderBy: { startedAt: "desc" },
-  });
-
-  // 3. Fetch student's completed/timed out historical attempts
-  const pastAttempts = await prisma.testAttempt.findMany({
-    where: {
-      userId: user.id,
-      status: {
-        in: [AttemptStatus.SUBMITTED, AttemptStatus.TIMED_OUT],
+  // Fetch available tests, in-progress attempt, and past attempts in parallel
+  const [availableTests, inProgressAttempt, pastAttempts] = await Promise.all([
+    prisma.test.findMany({
+      where: { status: "ACTIVE" },
+      orderBy: { createdAt: "asc" },
+    }),
+    prisma.testAttempt.findFirst({
+      where: {
+        userId: user.id,
+        status: AttemptStatus.IN_PROGRESS,
+        expiresAt: { gt: new Date() },
       },
-    },
-    include: {
-      test: true,
-      evaluation: true,
-    },
-    orderBy: {
-      submittedAt: "desc",
-    },
-  });
+      include: {
+        test: true,
+      },
+      orderBy: { startedAt: "desc" },
+    }),
+    prisma.testAttempt.findMany({
+      where: {
+        userId: user.id,
+        status: {
+          in: [AttemptStatus.SUBMITTED, AttemptStatus.TIMED_OUT],
+        },
+      },
+      include: {
+        test: true,
+        evaluation: true,
+      },
+      orderBy: {
+        submittedAt: "desc",
+      },
+    }),
+  ]);
 
   // Performance calculations from actual database records
   const totalCompleted = pastAttempts.length;

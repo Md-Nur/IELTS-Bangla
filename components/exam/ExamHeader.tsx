@@ -85,7 +85,7 @@ export function ExamHeader({
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
                 </svg>
-                <span className="hidden sm:inline">Saving...</span>
+                <span className="hidden sm:inline">সংরক্ষণ হচ্ছে...</span>
               </span>
             )}
             {saveStatus === "saved" && (
@@ -93,7 +93,7 @@ export function ExamHeader({
                 <svg className="w-3 h-3 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                 </svg>
-                <span className="hidden sm:inline">Saved</span>
+                <span className="hidden sm:inline">সংরক্ষিত</span>
               </span>
             )}
             {saveStatus === "failed" && (
@@ -101,7 +101,7 @@ export function ExamHeader({
                 <svg className="w-3 h-3 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
-                <span>Offline / Retrying</span>
+                <span>অফলাইন / পুনরায় চেষ্টা</span>
               </span>
             )}
           </div>
@@ -143,7 +143,7 @@ export function ExamHeader({
             className="px-2.5 py-1.5 rounded text-xs text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer border border-transparent hover:border-slate-700"
             title="Leave examination"
           >
-            <span className="hidden sm:inline">Exit</span>
+            <span className="hidden sm:inline">প্রস্থান</span>
             <svg
               className="w-4 h-4 sm:hidden"
               fill="none"
@@ -165,7 +165,7 @@ export function ExamHeader({
       <div className="lg:hidden flex items-center justify-between px-3 py-2 bg-slate-950 border-t border-slate-800 text-xs">
         {/* Mobile Passage Select */}
         <div className="flex items-center gap-1">
-          <span className="text-slate-400 text-[11px]">Passage:</span>
+          <span className="text-slate-400 text-[11px]">প্যাসেজ:</span>
           <select
             value={currentSectionIndex}
             onChange={(e) => onSelectSection(Number(e.target.value))}
@@ -173,7 +173,7 @@ export function ExamHeader({
           >
             {sections.map((_, idx) => (
               <option key={idx} value={idx}>
-                Passage {idx + 1}
+                প্যাসেজ {idx + 1}
               </option>
             ))}
           </select>
@@ -190,7 +190,7 @@ export function ExamHeader({
                 : "text-slate-400 hover:text-slate-200"
             }`}
           >
-            Passage
+            প্যাসেজ
           </button>
           <button
             type="button"
@@ -201,7 +201,7 @@ export function ExamHeader({
                 : "text-slate-400 hover:text-slate-200"
             }`}
           >
-            Questions
+            প্রশ্নোত্তর
           </button>
         </div>
       </div>

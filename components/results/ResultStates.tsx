@@ -1,18 +1,15 @@
 import React from "react";
 import Link from "next/link";
+import { BrandLoader } from "@/components/common/BrandLoader";
 
 export function ResultLoadingState() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center p-6">
-      <div className="max-w-md w-full bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-8 text-center shadow-sm space-y-4">
-        <div className="mx-auto w-12 h-12 rounded-full border-4 border-slate-200 dark:border-slate-800 border-t-blue-600 animate-spin" />
-        <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-          Loading Examination Results...
-        </h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
-          Retrieving your authoritative evaluated scores, passage breakdowns, and answer keys.
-        </p>
-      </div>
+      <BrandLoader
+        variant="full"
+        text="ফলাফল ও বিশ্লেষণ লোড হচ্ছে..."
+        subtext="আপনার মূল্যায়নকৃত স্কোর, ব্যান্ড স্কোর এবং উত্তরমালা তৈরি করা হচ্ছে।"
+      />
     </div>
   );
 }
@@ -33,26 +30,26 @@ export function ResultErrorState({
           </svg>
         </div>
         <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-          Unable to Load Results
+          ফলাফল লোড করা সম্ভব হয়নি
         </h2>
         <p className="text-xs text-slate-600 dark:text-slate-400">
-          {errorMessage || "The examination result could not be retrieved. Please check your credentials or attempt status."}
+          {errorMessage || "পরীক্ষার ফলাফল পাওয়া যায়নি। অনুগ্রহ করে আপনার প্রচেষ্টা বা সংযোগ যাচাই করুন।"}
         </p>
         <div className="pt-2 flex justify-center gap-3">
           {onRetry && (
             <button
               type="button"
               onClick={onRetry}
-              className="px-4 py-2 rounded-lg bg-slate-900 text-white dark:bg-blue-600 text-xs font-semibold hover:opacity-90 cursor-pointer"
+              className="px-4 py-2 rounded-lg bg-emerald-700 text-white dark:bg-emerald-600 text-xs font-semibold hover:bg-emerald-800 cursor-pointer"
             >
-              Retry
+              পুনরায় চেষ্টা করুন
             </button>
           )}
           <Link
-            href="/"
+            href="/dashboard"
             className="px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer"
           >
-            Go to Dashboard
+            ড্যাশবোর্ডে ফিরে যান
           </Link>
         </div>
       </div>

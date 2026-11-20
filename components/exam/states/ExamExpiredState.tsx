@@ -23,13 +23,13 @@ export function ExamExpiredState({ attemptId }: { attemptId?: string }) {
 
         <div className="space-y-2">
           <span className="inline-block px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 text-xs font-semibold uppercase tracking-wider border border-amber-200 dark:border-amber-800/40">
-            Session Concluded
+            পরীক্ষা সমাপ্ত
           </span>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-            Examination Time Expired
+            পরীক্ষার সময় শেষ হয়ে গেছে
           </h1>
           <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-sm mx-auto">
-            The allocated 60 minutes for this IELTS Academic Reading attempt has expired according to server-authoritative time. Your saved answers have been recorded.
+            অফিশিয়াল সার্ভার সময় অনুযায়ী এই IELTS Academic Reading পরীক্ষার বরাদ্দকৃত ৬০ মিনিট অতিক্রান্ত হয়েছে। আপনার সংরক্ষিত সকল উত্তর চূড়ান্তভাবে গৃহীত হয়েছে।
           </p>
         </div>
 
@@ -37,16 +37,16 @@ export function ExamExpiredState({ attemptId }: { attemptId?: string }) {
           {attemptId && (
             <Link
               href={`/results/${attemptId}`}
-              className="inline-block px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm transition-colors shadow-sm cursor-pointer"
+              className="inline-block px-6 py-2.5 rounded-lg bg-[#087653] hover:bg-[#065e42] text-white font-medium text-sm transition-colors shadow-sm cursor-pointer"
             >
-              View Examination Results
+              পরীক্ষার ফলাফল ও রিভিউ দেখুন
             </Link>
           )}
           <Link
-            href="/"
+            href="/dashboard"
             className="inline-block px-6 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm transition-colors dark:bg-slate-800 dark:hover:bg-slate-700 shadow-sm cursor-pointer"
           >
-            Return to Dashboard
+            ড্যাশবোর্ডে ফিরে যান
           </Link>
         </div>
       </div>

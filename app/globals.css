@@ -35,3 +35,34 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-anek-bangla), var(--font-hind-siliguri), system-ui, -apple-system, sans-serif;
 }
+
+@keyframes indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-indeterminate {
+  animation: indeterminate 2s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease-out forwards;
+}

@@ -30,12 +30,12 @@ export function TextCompletion({
           type="text"
           value={textValue}
           disabled={disabled}
-          placeholder="Type your answer here..."
+          placeholder="এখানে উত্তর লিখুন..."
           onChange={(e) => onChange(e.target.value)}
           className={`w-full max-w-lg px-3.5 py-2 text-sm rounded-md border transition-colors focus:outline-none focus:ring-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 ${
             isOverLimit
               ? "border-amber-500 focus:border-amber-600 focus:ring-amber-500/20"
-              : "border-slate-300 focus:border-blue-500 focus:ring-blue-500/20 dark:border-slate-700 dark:focus:border-blue-400"
+              : "border-slate-300 focus:border-emerald-600 focus:ring-emerald-500/20 dark:border-slate-700 dark:focus:border-emerald-500"
           }`}
         />
       </div>
@@ -53,7 +53,7 @@ export function TextCompletion({
           </span>
           {isOverLimit && (
             <span className="text-amber-600 dark:text-amber-400 font-medium">
-              (Exceeds word limit)
+              (শব্দসীমা অতিক্রম করেছে)
             </span>
           )}
         </div>

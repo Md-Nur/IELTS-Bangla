@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Logo } from "@/components/common/Logo";
+import { BrandLoader } from "@/components/common/BrandLoader";
 
 export function LoginForm() {
   const router = useRouter();
@@ -16,12 +17,10 @@ export function LoginForm() {
   const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [forgotPasswordNotice, setForgotPasswordNotice] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
-    setForgotPasswordNotice(false);
 
     if (!email.trim() || !password) {
       setErrorMessage("অনুগ্রহ করে আপনার ইমেইল এবং পাসওয়ার্ড প্রদান করুন।");
@@ -108,13 +107,12 @@ export function LoginForm() {
               <label className="block text-xs font-bold text-[#20395F] uppercase tracking-wider">
                 পাসওয়ার্ড (Password)
               </label>
-              <button
-                type="button"
-                onClick={() => setForgotPasswordNotice(!forgotPasswordNotice)}
+              <Link
+                href="/forgot-password"
                 className="text-xs text-[#087653] hover:underline font-medium cursor-pointer"
               >
                 পাসওয়ার্ড ভুলে গেছেন?
-              </button>
+              </Link>
             </div>
             <div className="relative">
               <input
@@ -146,12 +144,6 @@ export function LoginForm() {
             </div>
           </div>
 
-          {forgotPasswordNotice && (
-            <div className="p-3 rounded-lg bg-blue-50 border border-blue-200 text-xs text-blue-800">
-              স্বয়ংক্রিয় পাসওয়ার্ড রিসেট সুবিধাটি শীঘ্রই যুক্ত করা হচ্ছে। আপনার অ্যাকাউন্টের অ্যাক্সেস ফিরে পেতে অনুগ্রহ করে <strong>support@ieltsbangla.com</strong> এ ইমেইল করুন।
-            </div>
-          )}
-
           <div className="flex items-center">
             <label className="flex items-center gap-2 cursor-pointer select-none">
               <input
@@ -176,13 +168,7 @@ export function LoginForm() {
             }`}
           >
             {isLoading ? (
-              <>
-                <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                </svg>
-                <span>যাচাই করা হচ্ছে...</span>
-              </>
+              <BrandLoader variant="inline" text="যাচাই করা হচ্ছে..." />
             ) : (
               <span>লগইন করুন</span>
             )}

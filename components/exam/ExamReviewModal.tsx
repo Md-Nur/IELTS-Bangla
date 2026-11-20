@@ -1,5 +1,6 @@
 import React from "react";
 import { QuestionStatusItem } from "@/hooks/useExamState";
+import { BrandLoader } from "@/components/common/BrandLoader";
 
 export interface ExamReviewModalProps {
   isOpen: boolean;
@@ -32,10 +33,10 @@ export function ExamReviewModal({
         <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
           <div>
             <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-              Examination Overview & Navigation
+              পরীক্ষার সারসংক্ষেপ ও নেভিগেশন
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Review your progress across all 40 questions before finishing.
+              পরীক্ষা চূড়ান্তভাবে জমা দেওয়ার আগে সকল ৪০টি প্রশ্নের উত্তর যাচাই করুন।
             </p>
           </div>
           <button
@@ -54,15 +55,15 @@ export function ExamReviewModal({
         <div className="px-6 py-3 bg-slate-50 dark:bg-slate-950/60 border-b border-slate-200 dark:border-slate-800 grid grid-cols-3 gap-4 text-center">
           <div>
             <div className="text-xl font-bold text-slate-900 dark:text-slate-100">{answered}</div>
-            <div className="text-xs text-slate-500 font-medium">Answered</div>
+            <div className="text-xs text-slate-500 font-medium">উত্তর দেওয়া হয়েছে</div>
           </div>
           <div>
             <div className="text-xl font-bold text-slate-500 dark:text-slate-400">{unanswered}</div>
-            <div className="text-xs text-slate-500 font-medium">Unanswered</div>
+            <div className="text-xs text-slate-500 font-medium">অনুত্তরিত</div>
           </div>
           <div>
             <div className="text-xl font-bold text-amber-600 dark:text-amber-400">{flagged}</div>
-            <div className="text-xs text-amber-600 dark:text-amber-400 font-medium">Marked for Review</div>
+            <div className="text-xs text-amber-600 dark:text-amber-400 font-medium">রিভিউয়ের জন্য চিহ্নিত</div>
           </div>
         </div>
 
@@ -100,15 +101,15 @@ export function ExamReviewModal({
           <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500 dark:text-slate-400">
             <div className="flex items-center gap-2">
               <span className="w-3.5 h-3.5 rounded bg-slate-900 dark:bg-blue-600" />
-              <span>Answered</span>
+              <span>উত্তর সম্পন্ন</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-3.5 h-3.5 rounded bg-white border border-slate-300 dark:bg-slate-800 dark:border-slate-700" />
-              <span>Unanswered</span>
+              <span>অনুত্তরিত</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-amber-400" />
-              <span>Flagged for Review</span>
+              <span>রিভিউয়ের জন্য চিহ্নিত</span>
             </div>
           </div>
         </div>
@@ -120,7 +121,7 @@ export function ExamReviewModal({
             onClick={onClose}
             className="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 font-medium text-xs sm:text-sm transition-colors cursor-pointer"
           >
-            Back to Examination
+            পরীক্ষায় ফিরে যান
           </button>
 
           {onSubmit && (
@@ -135,15 +136,9 @@ export function ExamReviewModal({
               }`}
             >
               {isSubmitting ? (
-                <>
-                  <svg className="animate-spin h-3.5 w-3.5 text-white" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                  </svg>
-                  <span>Finalizing...</span>
-                </>
+                <BrandLoader variant="inline" text="ফলাফল প্রস্তুত হচ্ছে..." />
               ) : (
-                <span>Submit Examination</span>
+                <span>পরীক্ষা জমা দিন (Submit)</span>
               )}
             </button>
           )}

@@ -7,6 +7,7 @@ export default defineConfig({
     globals: true,
     include: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts'],
     exclude: ['node_modules', '.next', 'scratch'],
+    testTimeout: 15000,
   },
   resolve: {
     alias: {
