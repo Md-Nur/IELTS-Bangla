@@ -2,10 +2,10 @@
 
 **Document type:** Living project specification  
 **Project:** IELTS Bangla  
-**Status:** Initial development  
+**Status:** Phase 1 Reading Complete + Bengali-First Localization & Password Recovery  
 **Founders:** Nur and Mozammel  
 **Technical lead:** Nur  
-**Last updated:** Initial version
+**Last updated:** 2026-11-20 (Bengali localization, Gmail SMTP recovery, and branded loader)
 
 ---
 

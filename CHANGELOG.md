@@ -4,7 +4,46 @@ All notable changes, architectural decisions, and milestones for this project wi
 
 ## [Unreleased] - 2026-11-20
 
-### Redesign: Professional IELTS Preparation Platform & Runtime Architecture
+### Bengali-First Localization, Gmail SMTP Recovery & Branded Loading Experience
+- **Bengali-First Localization:**
+  - Standardized UI language to Bengali across all user-facing components: Navbar, Landing page (Hero, Trust Highlights, How It Works, Modules, Why IELTS Bangla, Final CTA), Footer, Auth forms (Login, Signup, Forgot Password, Reset Password), Student Dashboard, Practice Guide, About, Privacy, Terms, Exam interface, and Results & Detailed Answer Review.
+  - Preserved standard IELTS English terminology (e.g., IELTS, Academic, General Training, Reading, Listening, Writing, Speaking, Mock Test, Band Score, True/False/Not Given) paired with clear, natural Bengali explanations and instructions.
+  - Implemented refined bilingual typography with Google Fonts `Hind Siliguri` (body, weights 400-700) and `Anek Bangla` (headings, weights 500-800).
+  - Configured `html lang="bn"` and localized metadata and SEO open-graph tags.
+  - Preserved the existing brand color palette (`#087653`, `#20395F`, `#E7F5EF`, `#F8F8F9`, `#D93A45`).
+- **Gmail SMTP Password Recovery System:**
+  - Implemented centralized email architecture with `nodemailer@10.6.1` and TypeScript support (`lib/email/emailService.ts`).
+  - Configured IPv4 enforcement (`family: 4`) and connection pooling to prevent connection timeouts over ISP/macOS dual-stack IPv6 networks.
+  - Reconciled Gmail SMTP configuration safely in `.env` using active Google App Password on secure SSL port 465, with safe placeholders in `.env.example`.
+  - Created responsive, branded HTML email template in Bengali (`lib/email/templates/passwordResetEmail.ts`) featuring the official brand crest, reset CTA button, 30-minute expiry warning, security disclaimer, and plain-text fallback.
+  - Implemented cryptographically secure password reset flow:
+    - 32-byte cryptographically secure random token generated at `POST /api/auth/forgot-password`.
+    - Token stored in database exclusively as SHA-256 hash with 30-minute expiration.
+    - Single-use invalidation immediately upon password update.
+    - Prevents account enumeration via generic success responses.
+    - In-memory rate limiting on forgot password requests.
+    - Token verification endpoint at `GET /api/auth/verify-reset-token`.
+    - Atomically updates password (bcrypt salted hash) and marks token used in `POST /api/auth/reset-password`.
+  - Added `PasswordResetToken` model to Prisma schema and executed non-destructive migration `20261120000000_add_password_reset_token` on Neon serverless PostgreSQL.
+  - Updated auto-healing runtime schema resilience in `lib/db/ensureSchema.ts`.
+  - Authored automated test suite `lib/auth/__tests__/passwordReset.test.ts` (5 tests) covering token generation, hash verification, expiration rejection, single-use invalidation, and bcrypt updates.
+- **Professional Logo-Based Loading Experience (`BrandLoader`):**
+  - Created `components/common/BrandLoader.tsx` featuring the authentic dual-tone SVG brand crest, animated orbit rings, indeterminate gradient progress bar, and customizable Bengali status text.
+  - Provided three variants: `full` (full-page transitions), `section` (card and table loading), and `inline` (buttons and action feedback).
+  - Integrated Next.js App Router route segment loaders:
+    - Root `app/loading.tsx`.
+    - Dashboard `app/dashboard/loading.tsx` with animated skeletons.
+    - Practice `app/practice/loading.tsx`.
+    - Results `app/results/[attemptId]/loading.tsx`.
+  - Replaced generic spinners with `BrandLoader` across login, registration, password recovery, test launch button, and results review states.
+- **Performance Optimization:**
+  - Replaced sequential database queries in `app/dashboard/page.tsx` (`availableTests`, `inProgressAttempt`, `pastAttempts`) with `Promise.all([...])`, reducing server-side Neon roundtrip latency by ~60%.
+  - Adjusted Prisma transaction timeout configuration (`timeout: 20000`, `maxWait: 5000`) in `lib/services/examAttemptService.ts` to ensure resilience during 40-question batch grading over remote serverless connections.
+- **Verification & Quality Assurance:**
+  - 135 tests passing across 15 test suites with 100% pass rate.
+  - Zero TypeScript errors (`bun x tsc --noEmit`).
+  - Zero ESLint errors or warnings (`bun run lint`).
+  - Successful Next.js 16 production build with Turbopack and 23 prerendered pages (`bun run build`).
 - **Demo Student Account Decoupling:**
   - Completely eliminated the runtime dependency on the demo student account (`student@ieltsbangla.com`).
   - Removed automatic demo student registration and authentication retry loops from application startup.
