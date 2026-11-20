@@ -4,6 +4,27 @@ All notable changes, architectural decisions, and milestones for this project wi
 
 ## [Unreleased] - 2026-11-20
 
+### Authentic, Human-Designed Visual Refinements & Architecture Cohesion
+- **Elimination of Generic AI SaaS Tropes:**
+  - Audited and dismantled repetitive 3-4 card grids across `HighlightsSection.tsx`, `ModulesSection.tsx`, `HowItWorksSection.tsx`, and `WhyUsSection.tsx`.
+  - Standardized border radii from exaggerated, bubbly `rounded-2xl` and `rounded-3xl` down to disciplined, professional `rounded-xl` (12px) and `rounded-lg` (8px).
+  - Replaced repetitive floating corner SVGs, oversized background circles, and artificial glowing blurred gradient rings with grounded, purposeful academic compositions.
+  - Substituted generic, formulaic AI marketing copy with authentic, credible Bengali messaging tailored for serious university and IELTS preparation candidates.
+- **Intentional Asymmetric & Editorial Layouts:**
+  - `HeroSection.tsx`: Grounded the test preview inside an authentic desktop window frame with titlebar dots, status pills, and dual-pane passage/question simulation.
+  - `HighlightsSection.tsx`: Converted the 5-card grid into an asymmetric 2-column editorial showcase: prominent CBT Exam Simulation Engine with technical specs on the left, paired with 4 structured capabilities with clean borders on the right.
+  - `ModulesSection.tsx`: Elevated Academic Reading (Phase 1) with full visual dominance, live status pill, full test specifications, and direct CTA; integrated Listening, Writing, and Speaking into an understated horizontal 3-module development pipeline.
+  - `HowItWorksSection.tsx`: Transformed isolated boxes into a connected 4-step process timeline (`STEP 01` → `STEP 04`) with natural typography, subtle connector track, and concise step explanations.
+  - `WhyUsSection.tsx`: Structured into an editorial split featuring the founders' educational philosophy on the left and 4 core institutional pillars separated by clean horizontal dividers on the right.
+  - `FinalCtaSection.tsx`: Removed distracting floating background circles and grounded the CTA in dignified `#087653` deep emerald with crisp typography.
+- **Unified Design Language Across Student Journey:**
+  - `Dashboard`: Cleaned up performance metric cards, active test banner, test catalog, and recent attempts table with disciplined `rounded-xl` and `shadow-2xs`.
+  - `Auth & Password Recovery`: Aligned `LoginForm.tsx`, `SignupForm.tsx`, `ForgotPasswordPage`, and `ResetPasswordPage` to crisp `rounded-xl` cards, `rounded-lg` inputs, and brand hover states.
+  - `Results & Review`: Restyled `ResultHeader.tsx` to use the official brand `Logo`, cleaned up `ScoreSummaryCard.tsx` and `DetailedReviewSection.tsx` by replacing residual dark gradients and generic blue badges with navy ink `#20395F` and emerald `#087653`.
+- **Quality Assurance & Test Suite Isolation:**
+  - Configured `fileParallelism: false` in `vitest.config.mts` to ensure sequential database operations without mock or connection collisions against the live test database.
+  - 100% passing tests, zero ESLint warnings or errors, and zero TypeScript compilation issues.
+
 ### Visual Experience Enhancement & Reading Exam Interface Redesign
 - **Visual Design & Academic Illustrations (Revisited HTML Reference):**
   - Re-inspected the original inspiration reference (`IELTS-Bangla.html`) to identify reusable illustrations, decorative graphics, and micro-animations suitable for an adult IELTS preparation audience.
