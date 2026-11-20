@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { prisma } from "@/lib/prisma";
+import { findUserByIdSafe } from "@/lib/db/ensureSchema";
 import { SESSION_COOKIE_NAME, verifySessionToken, SessionPayload } from "./session";
 
 /**
@@ -26,20 +26,7 @@ export async function getCurrentServerUser() {
   if (!session || !session.userId) return null;
 
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: session.userId },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        isActive: true,
-        targetBand: true,
-        examDate: true,
-        createdAt: true,
-      },
-    });
-
+    const user = await findUserByIdSafe(session.userId);
     if (!user || !user.isActive) return null;
     return user;
   } catch {

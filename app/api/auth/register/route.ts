@@ -3,6 +3,7 @@ import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { Role } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import { createUserSafe } from "@/lib/db/ensureSchema";
 import { createSessionToken, SESSION_COOKIE_NAME, SESSION_MAX_AGE_SECONDS } from "@/lib/auth/session";
 
 const registerSchema = z.object({
@@ -51,21 +52,11 @@ export async function POST(request: Request) {
     const passwordHash = await bcrypt.hash(password, 10);
 
     // Strictly enforce Role.STUDENT upon registration
-    const user = await prisma.user.create({
-      data: {
-        email,
-        name: name || null,
-        passwordHash,
-        role: Role.STUDENT,
-        isActive: true,
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        isActive: true,
-      },
+    const user = await createUserSafe({
+      email,
+      name: name || null,
+      passwordHash,
+      role: Role.STUDENT,
     });
 
     const token = await createSessionToken({

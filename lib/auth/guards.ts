@@ -1,5 +1,5 @@
 import { Role } from "@prisma/client";
-import { prisma } from "@/lib/prisma";
+import { findUserByIdSafe } from "@/lib/db/ensureSchema";
 import { extractTokenFromRequest, verifySessionToken } from "./session";
 
 export interface AuthenticatedUser {
@@ -42,20 +42,17 @@ export async function getCurrentUser(request: Request): Promise<AuthenticatedUse
   const payload = await verifySessionToken(token);
   if (!payload || !payload.userId) return null;
 
-  const user = await prisma.user.findUnique({
-    where: { id: payload.userId },
-    select: {
-      id: true,
-      email: true,
-      name: true,
-      role: true,
-      isActive: true,
-    },
-  });
+  const user = await findUserByIdSafe(payload.userId);
 
   if (!user || !user.isActive) return null;
 
-  return user;
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
+    isActive: user.isActive,
+  };
 }
 
 /**
@@ -73,16 +70,7 @@ export async function requireAuth(request: Request): Promise<AuthenticatedUser> 
     throw new AuthenticationError("Invalid or expired session");
   }
 
-  const user = await prisma.user.findUnique({
-    where: { id: payload.userId },
-    select: {
-      id: true,
-      email: true,
-      name: true,
-      role: true,
-      isActive: true,
-    },
-  });
+  const user = await findUserByIdSafe(payload.userId);
 
   if (!user) {
     throw new AuthenticationError("User account no longer exists");
@@ -92,7 +80,13 @@ export async function requireAuth(request: Request): Promise<AuthenticatedUser> 
     throw new DeactivatedAccountError("Account has been deactivated");
   }
 
-  return user;
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
+    isActive: user.isActive,
+  };
 }
 
 /**

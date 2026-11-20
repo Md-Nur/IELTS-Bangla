@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
-import { prisma } from "@/lib/prisma";
+import { findUserByEmailSafe } from "@/lib/db/ensureSchema";
 import { createSessionToken, SESSION_COOKIE_NAME, SESSION_MAX_AGE_SECONDS } from "@/lib/auth/session";
 
 const loginSchema = z.object({
@@ -33,17 +33,7 @@ export async function POST(request: Request) {
 
     const { email, password } = validation.data;
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        passwordHash: true,
-        role: true,
-        isActive: true,
-      },
-    });
+    const user = await findUserByEmailSafe(email);
 
     if (!user || !user.passwordHash) {
       return NextResponse.json(
